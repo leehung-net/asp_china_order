@@ -1,0 +1,111 @@
+﻿@using System.Web.UI.WebControls
+@using PagedList.Mvc
+@model PagedList.IPagedList<OrderChina.Models.Order>
+@if (ViewData["message"] != null)
+{
+    <script>
+        alert(ViewData["message"]);
+    </script>
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<section class='container' style='padding: 20px;'>
+    <div class='row'>
+        @Html.Partial("_AsideMenuPartial")
+
+        <div class="col-md-9 order-content">
+            <div class='row'>
+                <h3 class='text-center'>DANH SÁCH ĐƠN HÀNG</h3>
+                @using (Html.BeginForm("Manage", "Account", FormMethod.Get))
+                {
+                    <p>
+                        <input name="_token" type="hidden" value="9NjpBV8oN7rpucA3HQdPbsU1EazsPzhmvCK0395C">
+                        <div class='col-md-2' id="fromDate">
+                            <input class="form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
+                        </div>
+                        <div class='col-md-2' id="toDate">
+                            <input class="form-control btn-flat" placeholder="Đến ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Đến ngày" name="toDate" type="text" value="@ViewBag.CurrentToDate">
+                        </div>
+
+                        <div class='col-md-2'>
+                            <input class="form-control btn-flat " placeholder="Mã đơn" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Mã đơn" autofocus="autofocus" name="OrderId" value="@ViewBag.CurrentOrderId" type="text">
+                        </div>
+
+                        <div class="col-md-3">
+                            @Html.DropDownList("listStatus", (IEnumerable<SelectListItem>)ViewBag.ListStatus, "--Trạng thái đơn--", new { @class = "form-control flat" })
+                        </div>
+                        <div class="col-md-1">
+                            <button name="submit" type="submit" class="btn btn-primary">
+                                <i class="fa fa-filter"></i>
+                            </button>
+                        </div>
+                    </p>
+                }
+                <hr>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class='text-center' style="width: 60px;">Mã đơn</th>
+                            <th class='text-center' style="width: 100px;">Tỷ giá</th>
+                            <th class='text-center' style="width: 150px;">Trạng thái</th>
+                            <th class='text-center' style="width: 150px;">Tổng tiền</th>
+                            <th class="text-center" style="width: 100px;">Ngày tạo</th>
+                            <th class='text-center' style="width: 100px;">Xem chi tiết đơn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.OrderId)
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Rate)
+                                </td>
+                                <td class='text-center'>
+                                    @item.getStatusText()
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.TotalPriceConvert)
+                                </td>
+                                <td class='text-center'>
+                                    @item.CreateDate.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class='text-center'>
+                                    <a rel='tooltip' title="Xem chi tiết"
+                                       href=@Url.Action("ViewOrderDetail", "Account",new{id = item.OrderId}) class="btn btn-xs btn-primary">
+                                        <i class="fa fa-search-plus"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action("Manage",
+    new { page, toDate = ViewBag.CurrentToDate, fromDate = ViewBag.CurrentFromDate, listStatus = ViewBag.CurrentStatus, OrderId = ViewBag.CurrentOrderId }))
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            $('#fromDate input').datepicker({
+                orientation: "bottom auto",
+                todayHighlight: true,
+                format:"dd/mm/yyyy"
+            });
+            $('#toDate input').datepicker({
+                orientation: "bottom auto",
+                todayHighlight: true,
+                format: "dd/mm/yyyy"
+            });
+        });
+    </script>
+}

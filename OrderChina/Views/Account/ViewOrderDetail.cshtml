@@ -1,0 +1,306 @@
+﻿@model OrderChina.Models.ViewDetailOrderModel
+
+<section class='container' style='padding: 20px;'>
+    <div class='row'>
+        @Html.Partial("_AsideMenuPartial")
+
+        <div class="col-md-9 order-content">
+            <div class='order-link'>
+
+                <nav class="navbar navbar-default order-nav gdtq-header-nav flat" id='top-menu' role="navigation">
+                    <div class='container-fluid' style="padding-left: 0px;padding-right: 0px;">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed btn-flat" data-toggle="collapse" data-target="#menu-head">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <div class="collapse navbar-collapse" id="menu-head" style="background-color:orange">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="#no-shop">Không shop</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class='row'>
+                    <h3 class='text-center' autoforcus ="true">CHI TIẾT ĐƠN HÀNG <b>@Model.OrderId</b> - @Model.Status</h3>
+                    <div class="alert alert-default btn-flat">
+
+                        <p><p>
+                            <em><u><strong>Chú ý:</strong></u></em><br />
+                            Mỗi dòng dữ liệu tương ứng với 1 link sản phẩm, quý khách điền thông tin chi tết để thuận lợi trong quá trình giao dịch.<br />
+                            Hàng được ký nhận tại kho Trung Quốc và trả hàng tại kho Việt Nam của China Express.<br />
+                            Trước khi tạo đơn hàng, quý khách đọc kỹ quy định và bảng giá của China Express:<br />
+                            - <em>Hướng dẫn:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/dich-vu-dat-hang.html">http://nhaphangtaobao.com.vn/tin-tuc/dich-vu-dat-hang.html</a><br />
+                            - <em>Quy định:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/quy-dinh/quy-dinh-voi-khach-hang-order.html">http://nhaphangtaobao.com.vn/tin-tuc/quy-dinh/quy-dinh-voi-khach-hang-order.html</a><br />
+                            - <em>Bảng giá:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/bang-gia.html">http://nhaphangtaobao.com.vn/tin-tuc/bang-gia.html</a><br />
+                            Quý khách chốt đơn hàng có nghĩa là quý khách đã <u><em><strong>đồng ý và thực hiện</strong></em></u> theo quy định của <strong>China Express!!!</strong>
+                        </p></p>
+
+                        <!--article style='margin-top: 20px;'>
+                            <ul>
+                                <li class="bank"><p>Để thanh toán đơn hàng quý khách vui lòng chuyển tiền đến tài khoản <strong class="text-danger">Vietcombank</strong> Chi nhánh sở giao dịch Hà Nội</p><p>Tài khoản: <strong class="text-danger">00110041XXXXX.</strong> Chủ TK: <strong class="text-danger">XXXX XXXX XXXX</strong> Nội dung chuyển khoản: <strong class="text-danger">Đặt cọc đơn hàng XXX gửi đến 0962.XX.XXXX</strong></p></li>
+                            </ul>
+                        </article-->
+                    </div>
+                </div>
+
+                <div class='order-mani row'>
+                    <p class="col-md-3">
+                        <a href="#controller" onclick="xac_nhan_order(4517,'1','0');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
+                        <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
+                    </p>
+                    <p class="col-md-3">
+                        <a href="#controller" onclick="xac_nhan_order(4517,'0','');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                        <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
+                    </p>
+                    <p class="col-md-3">1 NDT = @Model.Rate <sup>đ</sup></p>
+
+                    <p class='col-md-3'>
+                        Nhân viên KD: <b>Lê Văn Hùng: (04) 73009779 máy lẻ 103</b><br />
+                        <font style="font-size:14px"><i class='fa fa-phone'></i> 0977261061</font>
+                    </p>
+                    <span class="clearfix"></span>
+                </div>
+
+                <div class="gdtq-staff" style="margin: 30px 0;display:none">
+                    <div>
+                        <div class='col-md-4'>
+                            <p class='btn-flat text-center'><i class='fa fa-user'></i> CSKH 14 - Dư Thủy<br><i class='fa fa-phone'></i> 965751688</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-default btn-flat row">
+                    <div class="col-md-12">
+                        <h4>Chi tiết đơn hàng</h4>
+                    </div>
+
+                    <div class="col-md-6">
+                        <p><font>(1) Tiền hàng</font><font style="float:right">@Model.TotalPriceConvert<sup>đ</sup></font></p>
+                        <p><font>(2) Phí dịch vụ (5%)</font><font style="float:right">@Model.Fee<sup>đ</sup></font></p>
+                        <p><font>(3) Ship nội địa TQ</font><font style="float:right">@Model.FeeShipChina<sup>đ</sup></font></p>
+                        <p><font>(4) Trọng lượng</font><font style="float:right">@Model.Weight<sup>kg</sup></font></p>
+                        <p><font>(5) Cước vận chuyển</font><font style="float:right">@Model.FeeShip<sup>đ</sup></font></p>
+
+                    </div>
+                    <div class="col-md-6">
+                        <p><font>(6) Phí phát sinh (nếu có)</font><font style="float:right">0<sup>đ</sup></font></p>
+                        <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@(Model.TotalPriceConvert + Model.Fee + Model.FeeShipChina + Model.FeeShip)<sup>đ</sup></font></p>
+                        <p><font>(8) Đặt cọc</font><font style="float:right">0<sup>đ</sup></font></p>
+                        <p><font>(9) Đã thu thêm</font><font style="float:right">0<sup>đ</sup></font></p>
+
+                        <p><font>(10) Còn thiếu</font><font style="float:right">@Model.TotalPriceConvert<sup>đ</sup></font></p>
+
+
+                        <!--p><font>(10) Số dư tài khoản hiện tại</font><font style="float:right">0<sup>đ</sup></font></p-->
+
+                    </div>
+                    <span class="clearfix"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="section-detail row">
+                @*<h4>
+                        Bạn có thể sửa link ở trạng thái đơn mới hoặc báo giá, click vào icon <i class="fa fa-edit btn btn-info btn-xs"></i> để sửa
+                    </h4>
+
+                    <div class='order-group' id="id-121344">
+                        <div>
+                            <span class='ogs-status'>Tạo nhóm</span>
+                            <span class="pull-right shop-number">0</span>
+                            <span class="clearfix"></span>
+                        </div>
+                    </div>*@
+
+                <div class='order-group row' id='no-shop'>
+                    @*<div class='container-shop container-shop' style="background-color: #373737; color: #fff">
+                            <p class='col-md-12'>Danh sách link chưa phân shop</p>
+                        </div>*@
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class='text-center'>Mã link</th>
+                                <th class='text-center' style="width: 100px;">Link</th>
+                                <th class='text-center'>Shop</th>
+                                <th class='text-center'>Mô tả</th>
+                                <th class='text-center'>Khách đặt</th>
+                                <th class='text-center'>Đặt được</th>
+                                <th class='text-center'>Về kho</th>
+                                <th class='text-center'>Đơn giá</th>
+                                <th class='text-center'>Thành tiền</th>
+                                <th class='text-center'>Ngày xuất</th>
+                                <th class='text-center'>Ghi chú</th>
+                                <th class='text-center'>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id='link-container'>
+                            @foreach (var item in Model.ListOrderDetails)
+                            {
+                                <tr>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.OrderDetailId)
+                                    </td>
+                                    <td class='text-center'>
+                                        <a href="@item.Link" target="_blank">
+                                            @item.Link
+                                        </a>
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Shop)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                    </td>
+                                    <td class='text-center'>
+                                        0
+                                    </td>
+                                    <td class='text-center'>
+                                        0
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Price)
+                                    </td>
+                                    <td class='text-center'>
+                                        @(item.Price * item.Quantity)
+                                    </td>
+                                    <td class='text-center'></td>
+                                    <td class='text-center'></td>
+                                    <td class='text-center'>
+                                        <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+                                        <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    <a href="@Url.Action("AddEditOrderDetail", "Account", new { orderId = Model.OrderId })" class="btn-flat btn-warning btn-xs btn pull-right btn-add">
+                        <i class="fa fa-plus"></i> Thêm link
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-lg"
+         id="myModal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width: 900px">
+            <!-- empty -->
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootbox")
+
+
+    <script>
+        $(document).ready(function () {
+            $('#fromDate input').datepicker({
+                orientation: "bottom auto",
+                todayHighlight: true
+            });
+            $('#toDate input').datepicker({
+                orientation: "bottom auto",
+                todayHighlight: true
+            });
+            $('.btn-add').click(function (e) {
+
+                /*
+                * hủy liên kết
+                *
+                * việc này quan trọng
+                * nếu không hủy liên kết, modal sẽ không được load đúng cách
+                * vì action sẽ trả về 1 trang html trống với partialview
+                *
+                * cách tương tự return false; cách này thực hiện ở cuối method
+                */
+                e.preventDefault();
+
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
+            $('.btn-edit').click(function (e) {
+
+                /*
+                * hủy liên kết
+                *
+                * việc này quan trọng
+                * nếu không hủy liên kết, modal sẽ không được load đúng cách
+                * vì action sẽ trả về 1 trang html trống với partialview
+                *
+                * cách tương tự return false; cách này thực hiện ở cuối method
+                */
+                e.preventDefault();
+
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
+            $(".btn-deleted").click(function (e) {
+                e.preventDefault();
+
+                var url = $(this).attr('href');
+
+                bootbox.dialog({
+                    message: "Bạn có chắc muốn xóa link này?",
+                    title: "Xóa link khỏi đơn hàng",
+                    buttons: {
+                        success: {
+                            label: "Xóa!",
+                            className: "btn btn-success",
+                            callback: function () {
+                                $(this).dialog("close");
+                                window.location = url;
+                            }
+                        },
+                        danger: {
+                            label: "Đóng!",
+                            className: "btn btn-flat",
+                            callback: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    }
+                });
+            });
+
+        }); // document ready
+
+    </script>
+}

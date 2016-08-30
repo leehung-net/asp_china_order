@@ -1,0 +1,102 @@
+h1, h2, h3, h4, h5, h6{
+	margin: 0;
+	padding: 0;
+}
+a{
+	color: #2a6496;
+	text-decoration: none;
+}
+a:hover, a:focus{
+	color: #2a6496;
+	text-decoration: underline;
+}
+.btn-flat{
+	border-radius: 0 !important;
+}
+#user-page{
+	display: block;
+	margin: auto;
+	font-family: 'Open Sans',sans-serif;
+	font-size: 13px;
+	background: url('../../../uploads/backgrounds/background.jpg');
+}
+.logo{
+	width: 107px;
+	height: 42px;
+	background: url('../../image/logo.jpg');
+	margin: 10px auto;
+}
+.main-wrapper{
+	display: block;
+	margin: auto;
+	color: #333;
+}
+.form-box{
+	background: rgba(255, 255, 255, 0.6);
+	box-shadow: 0 0 5px rgba(0, 0, 0, .4);
+	padding: 10px 30px;
+	margin: 5% auto;
+	max-width: 700px;
+	display: block;
+}
+.form-control{
+	color: #333;
+}
+.form-horizontal .control-label{
+	color: #333;
+	font-weight: 400;
+}
+.form-user{
+	margin-top: 20px;
+}
+.buttonFacebook{
+	padding-top: 30px;
+	padding-bottom: 20px;
+	border-top: 1px solid #999;
+	box-shadow: 0 1px 0 #fff inset;
+}
+.check-store label{
+	font-weight: 400;
+}
+.check-store label > input{
+	margin-top: 2px;
+}
+.content-title .title{
+	font-weight: bold;
+	font-size: 20px;
+	color: #888;
+	margin: 10px 0px;
+	font-family: "Open Sans", sans-serif;
+}
+/*NETWORKSOCIA*/
+.btn-facebook {
+	background-color: #3b5998;
+	border-color: rgba(0, 0, 0, 0.2);
+	color: #ffffff;
+	padding: 0px 15px 0px 0px;
+}
+.btn-facebook:hover, .btn-facebook:focus, .btn-facebook:active, .btn-facebook.active, .open .dropdown-toggle.btn-facebook {
+	background-color: #30487b;
+	border-color: rgba(0, 0, 0, 0.2);
+	color: #ffffff;
+}
+.btn-facebook:active, .btn-facebook.active, .open .dropdown-toggle.btn-facebook {
+	background-image: none;
+}
+.btn-facebook.disabled, .btn-facebook[disabled], fieldset[disabled] .btn-facebook, .btn-facebook.disabled:hover, .btn-facebook[disabled]:hover, fieldset[disabled] .btn-facebook:hover, .btn-facebook.disabled:focus, .btn-facebook[disabled]:focus, fieldset[disabled] .btn-facebook:focus, .btn-facebook.disabled:active, .btn-facebook[disabled]:active, fieldset[disabled] .btn-facebook:active, .btn-facebook.disabled.active, .btn-facebook.active[disabled], fieldset[disabled] .btn-facebook.active {
+	background-color: #3b5998;
+	border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-facebook .badge {
+	background-color: #ffffff;
+	color: #3b5998;
+}
+.btn-social *:first-child {
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
+	font-size: 15px;
+	line-height: 32px;
+	text-align: center;
+	top: 0;
+	width: 35px;
+	margin-right: 5px;
+}

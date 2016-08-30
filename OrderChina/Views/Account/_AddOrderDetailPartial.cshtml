@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "_AddOrderDetailPartial";
+}
+
+@model OrderChina.Models.OrderDetail
+
+@using (Html.BeginForm("AddEditOrderDetail", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">@(ViewBag.IsUpdate ? "Cập nhật lại link hàng" : "Tạo mới link hàng")</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group row" style="width: 100%;font-size: 14px">
+
+                @Html.HiddenFor(m => m.OrderId)
+                @Html.HiddenFor(m => m.OrderDetailId)
+
+                <div class="col-sm-4">
+                    @Html.LabelFor(m => m.Link)
+                    @Html.TextBoxFor(m => m.Link, new { @class = "form-control btn-flat", placeholder = "Nhập link sản phẩm", autofocus = "autofocus", required = "true" })
+                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Link" placeholder='Nhập link sản phẩm' autofocus="autofocus" required="true">
+                        <span class="field-validation-valid" data-valmsg-for="ListOrderDetail[' + index + '].Link" data-valmsg-replace="false">Link không được để trống</span>*@
+                </div>
+                <div class="col-sm-2">
+                    @Html.LabelFor(m => m.Shop)
+                    @Html.TextBoxFor(m => m.Shop, new { @class = "form-control btn-flat", placeholder = "Tên shop" })
+                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Shop" placeholder='Tên shop'>*@
+                </div>
+                <div class="col-sm-2">
+                    @Html.LabelFor(m => m.Description)
+                    @Html.TextBoxFor(m => m.Description, new { @class = "form-control btn-flat", placeholder = "Mô tả" })
+                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Description" placeholder='Mô tả'>*@
+                </div>
+                <div class="col-sm-2">
+                    @Html.LabelFor(m => m.Quantity)
+                    @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control btn-flat", placeholder = "Số lượng", required = "true" })
+                    @*<input type="number" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Quantity" placeholder='Số lượng' />*@
+                </div>
+                <div class="col-sm-2">
+                    @Html.LabelFor(m => m.Price)
+                    @Html.TextBoxFor(m => m.Price, new { @class = "form-control btn-flat", placeholder = "Nhập giá", required = "true" })
+                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Price" placeholder='Nhập giá'>*@
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if (ViewBag.IsUpdate == true)
+                {
+                    <button type="submit" id="btnUpdate" value="update" name="cmd" class="btn btn-primary btn-update">Cập nhật</button>
+                }
+                else
+                {
+                    <button type="submit" value="Save" id="btnSave" name="cmd" class="btn btn-primary">Tạo mới</button>
+                }
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootbox")
+
+
+    @*<script>
+        $(document).ready(function () {
+            $('form button[type="submit"]').on('click', function () {
+                bootbox.alert(message, function() {
+                    $(this).parents('form').submit();
+                });
+            });
+        }); // document ready
+
+    </script>*@
+}

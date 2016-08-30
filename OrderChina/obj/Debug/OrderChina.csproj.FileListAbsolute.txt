@@ -1,0 +1,189 @@
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\OrderChina.dll.config
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\OrderChina.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\OrderChina.pdb
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Antlr3.Runtime.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.AspNet.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.Core.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.OAuth.Consumer.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.OAuth.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.OpenId.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\EntityFramework.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Microsoft.Data.Edm.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Microsoft.Data.OData.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Microsoft.Web.WebPages.OAuth.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Newtonsoft.Json.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Net.Http.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Net.Http.WebRequest.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Spatial.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Helpers.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Http.OData.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Mvc.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Optimization.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Razor.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.WebPages.Deployment.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.WebPages.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.WebPages.Razor.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\WebGrease.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\WebMatrix.Data.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\WebMatrix.WebData.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\EntityFramework.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Newtonsoft.Json.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Net.Http.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Net.Http.WebRequest.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Helpers.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Mvc.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Razor.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.WebPages.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.WebPages.Deployment.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.WebPages.Razor.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\WebMatrix.Data.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Microsoft.Web.WebPages.OAuth.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\WebMatrix.WebData.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.AspNet.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.Core.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.OAuth.Consumer.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.OAuth.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.OpenId.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Web.Http.OData.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Microsoft.Data.Edm.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\Microsoft.Data.OData.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\System.Spatial.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\de\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\es\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\fr\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\it\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ja\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ko\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ru\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\de\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\es\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\fr\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\it\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ja\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ko\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ru\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\de\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\es\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\fr\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\it\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ja\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ko\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\ru\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\zh-Hans\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\bin\zh-Hant\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\obj\Debug\OrderChina.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\obj\Debug\OrderChina.pdb
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina\OrderChina\obj\Debug\OrderChina.csprojResolveAssemblyReference.cache
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\OrderChina.dll.config
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\OrderChina.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\OrderChina.pdb
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Antlr3.Runtime.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.AspNet.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.Core.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.OAuth.Consumer.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.OAuth.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.OpenId.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\EntityFramework.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Microsoft.Data.Edm.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Microsoft.Data.OData.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Microsoft.Web.WebPages.OAuth.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Newtonsoft.Json.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Net.Http.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Net.Http.WebRequest.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Spatial.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Helpers.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Http.OData.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Mvc.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Optimization.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Razor.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.WebPages.Deployment.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.WebPages.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.WebPages.Razor.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\WebGrease.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\WebMatrix.Data.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\WebMatrix.WebData.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\EntityFramework.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Newtonsoft.Json.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Net.Http.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Net.Http.WebRequest.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Helpers.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Mvc.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Razor.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.WebPages.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.WebPages.Deployment.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.WebPages.Razor.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\WebMatrix.Data.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Microsoft.Web.WebPages.OAuth.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\WebMatrix.WebData.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.AspNet.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.Core.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.OAuth.Consumer.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.OAuth.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.OpenId.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Web.Http.OData.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Microsoft.Data.Edm.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Microsoft.Data.OData.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Spatial.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\de\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\es\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\fr\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\it\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ja\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ko\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ru\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\de\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\es\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\fr\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\it\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ja\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ko\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ru\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\de\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\es\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\fr\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\it\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ja\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ko\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\ru\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\zh-Hans\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\zh-Hant\System.Spatial.resources.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\obj\Debug\OrderChina.csprojResolveAssemblyReference.cache
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\obj\Debug\OrderChina.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\obj\Debug\OrderChina.pdb
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\PagedList.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\PagedList.Mvc.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\PagedList.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\PagedList.Mvc.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\obj\Debug\OrderChina.csproj.App.config
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\EntityFramework.SqlServer.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.IO.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Net.Http.Extensions.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Net.Http.Primitives.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Runtime.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Threading.Tasks.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Org.Mentalis.Security.Cryptography.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Mono.Math.dll
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\EntityFramework.SqlServer.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.IO.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Net.Http.Extensions.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Net.Http.Primitives.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Runtime.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\System.Threading.Tasks.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Org.Mentalis.Security.Cryptography.xml
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\Mono.Math.xml

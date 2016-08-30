@@ -1,0 +1,16 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <text>
+        @Html.ActionLink(@Session["Name"].ToString(), "Manage", "Account", null, new { title = "Quản lý" })!
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <a href="javascript:document.getElementById('logoutForm').submit()">Đăng xuất</a>
+        }
+    </text>
+}
+else
+{
+    <li>@Html.ActionLink("Đăng ký", "Register", "Account")</li>
+    <li>@Html.ActionLink("Đăng nhập", "Login", "Account")</li>
+}
