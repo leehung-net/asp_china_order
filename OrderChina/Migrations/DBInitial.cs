@@ -29,7 +29,8 @@ namespace OrderChina.Migrations
                 fee1 = 20000,
                 fee2 = 24000,
                 fee3 = 28000,
-                Price = 3200
+                Price = 3200,
+                userUpdate = "admin@gmail.com"
             });
         }
     }

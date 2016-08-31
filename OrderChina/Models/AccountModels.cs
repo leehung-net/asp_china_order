@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Reflection;
 using System.Web.Mvc;
-using System.Web.UI.WebControls.Expressions;
 
 namespace OrderChina.Models
 {
@@ -25,6 +24,7 @@ namespace OrderChina.Models
         public DbSet<Rate> Rates { get; set; }
 
         public DbSet<RateHistory> RateHistorys { get; set; }
+        public DbSet<SaleManageClient> SaleManageClients { get; set; }
     }
 
     [Table("UserProfile")]
@@ -34,6 +34,9 @@ namespace OrderChina.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string Phone { get; set; }
+
+        public string PhoneCompany { get; set; }
+
         public string Name { get; set; }
         public string Email { get; set; }
         public DateTime Birthday { get; set; }
@@ -43,6 +46,28 @@ namespace OrderChina.Models
         public string Password { get; set; }
 
         public string UserType { get; set; }
+
+        [NotMapped]
+        public string SaleManage { get; set; }
+
+        public string getUserTypeText()
+        {
+            foreach (FieldInfo fieldInfo in typeof(UserType).GetFields())
+            {
+                if (fieldInfo.FieldType.Name != "UserType")
+                    continue;
+                if (String.Equals(fieldInfo.Name, UserType, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var attribute = Attribute.GetCustomAttribute(fieldInfo, typeof(DisplayAttribute)) as DisplayAttribute;
+
+                    if (attribute != null)
+                        return attribute.Name;
+                }
+
+            }
+
+            return UserType;
+        }
     }
 
     [Table("Order")]
@@ -96,8 +121,8 @@ namespace OrderChina.Models
             return Status;
         }
     }
-    [Table("OrderDetail")]
 
+    [Table("OrderDetail")]
     public class OrderDetail
     {
         [Key]
@@ -126,8 +151,8 @@ namespace OrderChina.Models
         public string Note { get; set; }
         
     }
-    [Table("Rate")]
 
+    [Table("Rate")]
     public class Rate
     {
         [Key]
@@ -140,6 +165,8 @@ namespace OrderChina.Models
         public double fee2 { get; set; }
         public double fee3 { get; set; }
 
+        public string userUpdate { get; set; }
+
         public RateHistory CloneHistory()
         {
             return new RateHistory
@@ -148,13 +175,14 @@ namespace OrderChina.Models
                 fee1 = fee1,
                 fee2 = fee2,
                 fee3 = fee3,
+                UserUpdate = userUpdate,
                 LastUpdate = DateTime.Now
             };
         }
 
     }
-    [Table("RateHistory")]
 
+    [Table("RateHistory")]
     public class RateHistory
     {
         [Key]
@@ -169,7 +197,24 @@ namespace OrderChina.Models
         public DateTime LastUpdate { get; set; }
         public string UserUpdate { get; set; }
     }
-        #endregion
+
+    [Table("SaleManageClient")]
+    public class SaleManageClient
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Phải chọn sale")]
+        [Display(Name = "Sale quản lý")]
+        public string User_Sale { get; set; }
+
+        public string User_Client { get; set; }
+        public string User_Update { get; set; }
+        public DateTime LastUpdate { get; set; }
+
+    }
+    #endregion
 
     #region User
     public class LoginModel
@@ -193,27 +238,28 @@ namespace OrderChina.Models
 
         public string UserName { get; set; }
 
-        [Required]
-        [Remote("IsCheckEmail", "Account", ErrorMessage = "Định dạng email không đúng.")]
+        [Required(ErrorMessage = "Email bắt buộc nhập.")]
+        [Remote("IsCheckEmail", "Account", "")]
         [Display(Name = "Email *")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Mật khẩu bắt buộc nhập.")]
+        [StringLength(100, ErrorMessage = "{0} phải lớn hơn {2} ký tự.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu *")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Nhập lại mật khẩu *")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "Mật khẩu không khớp.")]
         public string ConfirmPassword { get; set; }
 
+        [Required(ErrorMessage = "Họ tên bắt buộc nhập.")]
         [Display(Name = "Họ tên *")]
         public string Name { get; set; }
 
-        [Required]
-        [Remote("IsCheckExitsPhone", "Account", ErrorMessage = "Số điện thoại {0} đã tồn tại trong hệ thống.")]
+        [Required(ErrorMessage = "Sđt bắt buộc nhập.")]
+        [Remote("IsCheckExitsPhone", "Account", ErrorMessage = "Sđt {0} đã tồn tại trong hệ thống.")]
         [Display(Name = "Số điện thoại *")]
         public string Phone { get; set; }
 
@@ -232,7 +278,11 @@ namespace OrderChina.Models
 
         [Display(Name = "TK ngân hàng")]
         public string Account { get; set; }
+
+        [Display(Name = "Loại tài khoản")]
+        public string UserType { get; set; }
     }
+
 
     public class ExternalLogin
     {
@@ -316,11 +366,13 @@ namespace OrderChina.Models
         Admin = 1,
         [Display(Name = "SupperUser")]
         SuperUser = 2,
-        [Display(Name = "Nhân viên sell")]
-        Seller = 3,
+        [Display(Name = "Nhân viên sale")]
+        Sale = 3,
         [Display(Name = "Kế toán")]
         Accounting = 4,
         [Display(Name = "Khách hàng")]
-        Client = 5
+        Client = 5,
+        [Display(Name = "Nhân viên đặt hàng")]
+        Orderer = 6
     }
 }

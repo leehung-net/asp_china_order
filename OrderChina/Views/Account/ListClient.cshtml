@@ -1,0 +1,147 @@
+﻿@using OrderChina.Models
+@using PagedList.Mvc
+@model PagedList.IPagedList<OrderChina.Models.UserProfile>
+@if (ViewData["message"] != null)
+{
+    <script>
+        alert(ViewData["message"]);
+    </script>
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<section class='container' style='padding: 20px;'>
+    <div class='row'>
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "ListClient", true } })
+
+        <div class="col-md-9 order-content">
+            <div class='row'>
+                <h3 class='text-center'>DANH SÁCH NGƯỜI SỬ DỤNG</h3>
+
+                <p>
+                    @Html.ActionLink("Tạo mới", "Register")
+                    @using (Html.BeginForm("ListClient", "Account", FormMethod.Get))
+                    {
+                        <div class='col-md-2'>
+                            <input class="form-control btn-flat " placeholder="Email" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Email" autofocus="autofocus" name="userName" value="@ViewBag.CurrentUserName" type="text">
+                        </div>
+
+                        <div class="col-md-3">
+                            @Html.DropDownList("userType", (IEnumerable<SelectListItem>)ViewBag.ListUserType, "--Loại người dùng--", new { @class = "form-control flat" })
+                        </div>
+                        <div class="col-md-1">
+                            <button name="submit" type="submit" class="btn btn-primary">
+                                <i class="fa fa-filter"></i>
+                            </button>
+                        </div>
+
+                    }
+                </p>
+                <hr>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class='text-center' style="width: 150px;">Email</th>
+                            <th class='text-center' style="width: 100px;">Họ tên</th>
+                            <th class='text-center' style="width: 60px;">Số điện thoại</th>
+                            <th class='text-center' style="width: 60px;">Loại người dùng</th>
+                            <th class="text-center" style="width: 60px;">Ngày sinh</th>
+                            <th class="text-center" style="width: 150px;">Số tài khoản</th>
+                            <th class="text-center" style="width: 150px;">Người quản lý</th>
+                            <th class='text-center' style="width: 100px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
+
+                                <td class='text-center'>
+                                    @item.getUserTypeText()
+                                </td>
+                                <td class='text-center'>
+                                    @item.Birthday.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Account)
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.SaleManage)
+                                </td>
+                                <td class='text-center'>
+                                    @if (item.UserType == UserType.Client.ToString())
+                                    {
+                                        <a rel='tooltip' title="Gán sale quản lý"
+                                           href=@Url.Action("AssignSaleForClient", "Account", new { id = item.Email, userSale = item.SaleManage }) class="btn btn-xs btn-primary btn-assign">
+                                            <i class="fa fa-file"></i>
+                                        </a>
+                                    }
+                                    @if (item.UserType != UserType.Admin.ToString() && item.UserType != UserType.Client.ToString())
+                                    {
+                                        <a rel='tooltip' title="Thay đổi quyền"
+                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Email }) class="btn btn-xs btn-primary ">
+                                            <i class="fa fa-cog"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action("Manage", new { page, toDate = ViewBag.CurrentToDate, fromDate = ViewBag.CurrentFromDate, listStatus = ViewBag.CurrentStatus, OrderId = ViewBag.CurrentOrderId }))
+            </div>
+        </div>
+    </div>
+    <div class="modal fade"
+         id="myModal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- empty -->
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+
+            $('.btn-assign').click(function (e) {
+
+
+                e.preventDefault();
+
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
+
+        }); // document ready
+
+    </script>
+}

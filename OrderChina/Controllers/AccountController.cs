@@ -91,6 +91,8 @@ namespace OrderChina.Controllers
         {
             var model = new RegisterModel();
             model.Birthday = DateTime.Now;
+            ViewBag.listUserType = GetListUserType();
+
             return View(model);
         }
 
@@ -100,7 +102,7 @@ namespace OrderChina.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterModel model)
+        public ActionResult Register(RegisterModel model, string listUserType)
         {
             if (ModelState.IsValid)
             {
@@ -118,15 +120,22 @@ namespace OrderChina.Controllers
                         Birthday = model.Birthday,
                         Name = model.Name,
                         Password = model.Password,
-                        Account = model.Account
+                        Account = model.Account,
+                        UserType = string.IsNullOrEmpty(listUserType) ? UserType.Client.ToString() : listUserType
                     };
                     db.UserProfiles.Add(userProfile);
                     db.SaveChanges();
 
-                    FormsAuthentication.SetAuthCookie(model.Email, false);
+                    if (!Request.IsAuthenticated)
+                    {
+                        FormsAuthentication.SetAuthCookie(model.Email, false);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("ListClient", "Account");
+                    }
 
-
-                    return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -232,6 +241,25 @@ namespace OrderChina.Controllers
             return new SelectList(list, "name", "display", value);
         }
 
+        private SelectList GetListUserType(string value = "")
+        {
+            List<Object> list = new List<object>();
+            foreach (FieldInfo fieldInfo in typeof(UserType).GetFields())
+            {
+                if (fieldInfo.FieldType.Name != "UserType")
+                    continue;
+                var attribute = Attribute.GetCustomAttribute(fieldInfo,
+                   typeof(DisplayAttribute)) as DisplayAttribute;
+
+                if (attribute != null)
+                    list.Add(new { name = fieldInfo.Name, display = attribute.Name });
+                else
+                    list.Add(new { name = fieldInfo.Name, display = fieldInfo.Name });
+
+            }
+
+            return new SelectList(list, "name", "display", value);
+        }
         //
         // POST: /Account/Manage
 
@@ -335,7 +363,17 @@ namespace OrderChina.Controllers
                    @"([\+\-_\.][0-9a-zA-Z]+)*" + // No continuous or ending +-_. chars in email
                    @")+" +
                    @"@(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]*\.)+[a-zA-Z0-9]{2,17})$";
-            return Json(Regex.IsMatch(str, pattern), JsonRequestBehavior.AllowGet);
+            if (!Regex.IsMatch(str, pattern))
+            {
+                return Json("Email không đúng định dạng", JsonRequestBehavior.AllowGet);
+
+            }
+            //check trung
+            if (db.UserProfiles.Any(lo => lo.Email.ToLower() == Email.ToLower()))
+            {
+                return Json("Email đã tồn tại trong hệ thống", JsonRequestBehavior.AllowGet);
+            }
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
         #endregion
 
@@ -455,7 +493,7 @@ namespace OrderChina.Controllers
         //}
         #endregion
 
-        public ActionResult ViewOrderDetail(int id,string message)
+        public ActionResult ViewOrderDetail(int id, string message)
         {
             ViewDetailOrderModel model = new ViewDetailOrderModel();
             var order = db.Orders.FirstOrDefault(a => a.OrderId == id);
@@ -516,13 +554,13 @@ namespace OrderChina.Controllers
                         if (ord != null)
                         {
                             ord.TotalPrice =
-                                db.OrderDetails.Where(a => a.OrderId == model.OrderId).Sum(a => a.Quantity*a.Price ?? 0);
-                            ord.TotalPriceConvert = ord.Rate*ord.TotalPrice;
+                                db.OrderDetails.Where(a => a.OrderId == model.OrderId).Sum(a => a.Quantity * a.Price ?? 0);
+                            ord.TotalPriceConvert = ord.Rate * ord.TotalPrice;
                             db.SaveChanges();
                         }
                         dbContextTransaction.Commit();
                         ViewData["message"] = "Thêm mới link hàng thành công";
-                        return RedirectToAction("ViewOrderDetail", new {id = model.OrderId});
+                        return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
                     }
                     catch
                     {
@@ -549,8 +587,8 @@ namespace OrderChina.Controllers
                             {
                                 ord.TotalPrice =
                                     db.OrderDetails.Where(a => a.OrderId == model.OrderId)
-                                        .Sum(a => (a.Quantity ?? 0)*(a.Price ?? 0));
-                                ord.TotalPriceConvert = ord.Rate*ord.TotalPrice;
+                                        .Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0));
+                                ord.TotalPriceConvert = ord.Rate * ord.TotalPrice;
                                 db.SaveChanges();
                             }
                         }
@@ -590,6 +628,59 @@ namespace OrderChina.Controllers
             }
             return RedirectToAction("ViewOrderDetail", new { id = orderId });
         }
+
+        public ActionResult ListClient(string userType, string userName, int? page)
+        {
+            ViewBag.ListUserType = GetListUserType(userType);
+            var userProfiles = new List<UserProfile>();
+
+            userProfiles = !string.IsNullOrEmpty(userType) ? db.UserProfiles.Where(a => a.UserType == userType).ToList() : db.UserProfiles.ToList();
+            if (!string.IsNullOrEmpty(userName))
+            {
+                userProfiles = userProfiles.FindAll(a => !String.Equals(a.Email, User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) && a.Email.ToLower().Contains(userName.ToLower()));
+            }
+            foreach (var userProfile in userProfiles)
+            {
+                if (userProfile.UserType == UserType.Client.ToString())
+                {
+                    //get sale
+                    var salemanage =
+                        db.SaleManageClients.FirstOrDefault(a => a.User_Client == userProfile.Email);
+                    if (salemanage != null)
+                    {
+                        userProfile.SaleManage = salemanage.User_Sale;
+                    }
+                }
+            }
+            ViewBag.CurrentUserType = userType;
+            ViewBag.CurrentUserName = userName;
+
+            const int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            return View(userProfiles.ToPagedList(pageNumber, pageSize));
+        }
+
+        public ActionResult AssignSaleForClient(string id, string userSale)
+        {
+            var model = new SaleManageClient { User_Client = id, User_Sale = userSale };
+            var listSale = db.UserProfiles.Where(a => a.UserType == UserType.Sale.ToString()).Select(a => new { email = a.Email, display = a.Name });
+            ViewBag.listSale = new SelectList(listSale, "email", "display", userSale);
+            return PartialView("_AssignSalePartial", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignSaleForClient(SaleManageClient model, string listSale)
+        {
+            model.User_Update = User.Identity.Name;
+            model.LastUpdate = DateTime.Now;
+            db.SaleManageClients.Add(model);
+            db.SaveChanges();
+            return RedirectToAction("ListClient");
+        }
+
     }
 
 }

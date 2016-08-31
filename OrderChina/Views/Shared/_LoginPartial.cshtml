@@ -1,7 +1,8 @@
 ﻿@if (Request.IsAuthenticated)
 {
+    var name = Session["Name"] != null ? Session["Name"].ToString() : User.Identity.Name;
     <text>
-        @Html.ActionLink(@Session["Name"].ToString(), "Manage", "Account", null, new { title = "Quản lý" })!
+        @Html.ActionLink(name, "Manage", "Account", null, new { title = "Quản lý" })!
         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
         {
             @Html.AntiForgeryToken()
