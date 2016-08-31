@@ -432,6 +432,7 @@
     <Content Include="Views\Account\_AddOrderDetailPartial.cshtml" />
     <Content Include="Views\Account\ListClient.cshtml" />
     <Content Include="Views\Account\_AssignSalePartial.cshtml" />
+    <Content Include="Views\Account\_ChangeUserTypePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -87,7 +87,7 @@
                                     @if (item.UserType != UserType.Admin.ToString() && item.UserType != UserType.Client.ToString())
                                     {
                                         <a rel='tooltip' title="Thay đổi quyền"
-                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Email }) class="btn btn-xs btn-primary ">
+                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Email }) class="btn btn-xs btn-primary btn-change">
                                             <i class="fa fa-cog"></i>
                                         </a>
                                     }
@@ -140,7 +140,25 @@
                     $modal.modal(option, 'show');
                 });
             });
+            $('.btn-change').click(function (e) {
 
+
+                e.preventDefault();
+
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
         }); // document ready
 
     </script>

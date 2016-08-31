@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Transactions;
+using System.Web.DynamicData;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
@@ -674,10 +675,48 @@ namespace OrderChina.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AssignSaleForClient(SaleManageClient model, string listSale)
         {
-            model.User_Update = User.Identity.Name;
-            model.LastUpdate = DateTime.Now;
-            db.SaleManageClients.Add(model);
-            db.SaveChanges();
+            var update = db.SaleManageClients.FirstOrDefault(a => a.User_Client == model.User_Client);
+            if (update == null)
+            {
+                model.User_Update = User.Identity.Name;
+                model.LastUpdate = DateTime.Now;
+                db.SaleManageClients.Add(model);
+                db.SaveChanges();
+            }
+            else
+            {
+                update.User_Update = User.Identity.Name;
+                update.LastUpdate = DateTime.Now;
+                update.User_Sale = model.User_Sale;
+                db.SaveChanges();
+            }
+            
+            return RedirectToAction("ListClient");
+        }
+
+        public ActionResult ChangeUserType(string id,string userType)
+        {
+            var model = db.UserProfiles.FirstOrDefault(a => a.Email == id);
+            if (model == null)
+                return RedirectToAction("ListClient");
+
+            ViewBag.listUserType = GetListUserType(userType);
+
+            return PartialView("_ChangeUserTypePartial", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeUserType(UserProfile model)
+        {
+            var userUpdate = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+            if (userUpdate != null)
+            {
+                userUpdate.UserType = model.UserType;
+                db.SaveChanges();
+
+            }
             return RedirectToAction("ListClient");
         }
 
