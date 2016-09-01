@@ -78,7 +78,8 @@ namespace OrderChina.Migrations
                 fee2 = 24000,
                 fee3 = 28000,
                 Price = 3200,
-                userUpdate = "admin@gmail.com"
+                userUpdate = "admin@gmail.com",
+                lastUpdated = DateTime.Now
             });
         }
     }

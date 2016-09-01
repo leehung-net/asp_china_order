@@ -1,0 +1,150 @@
+﻿@using PagedList.Mvc
+@model OrderChina.Models.RateModel
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<section @*class='container'*@ style='padding: 20px;'>
+    <div class='row'>
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "Rate", true } })
+        <div class="col-md-9 order-content">
+            <div class='row'>
+                <h3 class='text-center'>Cập nhật tỷ giá</h3>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-sm-3">
+                                <label class="control-label">Tỷ giá</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label class="control-label">Cước vc 1</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <label class="control-label">Cước vc 2</label>
+                            </div>
+                            <div class="col-sm-1">
+                                <label class="control-label">Cước vc 3</label>
+                            </div>
+                        </div>
+
+                        <div id="orderDetail">
+                            <div class="form-group" style="width: 100%;">
+                                @Html.HiddenFor(m => m.Rate.RateId)
+
+                                <div class="col-sm-3">
+                                    @Html.TextBoxFor(m => m.Rate.Price, new { @class = "form-control btn-flat", placeholder = "Tỷ giá", autofocus = "autofocus", required = "true" })
+                                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Link" placeholder='Tỷ giá' autofocus="autofocus" required="true">*@
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.TextBoxFor(m => m.Rate.fee1, new { @class = "form-control btn-flat", placeholder = "Cước vc 1" })
+                                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Description" placeholder='Cước' vc 2'>*@
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.TextBoxFor(m => m.Rate.fee2, new { @class = "form-control btn-flat", placeholder = "Cước vc 2" })
+                                    @*<input type="number" class="form-control btn-flat" name="ListOrderDetail[0].Quantity" placeholder='Số lượng' required="true">*@
+                                </div>
+                                <div class="col-sm-2">
+                                    @Html.TextBoxFor(m => m.Rate.fee3, new { @class = "form-control btn-flat", placeholder = "Cước vc 3" })
+                                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Price" placeholder='Nhập giá' required="true">*@
+                                </div>
+                                <div class="col-sm-2">
+                                    <button name="submit" value="Process" class="btn btn-default pull-right btn-flat" type="submit">
+                                        <i class="glyphicon glyphicon-shopping-cart"></i>
+                                        Cập nhật
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row">
+                <h3 class='text-center'>Lịch sử cập nhật tỷ giá</h3>
+                @using (Html.BeginForm("UpdateRate", "Account", FormMethod.Get))
+                {
+                    <p>
+                        <div class='col-md-2' id="fromDate">
+                            <input class="form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
+                        </div>
+                        <div class='col-md-2' id="toDate">
+                            <input class="form-control btn-flat" placeholder="Đến ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Đến ngày" name="toDate" type="text" value="@ViewBag.CurrentToDate">
+                        </div>
+
+                        <div class="col-md-1">
+                            <button name="submit" type="submit" class="btn btn-primary">
+                                <i class="fa fa-filter"></i>
+                            </button>
+                        </div>
+                    </p>
+                }
+                <hr>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class='text-center' style="width: 100px;">Tỷ giá</th>
+                            <th class='text-center'>Cước vc 1</th>
+                            <th class='text-center'>Cước vc 2</th>
+                            <th class='text-center'>Cước vc 3</th>
+                            <th class='text-center'>Người cập nhật</th>
+                            <th class='text-center'>Thời gian cập nhật</th>
+                        </tr>
+                    </thead>
+                    <tbody id='link-container'>
+                        @if (Model.ListRateHistory != null)
+                        {
+                            foreach (var item in Model.ListRateHistory)
+                            {
+                                <tr>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Price)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.fee1)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.fee2)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.fee3)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.UserUpdate)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.LastUpdate)
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <br />
+
+                Page @(Model.ListRateHistory.PageCount < Model.ListRateHistory.PageNumber ? 0 : Model.ListRateHistory.PageNumber) of @Model.ListRateHistory.PageCount
+                @Html.PagedListPager(Model.ListRateHistory, page => Url.Action("UpdateRate", new { page, toDate = ViewBag.CurrentToDate, fromDate = ViewBag.CurrentFromDate }))
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            $('#fromDate input').datepicker({
+                orientation: "bottom auto",
+                todayHighlight: true,
+                format: "dd/mm/yyyy"
+            });
+            $('#toDate input').datepicker({
+                orientation: "bottom auto",
+                todayHighlight: true,
+                format: "dd/mm/yyyy"
+            });
+        });
+    </script>
+}

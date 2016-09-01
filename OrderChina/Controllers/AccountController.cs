@@ -72,7 +72,7 @@ namespace OrderChina.Controllers
         }
 
 
-        
+
         public ActionResult LogOff()
         {
             WebSecurity.Logout();
@@ -491,7 +491,7 @@ namespace OrderChina.Controllers
         //    stream.Position = 0;
         //    return stream;
         //}
-        #endregion
+
 
         public ActionResult ViewOrderDetail(int id, string message)
         {
@@ -544,6 +544,9 @@ namespace OrderChina.Controllers
             var modelEmpty = new OrderDetail { OrderId = orderId ?? 0 };
             return PartialView("_AddOrderDetailPartial", modelEmpty);
         }
+        #endregion
+
+        #region Administrator
 
         [HttpPost]
         [AllowAnonymous]
@@ -752,6 +755,78 @@ namespace OrderChina.Controllers
             }
             return RedirectToAction("ListClient");
         }
+
+        public ActionResult UpdateRate(string fromDate, string toDate, int? page)
+        {
+            const int pageSize = 3;
+            int pageNumber = (page ?? 1);
+
+            var model = new RateModel();
+            var rate = db.Rates.First();
+            if (rate != null)
+            {
+                model.Rate = rate;
+                if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+                {
+                    var fromdate = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    var todate = DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    var rateHistories = (from rateHistory in db.RateHistorys
+                                         where fromdate <= rateHistory.LastUpdate && rateHistory.LastUpdate <= todate
+                                         select rateHistory).ToList();
+                    model.ListRateHistory = rateHistories.ToPagedList(pageNumber, pageSize);
+
+                }
+
+                model.ListRateHistory = db.RateHistorys.OrderByDescending(a => a.LastUpdate).Take(10).ToPagedList(pageNumber, pageSize);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateRate(RateModel model)
+        {
+            if (model.Rate.RateId > 0)
+            {
+                var modelUpdate = db.Rates.FirstOrDefault(a => a.RateId == model.Rate.RateId);
+
+                if (modelUpdate != null)
+                {
+                    modelUpdate.Price = model.Rate.Price;
+                    modelUpdate.fee1 = model.Rate.fee1;
+                    modelUpdate.fee2 = model.Rate.fee2;
+                    modelUpdate.fee3 = model.Rate.fee3;
+                    modelUpdate.userUpdate = User.Identity.Name;
+                    modelUpdate.lastUpdated = DateTime.Now;
+
+                    db.RateHistorys.Add(modelUpdate.CloneHistory());
+                    db.SaveChanges();
+
+                    Session["Price"] = modelUpdate.Price.ToString("##,###");
+                    Session["fee1"] = modelUpdate.FormatPrice(modelUpdate.fee1);
+                    Session["fee2"] = modelUpdate.FormatPrice(modelUpdate.fee2);
+                    Session["fee3"] = modelUpdate.FormatPrice(modelUpdate.fee3); 
+                }
+            }
+            else
+            {
+                model.Rate.userUpdate = User.Identity.Name;
+                model.Rate.lastUpdated = DateTime.Now;
+                db.Rates.Add(model.Rate);
+
+                db.RateHistorys.Add(model.Rate.CloneHistory());
+                db.SaveChanges();
+
+                Session["Price"] = model.Rate.Price.ToString("##,###");
+                Session["fee1"] = model.Rate.FormatPrice(model.Rate.fee1);
+                Session["fee2"] = model.Rate.FormatPrice(model.Rate.fee2);
+                Session["fee3"] = model.Rate.FormatPrice(model.Rate.fee3); 
+            }
+
+            return RedirectToAction("UpdateRate");
+        }
+        #endregion
 
     }
 
