@@ -230,7 +230,6 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\DBInitial.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\NewsModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
