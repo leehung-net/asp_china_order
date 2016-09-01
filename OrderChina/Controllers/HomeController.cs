@@ -15,10 +15,10 @@ namespace OrderChina.Controllers
                 var rate = db.Rates.FirstOrDefault();
                 if (rate != null)
                 {
-                    Session["Price"] = rate.Price;
-                    Session["fee1"] = rate.fee1;
-                    Session["fee2"] = rate.fee2;
-                    Session["fee3"] = rate.fee3;
+                    Session["Price"] = rate.Price.ToString("##,###");
+                    Session["fee1"] = rate.FormatPrice(rate.fee1);
+                    Session["fee2"] = rate.FormatPrice(rate.fee2); 
+                    Session["fee3"] = rate.FormatPrice(rate.fee3); 
                 }
             }
             if (Request.IsAuthenticated)

@@ -57,7 +57,7 @@
                         <a href="#controller" onclick="xac_nhan_order(4517,'0','');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
                         <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
                     </p>
-                    <p class="col-md-3">1 NDT = @Model.Rate.ToString("0:0,0") <sup>đ</sup></p>
+                    <p class="col-md-3">1 NDT = @Model.Rate.ToString("##,###") <sup>đ</sup></p>
 
                     @if (Model.SaleManageInfo != null)
                     {
