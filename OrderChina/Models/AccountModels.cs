@@ -167,17 +167,19 @@ namespace OrderChina.Models
         public double fee3 { get; set; }
 
         public string userUpdate { get; set; }
+        public DateTime lastUpdated { get; set; }
 
         public RateHistory CloneHistory()
         {
             return new RateHistory
             {
+                RateId = RateId,
                 Price = Price,
                 fee1 = fee1,
                 fee2 = fee2,
                 fee3 = fee3,
                 UserUpdate = userUpdate,
-                LastUpdate = DateTime.Now
+                LastUpdate = lastUpdated
             };
         }
 
@@ -241,6 +243,7 @@ namespace OrderChina.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int RateHistoryId { get; set; }
+        public int RateId { get; set; }
 
         public double Price { get; set; }
 
@@ -406,6 +409,16 @@ namespace OrderChina.Models
 
         public string SalePhoneCompany { get; set; }
         public string SalePhone { get; set; }
+    }
+    #endregion
+
+    #region Accounting
+
+    public class RateModel
+    {
+        public Rate Rate { get; set; }
+
+        public PagedList.IPagedList<RateHistory> ListRateHistory { get; set; }
     }
     #endregion
 
