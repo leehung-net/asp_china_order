@@ -222,6 +222,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -229,6 +230,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\DBInitial.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\NewsModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -440,6 +442,7 @@
     <Content Include="Views\Home\lienhe.cshtml" />
     <Content Include="Views\Home\tuyendung.cshtml" />
     <Content Include="Views\Account\_ChangeUserTypePartial.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -26,6 +26,20 @@ namespace OrderChina.Models
 
         public DbSet<RateHistory> RateHistorys { get; set; }
         public DbSet<SaleManageClient> SaleManageClients { get; set; }
+        public DbSet<News> News { get; set; }
+        
+    }
+    [Table("News")]
+    public class News
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int IDNews { get; set; }
+        public string Title { get; set; }
+        public string NewsContent { get; set; }
+        public string Titlebig { get; set; }
+        public string Img { get; set; }
+
     }
 
     [Table("UserProfile")]
@@ -438,4 +452,5 @@ namespace OrderChina.Models
         [Display(Name = "Nhân viên đặt hàng")]
         Orderer = 6
     }
+    
 }
