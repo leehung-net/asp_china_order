@@ -98,7 +98,7 @@
                 </table>
                 <br />
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-                @Html.PagedListPager(Model, page => Url.Action("Manage", new { page, toDate = ViewBag.CurrentToDate, fromDate = ViewBag.CurrentFromDate, listStatus = ViewBag.CurrentStatus, OrderId = ViewBag.CurrentOrderId }))
+                @Html.PagedListPager(Model, page => Url.Action("ListClient", new { page, userType = ViewBag.CurrentUserType, userName = ViewBag.CurrentUserName }))
             </div>
         </div>
     </div>

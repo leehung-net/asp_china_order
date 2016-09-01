@@ -22,6 +22,54 @@ namespace OrderChina.Migrations
                 Account = "123456789",
                 Gender = "Nam",
                 Birthday = DateTime.Now
+            } );
+            context.UserProfiles.Add(new UserProfile
+            {
+                Email = "Accounting@gmail.com",
+                Name = "Accounting",
+                UserType = UserType.Accounting.ToString(),
+                Phone = "0977261065",
+                Password = "123456",
+                Address = "Hoài đức",
+                Account = "123456789",
+                Gender = "Nam",
+                Birthday = DateTime.Now
+            });
+            context.UserProfiles.Add(new UserProfile
+            {
+                Email = "client@gmail.com",
+                Name = "client",
+                UserType = UserType.Client.ToString(),
+                Phone = "0977261062",
+                Password = "123456",
+                Address = "Hoài đức",
+                Account = "123456789",
+                Gender = "Nam",
+                Birthday = DateTime.Now
+            });
+            context.UserProfiles.Add(new UserProfile
+            {
+                Email = "orderer@gmail.com",
+                Name = "Orderer",
+                UserType = UserType.Orderer.ToString(),
+                Phone = "0977261063",
+                Password = "123456",
+                Address = "Hoài đức",
+                Account = "123456789",
+                Gender = "Nam",
+                Birthday = DateTime.Now
+            });
+            context.UserProfiles.Add(new UserProfile
+            {
+                Email = "sale@gmail.com",
+                Name = "Sale",
+                UserType = UserType.Sale.ToString(),
+                Phone = "0977261064",
+                Password = "123456",
+                Address = "Hoài đức",
+                Account = "123456789",
+                Gender = "Nam",
+                Birthday = DateTime.Now
             });
 
             context.Rates.Add(new Rate

@@ -10,7 +10,7 @@ namespace OrderChina.Models
 {
     public class DBContext : DbContext
     {
-    #region Database
+        #region Database
         public DBContext()
             : base("DefaultConnection")
         {
@@ -100,7 +100,7 @@ namespace OrderChina.Models
 
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate { get; set; }
-        public string SellManager { get; set; }
+        public string SaleManager { get; set; }
 
         public string getStatusText()
         {
@@ -149,7 +149,7 @@ namespace OrderChina.Models
         public int QuantityInWarehouse { get; set; }
 
         public string Note { get; set; }
-        
+
     }
 
     [Table("Rate")]
@@ -214,7 +214,7 @@ namespace OrderChina.Models
         public DateTime LastUpdate { get; set; }
 
     }
-    #endregion
+        #endregion
 
     #region User
     public class LoginModel
@@ -340,9 +340,18 @@ namespace OrderChina.Models
         public double FeeShip { get; set; }
 
         public DateTime CreateDate { get; set; }
-        public string SellManager { get; set; }
+        public string SaleManager { get; set; }
 
+        public SaleManageInfo SaleManageInfo { get; set; }
         public IEnumerable<OrderDetail> ListOrderDetails { get; set; }
+    }
+
+    public class SaleManageInfo
+    {
+        public string SaleName { get; set; }
+
+        public string SalePhoneCompany { get; set; }
+        public string SalePhone { get; set; }
     }
     #endregion
 

@@ -2,7 +2,7 @@
 
 <section class='container' style='padding: 20px;'>
     <div class='row'>
-        @Html.Partial("_AsideMenuPartial")
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary() { { "Manage", true } })
 
         <div class="col-md-9 order-content">
             <div class='order-link'>
@@ -26,7 +26,7 @@
                 </nav>
 
                 <div class='row'>
-                    <h3 class='text-center' autoforcus ="true">CHI TIẾT ĐƠN HÀNG <b>@Model.OrderId</b> - @Model.Status</h3>
+                    <h3 class='text-center'>CHI TIẾT ĐƠN HÀNG <b>@Model.OrderId</b> - @Model.Status</h3>
                     <div class="alert alert-default btn-flat">
 
                         <p><p>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <div class='order-mani row'>
+                <div class='row'>
                     <p class="col-md-3">
                         <a href="#controller" onclick="xac_nhan_order(4517,'1','0');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
                         <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
@@ -57,21 +57,16 @@
                         <a href="#controller" onclick="xac_nhan_order(4517,'0','');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
                         <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
                     </p>
-                    <p class="col-md-3">1 NDT = @Model.Rate <sup>đ</sup></p>
+                    <p class="col-md-3">1 NDT = @Model.Rate.ToString("0:0,0") <sup>đ</sup></p>
 
-                    <p class='col-md-3'>
-                        Nhân viên KD: <b>Lê Văn Hùng: (04) 73009779 máy lẻ 103</b><br />
-                        <font style="font-size:14px"><i class='fa fa-phone'></i> 0977261061</font>
-                    </p>
+                    @if (Model.SaleManageInfo != null)
+                    {
+                        <p class='col-md-3'>
+                            Nhân viên KD: <b>@(Model.SaleManageInfo.SaleName + " : " + Model.SaleManageInfo.SalePhoneCompany)</b><br />
+                            <font style="font-size:14px"><i class='fa fa-phone'></i> @Model.SaleManageInfo.SalePhone</font>
+                        </p>
+                    }
                     <span class="clearfix"></span>
-                </div>
-
-                <div class="gdtq-staff" style="margin: 30px 0;display:none">
-                    <div>
-                        <div class='col-md-4'>
-                            <p class='btn-flat text-center'><i class='fa fa-user'></i> CSKH 14 - Dư Thủy<br><i class='fa fa-phone'></i> 965751688</p>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="alert alert-default btn-flat row">
@@ -94,33 +89,14 @@
                         <p><font>(9) Đã thu thêm</font><font style="float:right">0<sup>đ</sup></font></p>
 
                         <p><font>(10) Còn thiếu</font><font style="float:right">@Model.TotalPriceConvert<sup>đ</sup></font></p>
-
-
-                        <!--p><font>(10) Số dư tài khoản hiện tại</font><font style="float:right">0<sup>đ</sup></font></p-->
-
                     </div>
                     <span class="clearfix"></span>
                 </div>
             </div>
         </div>
         <div class="col-md-12">
-            <div class="section-detail row">
-                @*<h4>
-                        Bạn có thể sửa link ở trạng thái đơn mới hoặc báo giá, click vào icon <i class="fa fa-edit btn btn-info btn-xs"></i> để sửa
-                    </h4>
-
-                    <div class='order-group' id="id-121344">
-                        <div>
-                            <span class='ogs-status'>Tạo nhóm</span>
-                            <span class="pull-right shop-number">0</span>
-                            <span class="clearfix"></span>
-                        </div>
-                    </div>*@
-
+            <div class="row">
                 <div class='order-group row' id='no-shop'>
-                    @*<div class='container-shop container-shop' style="background-color: #373737; color: #fff">
-                            <p class='col-md-12'>Danh sách link chưa phân shop</p>
-                        </div>*@
                     <table class="table table-bordered">
                         <thead>
                             <tr>

@@ -10,14 +10,15 @@
             <ul class="dropdown-menu flat">
                 <li><a href="">Thông tin cá nhân</a></li>
                 <li>
-                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
-                    {
-                        @Html.AntiForgeryToken()
-                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Đăng xuất</a></li>
-                    }
-            </li>
+                    <a href="@Url.Action("LogOff", "Account")">Đăng xuất</a>
+                    @*@using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Đăng xuất</a></li>
+                        }*@
+                </li>
             </ul>
-            </li>
+        </li>
 
     </text>
 }
