@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Globalization;
 using System.Reflection;
 using System.Web.Mvc;
 
@@ -10,7 +11,7 @@ namespace OrderChina.Models
 {
     public class DBContext : DbContext
     {
-    #region Database
+        #region Database
         public DBContext()
             : base("DefaultConnection")
         {
@@ -100,7 +101,7 @@ namespace OrderChina.Models
 
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate { get; set; }
-        public string SellManager { get; set; }
+        public string SaleManager { get; set; }
 
         public string getStatusText()
         {
@@ -149,7 +150,7 @@ namespace OrderChina.Models
         public int QuantityInWarehouse { get; set; }
 
         public string Note { get; set; }
-        
+
     }
 
     [Table("Rate")]
@@ -180,6 +181,58 @@ namespace OrderChina.Models
             };
         }
 
+        public string FormatPrice(double index)
+        {
+
+            int sp = 1000;
+            string hq = "k";
+            if (1000 <= index && index < 1000000 || -1000 >= index && index > -1000000)
+            {
+                sp = 1000;
+                hq = "k";
+            }
+            if (1000000 <= index && index < 1000000000 || -1000000 >= index && index > -1000000000)
+            {
+                sp = 1000000;
+                hq = "m";
+            }
+            if (index >= 1000000000 || index <= -1000000000)
+            {
+                sp = 1000000000;
+                hq = "b";
+            }
+
+            if (index >= 1000 || index <= -1000)
+            {
+                var pt = index;
+                if (index < 0)
+                {
+                    pt = pt * (-1);
+                }
+
+                var p = Math.Round((float)pt / sp, 1);
+                var txt = p.ToString(CultureInfo.InvariantCulture);
+
+                if (p - (int)p == 0)
+                {
+                    if (index > 0)
+                    {
+                        return txt + hq;
+                    }
+                    return "-" + txt + hq;
+                }
+                else
+                {
+                    if (index > 0)
+                    {
+                        return txt.Replace(".", hq);
+                    }
+                    return "-" + txt.Replace(".", hq);
+                }
+            }
+
+            return index.ToString();
+        }
     }
 
     [Table("RateHistory")]
@@ -196,6 +249,7 @@ namespace OrderChina.Models
         public double fee3 { get; set; }
         public DateTime LastUpdate { get; set; }
         public string UserUpdate { get; set; }
+
     }
 
     [Table("SaleManageClient")]
@@ -214,7 +268,7 @@ namespace OrderChina.Models
         public DateTime LastUpdate { get; set; }
 
     }
-    #endregion
+        #endregion
 
     #region User
     public class LoginModel
@@ -340,9 +394,18 @@ namespace OrderChina.Models
         public double FeeShip { get; set; }
 
         public DateTime CreateDate { get; set; }
-        public string SellManager { get; set; }
+        public string SaleManager { get; set; }
 
+        public SaleManageInfo SaleManageInfo { get; set; }
         public IEnumerable<OrderDetail> ListOrderDetails { get; set; }
+    }
+
+    public class SaleManageInfo
+    {
+        public string SaleName { get; set; }
+
+        public string SalePhoneCompany { get; set; }
+        public string SalePhone { get; set; }
     }
     #endregion
 

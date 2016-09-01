@@ -10,26 +10,26 @@ namespace OrderChina.Controllers
         DBContext db = new DBContext();
         public ActionResult Index()
         {
-            //if (db.Rates.Any())
-            //{
-            //    var rate = db.Rates.FirstOrDefault();
-            //    if (rate != null)
-            //    {
-            //        Session["Price"] = rate.Price;
-            //        Session["fee1"] = rate.fee1;
-            //        Session["fee2"] = rate.fee2;
-            //        Session["fee3"] = rate.fee3;
-            //    }
-            //}
-            //if (Request.IsAuthenticated)
-            //{
-            //    var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == User.Identity.Name);
-            //    if (userProfile != null)
-            //    {
-            //        Session["Name"] = userProfile.Name;
-            //        Session["UserType"] = userProfile.UserType;
-            //    }
-            //}
+            if (db.Rates.Any())
+            {
+                var rate = db.Rates.FirstOrDefault();
+                if (rate != null)
+                {
+                    Session["Price"] = rate.Price.ToString("##,###");
+                    Session["fee1"] = rate.FormatPrice(rate.fee1);
+                    Session["fee2"] = rate.FormatPrice(rate.fee2); 
+                    Session["fee3"] = rate.FormatPrice(rate.fee3); 
+                }
+            }
+            if (Request.IsAuthenticated)
+            {
+                var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == User.Identity.Name);
+                if (userProfile != null)
+                {
+                    Session["Name"] = userProfile.Name;
+                    Session["UserType"] = userProfile.UserType;
+                }
+            }
            
             return View();
         }

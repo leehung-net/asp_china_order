@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Transactions;
+using System.Web.DynamicData;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
@@ -71,11 +72,7 @@ namespace OrderChina.Controllers
         }
 
 
-        //
-        // POST: /Account/LogOff
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public ActionResult LogOff()
         {
             WebSecurity.Logout();
@@ -409,7 +406,9 @@ namespace OrderChina.Controllers
                             Phone = user.Phone,
                             UserName = user.Email
                         };
+                        var saleManage = db.SaleManageClients.FirstOrDefault(a => a.User_Client == user.Email);
                         order.TotalPriceConvert = order.TotalPrice * order.Rate;
+                        if (saleManage != null) order.SaleManager = saleManage.User_Sale;
                         db.Entry(order).State = EntityState.Added;
                         db.Orders.Add(order);
                         db.SaveChanges();
@@ -451,6 +450,7 @@ namespace OrderChina.Controllers
                             Rate = rate != null ? rate.Price : 0,
                             Phone = model.ListOrderDetail.First().Phone
                         };
+
                         db.Entry(order).State = EntityState.Added;
                         db.Orders.Add(order);
                         db.SaveChanges();
@@ -495,7 +495,7 @@ namespace OrderChina.Controllers
 
         public ActionResult ViewOrderDetail(int id, string message)
         {
-            ViewDetailOrderModel model = new ViewDetailOrderModel();
+            var model = new ViewDetailOrderModel();
             var order = db.Orders.FirstOrDefault(a => a.OrderId == id);
             var orderDetail = db.OrderDetails.Where(a => a.OrderId == id);
             model.OrderId = id;
@@ -506,13 +506,26 @@ namespace OrderChina.Controllers
                 model.Status = order.getStatusText();
                 model.TotalPriceConvert = order.TotalPriceConvert;
                 model.TotalPrice = order.TotalPrice;
-                model.SellManager = order.SellManager;
+                model.SaleManager = order.SaleManager;
                 model.UserName = order.UserName;
                 model.FeeShip = order.FeeShip;
                 model.FeeShipChina = order.FeeShipChina;
                 model.CreateDate = order.CreateDate;
                 model.Fee = order.Fee;
                 model.Weight = order.Weight;
+                if (!string.IsNullOrEmpty(order.SaleManager))
+                {
+                    var user = db.UserProfiles.FirstOrDefault(a => a.Email == order.SaleManager);
+                    if (user != null)
+                    {
+                        model.SaleManageInfo = new SaleManageInfo
+                        {
+                            SaleName = user.Name,
+                            SalePhone = user.Phone,
+                            SalePhoneCompany = user.PhoneCompany
+                        };
+                    }
+                }
             }
             model.ListOrderDetails = orderDetail;
             ViewData["message"] = message;
@@ -674,10 +687,69 @@ namespace OrderChina.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AssignSaleForClient(SaleManageClient model, string listSale)
         {
-            model.User_Update = User.Identity.Name;
-            model.LastUpdate = DateTime.Now;
-            db.SaleManageClients.Add(model);
-            db.SaveChanges();
+            var update = db.SaleManageClients.FirstOrDefault(a => a.User_Client == model.User_Client);
+
+            if (update == null)
+            {
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        model.User_Update = User.Identity.Name;
+                        model.LastUpdate = DateTime.Now;
+                        db.SaleManageClients.Add(model);
+
+                        //truong hop khach hang moi duoc gan sale
+                        //update sale vao don hang moi chua co sale manage
+                        var listOrder = db.Orders.Where(a => a.UserName == model.User_Client && string.IsNullOrEmpty(a.SaleManager)).ToList();
+                        foreach (var order in listOrder)
+                        {
+                            order.SaleManager = model.User_Sale;
+                        }
+                        db.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                    }
+                }
+
+            }
+            else
+            {
+                update.User_Update = User.Identity.Name;
+                update.LastUpdate = DateTime.Now;
+                update.User_Sale = model.User_Sale;
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("ListClient");
+        }
+
+        public ActionResult ChangeUserType(string id, string userType)
+        {
+            var model = db.UserProfiles.FirstOrDefault(a => a.Email == id);
+            if (model == null)
+                return RedirectToAction("ListClient");
+
+            ViewBag.listUserType = GetListUserType(userType);
+
+            return PartialView("_ChangeUserTypePartial", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeUserType(UserProfile model)
+        {
+            var userUpdate = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+            if (userUpdate != null)
+            {
+                userUpdate.UserType = model.UserType;
+                db.SaveChanges();
+
+            }
             return RedirectToAction("ListClient");
         }
 

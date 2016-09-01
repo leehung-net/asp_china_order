@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "_AssignSalePartial";
+}
+@model OrderChina.Models.UserProfile
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+@using (Html.BeginForm("ChangeUserType", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">"Gán quyền cho người dùng"</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group row" style="width: 100%;font-size: 14px">
+                
+                @Html.HiddenFor(m => m.Email)
+
+                <div class="col-sm-4">
+                    @Html.LabelFor(m => m.UserType)
+                    @Html.DropDownListFor(m => m.UserType, (IEnumerable<SelectListItem>)ViewBag.listUserType, "--Chọn loại người dùng--", new { @class = "form-control flat", style = "width: 300px;display: inline;" })
+                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Link" placeholder='Nhập link sản phẩm' autofocus="autofocus" required="true">
+                        <span class="field-validation-valid" data-valmsg-for="ListOrderDetail[' + index + '].Link" data-valmsg-replace="false">Link không được để trống</span>*@
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" value="Save" id="btnSave" name="cmd" class="btn btn-primary">Cập nhật</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+}
