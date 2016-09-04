@@ -503,7 +503,8 @@ namespace OrderChina.Controllers
             {
                 model.Phone = order.Phone;
                 model.Rate = order.Rate;
-                model.Status = order.getStatusText();
+                model.Status = order.Status;
+                model.StatusText = order.getStatusText();
                 model.TotalPriceConvert = order.TotalPriceConvert;
                 model.TotalPrice = order.TotalPrice;
                 model.SaleManager = order.SaleManager;
@@ -544,9 +545,6 @@ namespace OrderChina.Controllers
             var modelEmpty = new OrderDetail { OrderId = orderId ?? 0 };
             return PartialView("_AddOrderDetailPartial", modelEmpty);
         }
-        #endregion
-
-        #region Administrator
 
         [HttpPost]
         [AllowAnonymous]
@@ -644,6 +642,35 @@ namespace OrderChina.Controllers
             }
             return RedirectToAction("ViewOrderDetail", new { id = orderId });
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult Cancel_Order(string orderId)
+        {
+            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString() == orderId);
+            if (order != null)
+            {
+                order.Status = OrderStatus.Cancel.ToString();
+                db.SaveChanges();
+            }
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult Confirm_Order(string orderId)
+        {
+            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString() == orderId);
+            if (order != null)
+            {
+                order.Status = OrderStatus.ClientConfirm.ToString();
+                db.SaveChanges();
+            }
+            return Json(new { success = true });
+        }
+        #endregion
+
+        #region Administrator
 
         public ActionResult ListClient(string userType, string userName, int? page)
         {
@@ -806,7 +833,7 @@ namespace OrderChina.Controllers
                     Session["Price"] = modelUpdate.Price.ToString("##,###");
                     Session["fee1"] = modelUpdate.FormatPrice(modelUpdate.fee1);
                     Session["fee2"] = modelUpdate.FormatPrice(modelUpdate.fee2);
-                    Session["fee3"] = modelUpdate.FormatPrice(modelUpdate.fee3); 
+                    Session["fee3"] = modelUpdate.FormatPrice(modelUpdate.fee3);
                 }
             }
             else
@@ -821,7 +848,7 @@ namespace OrderChina.Controllers
                 Session["Price"] = model.Rate.Price.ToString("##,###");
                 Session["fee1"] = model.Rate.FormatPrice(model.Rate.fee1);
                 Session["fee2"] = model.Rate.FormatPrice(model.Rate.fee2);
-                Session["fee3"] = model.Rate.FormatPrice(model.Rate.fee3); 
+                Session["fee3"] = model.Rate.FormatPrice(model.Rate.fee3);
             }
 
             return RedirectToAction("UpdateRate");
