@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Transactions;
-using System.Web.DynamicData;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
@@ -403,6 +402,7 @@ namespace OrderChina.Controllers
                             TotalPrice = model.ListOrderDetail.Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0)),
                             Status = OrderStatus.New.ToString(),
                             Rate = rate != null ? rate.Price : 0,
+                            Fee = 5,
                             Phone = user.Phone,
                             UserName = user.Email
                         };

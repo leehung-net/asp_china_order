@@ -443,6 +443,7 @@
     <Content Include="Views\Account\_ChangeUserTypePartial.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Views\Account\UpdateRate.cshtml" />
+    <Content Include="Views\Account\_SaleConfirmOrderPartial.cshtml" />
     <Content Include="Views\News\DetailNews.cshtml" />
     <Content Include="Views\News\ManageNews.cshtml" />
   </ItemGroup>
