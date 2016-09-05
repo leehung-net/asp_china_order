@@ -1,4 +1,5 @@
-﻿@model OrderChina.Models.ViewDetailOrderModel
+﻿@using OrderChina.Models
+@model OrderChina.Models.ViewDetailOrderModel
 
 <section @*class='container'*@ style='padding: 20px;'>
     <div class='row'>
@@ -26,7 +27,7 @@
                 </nav>
 
                 <div class='row'>
-                    <h3 class='text-center'>CHI TIẾT ĐƠN HÀNG <b>@Model.OrderId</b> - @Model.Status</h3>
+                    <h3 class='text-center'>CHI TIẾT ĐƠN HÀNG <b>@Model.OrderId</b> - @Model.StatusText</h3>
                     <div class="alert alert-default btn-flat">
 
                         <p><p>
@@ -50,12 +51,43 @@
 
                 <div class='row'>
                     <p class="col-md-3">
-                        <a href="#controller" onclick="xac_nhan_order(4517,'1','0');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
-                        <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
+                        @if (@Model.Status == OrderStatus.Cancel.ToString())
+                        {
+                            <a href="#controller" onclick="alert('Đơn hàng này đã hủy!');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
+                            <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
+                        }
+                        else if (@Model.Status != OrderStatus.New.ToString())
+                        {
+                            <a href="#controller" onclick="alert('Đơn hàng này đã xác nhận!');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
+                            <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
+                        }
+                        else
+                        {
+                            <a href="#controller" onclick="confirm_order(@Model.OrderId ,'0');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
+                            <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
+                        }
+
                     </p>
                     <p class="col-md-3">
-                        <a href="#controller" onclick="xac_nhan_order(4517,'0','');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
-                        <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
+                        @if (@Model.Status == OrderStatus.Cancel.ToString())
+                        {
+                            <a href="#controller" onclick="alert('Đơn hàng này đã hủy!');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                            <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
+                        }
+                        else if (@Model.Status != OrderStatus.New.ToString())
+                        {
+                            <a href="#controller" onclick="alert('Đơn hàng này đã xác nhận!');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                            <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
+                        }
+                        else
+                        {
+                            <a href="#controller" onclick="confirm_order(@Model.OrderId,'0');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                            <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
+                        }
+
+                    </p>
+                    <p class="col-md-3">
+
                     </p>
                     <p class="col-md-3">1 NDT = @Model.Rate.ToString("##,###") <sup>đ</sup></p>
 
@@ -91,6 +123,11 @@
                         <p><font>(10) Còn thiếu</font><font style="float:right">@Model.TotalPriceConvert<sup>đ</sup></font></p>
                     </div>
                     <span class="clearfix"></span>
+                    <p class="col-md-6 pull-right">
+                        <a href="#controller" onclick="" class="btn btn-facebook btn-xs pull-right" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
+                        <a href="#controller" onclick="" class="btn btn-facebook btn-xs pull-right" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
+                        <a href="#controller" onclick="" class="btn btn-facebook btn-xs pull-right" title="Cập nhật đặt hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -276,7 +313,83 @@
                 });
             });
 
+            $(".btn-deleted").click(function (e) {
+                e.preventDefault();
+
+                var url = $(this).attr('href');
+
+                bootbox.dialog({
+                    message: "Bạn có chắc muốn xóa link này?",
+                    title: "Xóa link khỏi đơn hàng",
+                    buttons: {
+                        success: {
+                            label: "Xóa!",
+                            className: "btn btn-success",
+                            callback: function () {
+                                $(this).dialog("close");
+                                window.location = url;
+                            }
+                        },
+                        danger: {
+                            label: "Đóng!",
+                            className: "btn btn-flat",
+                            callback: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    }
+                });
+            });
+
         }); // document ready
+        function confirm_order(orderId, type) {
+            if (type == 0) {
+                $.ajax({
+                    url: "@Url.Action("Cancel_Order", "Account")",
+                    type: 'POST',
+                    data: '{ \"orderId\" : \"' + orderId + '\"}',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: "json",
+                    success: function (data) {
+                        //alert(data.success);
+                        if (data.success) {
+                            bootbox.alert("Hủy đơn hàng thành công!", function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            bootbox.alert("Có lỗi trong quá trình hủy đơn hàng!", function () {
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Lỗi");
+                    }
+                });
+            } else if (type == 1) {
+                $.ajax({
+                    url: "@Url.Action("Confirm_Order", "Account")",
+                    type: 'POST',
+                    data: '{ \"orderId\" : \"' + orderId + '\"}',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            bootbox.alert("Xác nhận đơn hàng thành công!", function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            bootbox.alert("Có lỗi trong quá trình xác nhận đơn hàng!", function () {
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Lỗi");
+                    }
+                });
+            }
+
+        }
 
     </script>
 }

@@ -415,6 +415,7 @@ namespace OrderChina.Models
 
         public SaleManageInfo SaleManageInfo { get; set; }
         public IEnumerable<OrderDetail> ListOrderDetails { get; set; }
+        public string StatusText { get; set; }
     }
 
     public class SaleManageInfo
@@ -447,7 +448,9 @@ namespace OrderChina.Models
         [Display(Name = "Hoàn thành")]
         Finish = 4,
         [Display(Name = "Đơn hủy")]
-        Cancel = 5
+        Cancel = 5,
+        [Display(Name = "Khách hàng confirm")]
+        ClientConfirm = 6
     }
 
     public enum UserType
