@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "_AssignSalePartial";
+}
+@model OrderChina.Models.Order
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+@using (Html.BeginForm("ChangeUserType", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">"Chốt đơn hàng"</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group row" style="width: 100%;font-size: 14px">
+
+                @Html.HiddenFor(m => m.OrderId)
+
+                <div class="col-sm-4">
+                    @Html.LabelFor(m => m.Fee)
+                    @Html.EditorFor(m => m.Fee)
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" value="Save" id="btnSave" name="cmd" class="btn btn-primary">Cập nhật</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+}

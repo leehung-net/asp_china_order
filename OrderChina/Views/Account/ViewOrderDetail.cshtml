@@ -1,4 +1,5 @@
-﻿@using OrderChina.Models
+﻿@using System.Text.RegularExpressions
+@using OrderChina.Models
 @model OrderChina.Models.ViewDetailOrderModel
 
 <section @*class='container'*@ style='padding: 20px;'>
@@ -37,7 +38,7 @@
                             Trước khi tạo đơn hàng, quý khách đọc kỹ quy định và bảng giá của China Express:<br />
                             - <em>Hướng dẫn:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/dich-vu-dat-hang.html">http://nhaphangtaobao.com.vn/tin-tuc/dich-vu-dat-hang.html</a><br />
                             - <em>Quy định:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/quy-dinh/quy-dinh-voi-khach-hang-order.html">http://nhaphangtaobao.com.vn/tin-tuc/quy-dinh/quy-dinh-voi-khach-hang-order.html</a><br />
-                            - <em>Bảng giá:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/bang-gia.html">http://nhaphangtaobao.com.vn/tin-tuc/bang-gia.html</a><br />
+                            - <em>Bảng giá:</em> <a href="@Url.Action("Banggia","Home")">@Url.Action("Banggia", "Home")</a><br />
                             Quý khách chốt đơn hàng có nghĩa là quý khách đã <u><em><strong>đồng ý và thực hiện</strong></em></u> theo quy định của <strong>China Express!!!</strong>
                         </p></p>
 
@@ -108,7 +109,7 @@
 
                     <div class="col-md-6">
                         <p><font>(1) Tiền hàng</font><font style="float:right">@Model.TotalPriceConvert<sup>đ</sup></font></p>
-                        <p><font>(2) Phí dịch vụ (5%)</font><font style="float:right">@Model.Fee<sup>đ</sup></font></p>
+                        <p><font>(2) Phí dịch vụ (5%)</font><font style="float:right">@{ Math.Round((Model.TotalPriceConvert*Model.Fee)/100, MidpointRounding.ToEven) }<sup>đ</sup></font></p>
                         <p><font>(3) Ship nội địa TQ</font><font style="float:right">@Model.FeeShipChina<sup>đ</sup></font></p>
                         <p><font>(4) Trọng lượng</font><font style="float:right">@Model.Weight<sup>kg</sup></font></p>
                         <p><font>(5) Cước vận chuyển</font><font style="float:right">@Model.FeeShip<sup>đ</sup></font></p>
@@ -116,7 +117,7 @@
                     </div>
                     <div class="col-md-6">
                         <p><font>(6) Phí phát sinh (nếu có)</font><font style="float:right">0<sup>đ</sup></font></p>
-                        <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@(Model.TotalPriceConvert + Model.Fee + Model.FeeShipChina + Model.FeeShip)<sup>đ</sup></font></p>
+                        <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@(Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip)<sup>đ</sup></font></p>
                         <p><font>(8) Đặt cọc</font><font style="float:right">0<sup>đ</sup></font></p>
                         <p><font>(9) Đã thu thêm</font><font style="float:right">0<sup>đ</sup></font></p>
 
@@ -124,9 +125,9 @@
                     </div>
                     <span class="clearfix"></span>
                     <p class="col-md-6 pull-right">
-                        <a href="#controller" onclick="" class="btn btn-facebook btn-xs pull-right" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
-                        <a href="#controller" onclick="" class="btn btn-facebook btn-xs pull-right" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
-                        <a href="#controller" onclick="" class="btn btn-facebook btn-xs pull-right" title="Cập nhật đặt hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                        <a class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
+                        <a class="btn btn-facebook btn-xs pull-right" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
+                        <a class="btn btn-facebook btn-xs pull-right" title="Cập nhật đặt hàng"><i class="fa fa-trash-o"></i> Cập nhật đặt hàng</a>
                     </p>
                 </div>
             </div>
