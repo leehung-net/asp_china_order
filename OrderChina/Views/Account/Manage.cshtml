@@ -1,4 +1,5 @@
 ﻿@using System.Web.UI.WebControls
+@using OrderChina.Models
 @using PagedList.Mvc
 @model PagedList.IPagedList<OrderChina.Models.Order>
 @if (ViewData["message"] != null)
@@ -20,9 +21,18 @@
                 @using (Html.BeginForm("Manage", "Account", FormMethod.Get))
                 {
                     <p>
-                        <input name="_token" type="hidden" value="9NjpBV8oN7rpucA3HQdPbsU1EazsPzhmvCK0395C">
+                        @if (Session["UserType"] != null)
+                        {
+                            if (Session["UserType"] != UserType.Client.ToString())
+                            {
+                                <div class='col-md-2' id="username" style="padding-left: inherit">
+                                    <input class=" form-control btn-flat" placeholder="Khách hàng" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Khách hàng" name="username" type="text" value="@ViewBag.CurrentUserName">
+                                </div>
+                            }
+                        }
+
                         <div class='col-md-2' id="fromDate">
-                            <input class="form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
+                            <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
                         </div>
                         <div class='col-md-2' id="toDate">
                             <input class="form-control btn-flat" placeholder="Đến ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Đến ngày" name="toDate" type="text" value="@ViewBag.CurrentToDate">
@@ -47,11 +57,18 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th class='text-center' style="width: 60px;">Mã đơn</th>
-                            <th class='text-center' style="width: 100px;">Tỷ giá</th>
-                            <th class='text-center' style="width: 150px;">Trạng thái</th>
-                            <th class='text-center' style="width: 150px;">Tổng tiền</th>
-                            <th class="text-center" style="width: 100px;">Ngày tạo</th>
+                            @if (Session["UserType"] != null)
+                            {
+                                if (Session["UserType"] != UserType.Client.ToString())
+                                {
+                                    <th class='text-center' style="width: 10px;">Khách hàng</th>
+                                }
+                            }
+                            <th class='text-center' style="width: 10px;">Mã đơn</th>
+                            <th class='text-center' style="width: 10px;">Tỷ giá</th>
+                            <th class='text-center' style="width: 10px;">Trạng thái</th>
+                            <th class='text-center' style="width: 10px;">Tổng tiền</th>
+                            <th class="text-center" style="width: 10px;">Ngày tạo</th>
                             <th class='text-center' style="width: 100px;">Xem chi tiết đơn</th>
                         </tr>
                     </thead>
@@ -59,6 +76,15 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                @if (Session["UserType"] != null)
+                                {
+                                    if (Session["UserType"] != UserType.Client.ToString())
+                                    {
+                                        <td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.UserName)
+                                        </td>
+                                    }
+                                }
                                 <td class='text-center'>
                                     @Html.DisplayFor(modelItem => item.OrderId)
                                 </td>

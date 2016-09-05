@@ -1,5 +1,4 @@
-﻿@using System.Text.RegularExpressions
-@using OrderChina.Models
+﻿@using OrderChina.Models
 @model OrderChina.Models.ViewDetailOrderModel
 
 <section @*class='container'*@ style='padding: 20px;'>
@@ -109,7 +108,7 @@
 
                     <div class="col-md-6">
                         <p><font>(1) Tiền hàng</font><font style="float:right">@Model.TotalPriceConvert<sup>đ</sup></font></p>
-                        <p><font>(2) Phí dịch vụ (5%)</font><font style="float:right">@{ Math.Round((Model.TotalPriceConvert*Model.Fee)/100, MidpointRounding.ToEven) }<sup>đ</sup></font></p>
+                        <p><font>(2) Phí dịch vụ (@Model.Fee%)</font><font style="float:right">@Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven)<sup>đ</sup></font></p>
                         <p><font>(3) Ship nội địa TQ</font><font style="float:right">@Model.FeeShipChina<sup>đ</sup></font></p>
                         <p><font>(4) Trọng lượng</font><font style="float:right">@Model.Weight<sup>kg</sup></font></p>
                         <p><font>(5) Cước vận chuyển</font><font style="float:right">@Model.FeeShip<sup>đ</sup></font></p>
@@ -125,7 +124,15 @@
                     </div>
                     <span class="clearfix"></span>
                     <p class="col-md-6 pull-right">
-                        <a class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
+                        @if (@Model.Status != OrderStatus.ClientConfirm.ToString())
+                        {
+                            <a href="#" onclick="bootbox.alert('Trạng thái lệnh không hợp lệ')" class="btn btn-facebook btn-xs pull-right" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("SaleConfirmOrder", "Account", new { id = Model.OrderId })" class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
+
+                        }
                         <a class="btn btn-facebook btn-xs pull-right" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
                         <a class="btn btn-facebook btn-xs pull-right" title="Cập nhật đặt hàng"><i class="fa fa-trash-o"></i> Cập nhật đặt hàng</a>
                     </p>
@@ -204,13 +211,23 @@
         </div>
     </div>
 
-    <div class="modal fade modal-lg"
+    <div class="modal fade"
          id="myModal"
          tabindex="-1"
          role="dialog"
          aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" style="width: 900px">
+            <!-- empty -->
+        </div>
+    </div>
+    <div class="modal fade"
+         id="myModal1"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-mini">
             <!-- empty -->
         </div>
     </div>
@@ -286,6 +303,33 @@
                     $modal.modal(option, 'show');
                 });
             });
+            $('.btn-sale-confirm').click(function (e) {
+
+                /*
+                * hủy liên kết
+                *
+                * việc này quan trọng
+                * nếu không hủy liên kết, modal sẽ không được load đúng cách
+                * vì action sẽ trả về 1 trang html trống với partialview
+                *
+                * cách tương tự return false; cách này thực hiện ở cuối method
+                */
+                e.preventDefault();
+
+                var $modal = $('#myModal1');
+                var $modalDialog = $('.modal-mini');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
             $(".btn-deleted").click(function (e) {
                 e.preventDefault();
 
@@ -299,7 +343,7 @@
                             label: "Xóa!",
                             className: "btn btn-success",
                             callback: function () {
-                                $(this).dialog("close");
+                                $(this).modal('hide');
                                 window.location = url;
                             }
                         },
@@ -307,40 +351,13 @@
                             label: "Đóng!",
                             className: "btn btn-flat",
                             callback: function () {
-                                $(this).dialog("close");
+                                $(this).modal('hide');
                             }
                         }
                     }
                 });
             });
 
-            $(".btn-deleted").click(function (e) {
-                e.preventDefault();
-
-                var url = $(this).attr('href');
-
-                bootbox.dialog({
-                    message: "Bạn có chắc muốn xóa link này?",
-                    title: "Xóa link khỏi đơn hàng",
-                    buttons: {
-                        success: {
-                            label: "Xóa!",
-                            className: "btn btn-success",
-                            callback: function () {
-                                $(this).dialog("close");
-                                window.location = url;
-                            }
-                        },
-                        danger: {
-                            label: "Đóng!",
-                            className: "btn btn-flat",
-                            callback: function () {
-                                $(this).dialog("close");
-                            }
-                        }
-                    }
-                });
-            });
 
         }); // document ready
         function confirm_order(orderId, type) {

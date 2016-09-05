@@ -105,6 +105,8 @@ namespace OrderChina.Models
         [Display(Name = "Tổng tiền")]
         public double TotalPriceConvert { get; set; }
 
+        [Display(Name = "Phí dịch vụ")]
+        [Required(ErrorMessage = "Phí dịch vụ bắt buộc nhập")]
         public double Fee { get; set; }
 
         public double FeeShipChina { get; set; }
@@ -450,7 +452,9 @@ namespace OrderChina.Models
         [Display(Name = "Đơn hủy")]
         Cancel = 5,
         [Display(Name = "Khách hàng confirm")]
-        ClientConfirm = 6
+        ClientConfirm = 6,
+        [Display(Name = "Sale chốt đơn hàng")]
+        SaleConfirm = 7
     }
 
     public enum UserType

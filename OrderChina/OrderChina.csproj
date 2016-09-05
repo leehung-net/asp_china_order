@@ -294,6 +294,12 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="Images\1455768819anh-1-dich-vu-order.png" />
+    <Content Include="Images\1455769795anh-2-dich-vu-ship-ho.png" />
+    <Content Include="Images\1455786567anh-3-tu-van-ho-tro.png" />
+    <Content Include="Images\1455788196anh-4-nap-tien.png" />
+    <Content Include="Images\News\maxresdefault-2_xqxw-240x160.jpg" />
+    <Content Include="Images\News\tq1-240x160.jpg" />
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />

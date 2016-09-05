@@ -5,7 +5,7 @@
 <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
 <script src="/Scripts/jquery.validate.js"></script>
 <script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
-@using (Html.BeginForm("ChangeUserType", "Account", FormMethod.Post))
+@using (Html.BeginForm("SaleConfirmOrder", "Account", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -21,6 +21,7 @@
                 <div class="col-sm-4">
                     @Html.LabelFor(m => m.Fee)
                     @Html.EditorFor(m => m.Fee)
+                    @Html.ValidationMessageFor(m => m.Fee)
                 </div>
             </div>
             <div class="modal-footer">
