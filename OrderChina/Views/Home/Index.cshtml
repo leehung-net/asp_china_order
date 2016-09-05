@@ -1,45 +1,317 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+<style>
+    .home {
+        font-family: "Myriad Set Pro","Lucida Grande","Helvetica Neue","Helvetica","Arial","Verdana","sans-serif";
+        font-size: 16px;
+        line-height: 1.45;
+        font-weight: 400;
+        background-color: white;
+        padding-top: 60px;
+    }
+
+    .block-title {
+        font-size: 18px;
+        line-height: 24px;
+        margin: 0 0 0px;
+        text-transform: uppercase;
+        font-weight: 400;
+    }
+
+    .line-break {
+        width: 50px;
+        border-top: 2px solid red;
+    }
+
+    .image-background {
+        position: relative;
+        margin-bottom: 40px;
+    }
+
+    .image-content {
+        width: 100%;
+    }
+
+    .image-text-style {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(2, 107, 159, 0.8);
+        color: #fff;
+        padding: 20px;
+    }
+
+    .ul-border {
+        margin: 0;
+        border-bottom: 1px dashed #fff;
+        list-style: disc;
+        padding-left: 20px;
+        padding-bottom: 10px;
+    }
+
+    .mid-content {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .div2 {
+        background: #f3f3f3;
+        padding-top: 50px;
+        padding-left: 20px;
+        padding-bottom: 10px;
+    }
+
+    .ul {
+        list-style: none outside none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ul-1 li {
+        position: relative;
+        border-bottom: 1px dashed #97908d;
+        padding: 10px 0 10px 70px;
+        line-height: 20px;
+        min-height: 60px;
+    }
+
+    .tit {
+        position: absolute;
+        left: 0;
+        top: 10px;
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
+        text-align: center;
+        background: #fa5c58;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .utilities-ctm {
+        padding-left: 20px;
+        color: #fa5c58;
+        margin: 0 0 20px;
+        list-style: disc;
+    }
+
+        .utilities-ctm li {
+            padding: 10px 0 10px 10px;
+        }
+
+            .utilities-ctm li a {
+                color: #428bca;
+            }
+</style>
 @*@section featured {
-    <section class="featured">
-        <div class="content-wrapper">
-            <hgroup class="title">
-                <h1>@ViewBag.Title.</h1>
-                <h2>@ViewBag.Message</h2>
-            </hgroup>
-            <p>
-                To learn more about ASP.NET MVC visit
-                <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
-                The page features <mark>videos, tutorials, and samples</mark> to help you get the most from ASP.NET MVC.
-                If you have any questions about ASP.NET MVC visit
-                <a href="http://forums.asp.net/1146.aspx/1?MVC" title="ASP.NET MVC Forum">our forums</a>.
-            </p>
+        <section class="featured">
+            <div class="content-wrapper">
+                <hgroup class="title">
+                    <h1>@ViewBag.Title.</h1>
+                    <h2>@ViewBag.Message</h2>
+                </hgroup>
+                <p>
+                    To learn more about ASP.NET MVC visit
+                    <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+                    The page features <mark>videos, tutorials, and samples</mark> to help you get the most from ASP.NET MVC.
+                    If you have any questions about ASP.NET MVC visit
+                    <a href="http://forums.asp.net/1146.aspx/1?MVC" title="ASP.NET MVC Forum">our forums</a>.
+                </p>
+            </div>
+        </section>
+    }*@
+<div class="home">
+    <div class="col-lg-12">
+        <div style="text-align:center">
+            <h1><b>DỊCH VỤ CỦA CHÚNG TÔI</b></h1>
+            <br /><p>Chúng tôi luôn cố gắng mang đến chất lượng dịch vụ tốt nhất cho quý khách.</p>
         </div>
-    </section>
-}*@
-<h3>We suggest the following:</h3>
-<ol class="round">
-    <li class="one">
-        <h5>Getting Started</h5>
-        ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-        enables a clean separation of concerns and that gives you full control over markup
-        for enjoyable, agile development. ASP.NET MVC includes many features that enable
-        fast, TDD-friendly development for creating sophisticated applications that use
-        the latest web standards.
-        <a href="http://go.microsoft.com/fwlink/?LinkId=245151">Learn more…</a>
-    </li>
+    </div>
+    <div class="mid-content">
+        <div class="row">
+            <div class="col-sm-3">
+                <div>
+                    <h1 class="block-title">
+                        DỊCH VỤ ORDER HÀNG
+                    </h1>
+                    <hr align="left" class="line-break" />
+                    <div class="image-background">
+                        <div><img src="Images/1455768819anh-1-dich-vu-order.png" class="image-content" /></div>
+                        <div class="image-text-style">
+                            <ul class="ul-border">
+                                <li>Quản lý đơn hàng online</li>
+                                <li>Kết đơn 24/24</li>
+                                <li>Thời gian hàng về trung bình 5 - 10 ngày</li>
+                                <li>Cam kết đặt đúng link khách yêu cầu</li>
+                                <li>Chi phí thấp, giá cạnh tranh</li>
 
-    <li class="two">
-        <h5>Add NuGet packages and jump-start your coding</h5>
-        NuGet makes it easy to install and update free libraries and tools.
-        <a href="http://go.microsoft.com/fwlink/?LinkId=245153">Learn more…</a>
-    </li>
+                            </ul>
+                            <div class="row">
+                                <div class="col-lg-7">Tổng đài</div>
+                                <div class="col-lg-5">047.300.9779</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div>
+                    <h1 class="block-title">
+                        DỊCH VỤ GOM HÀNG - SHIP HỘ
+                    </h1>
+                    <hr align="left" class="line-break" />
+                    <div class="image-background">
+                        <div><img src="Images/1455769795anh-2-dich-vu-ship-ho.png" class="image-content" /></div>
+                        <div class="image-text-style">
+                            <ul class="ul-border">
+                                <li>Vận chuyển bằng nhiều hình thức khác nhau</li>
+                                <li>Cho thuê kho bãi, nhận hàng, đóng bao</li>
+                                <li>Quản lý hàng hóa, mã vận đơn online khoa học</li>
+                                <li>Hàng về từ 2 - 3 ngày sau khi hàng tới kho QC</li>
+                                <li>Giá cạnh tranh</li>
 
-    <li class="three">
-        <h5>Find Web Hosting</h5>
-        You can easily find a web hosting company that offers the right mix of features
-        and price for your applications.
-        <a href="http://go.microsoft.com/fwlink/?LinkId=245157">Learn more…</a>
-    </li>
-</ol>
+                            </ul>
+                            <div class="row">
+                                <div class="col-lg-7">Tổng đài</div>
+                                <div class="col-lg-5">047.300.9779</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div>
+                    <h1 class="block-title">
+                        TƯ VẤN - TÌM NGUỒN HÀNG
+                    </h1>
+                    <hr align="left" class="line-break" />
+                    <div class="image-background">
+                        <div><img src="Images/1455786567anh-3-tu-van-ho-tro.png" class="image-content" /></div>
+                        <div class="image-text-style">
+                            <ul class="ul-border">
+                                <li>Dành cho khách hàng tìm kiếm nhà cung cấp giá cả cạnh tranh </li>
+                                <li>Đội ngũ nhân viên am hiểu về nhiều lĩnh vực, tư vấn nhiệt tình</li>
+                                <li>Dịch vụ chuyên nghiệp từ A - Z</li>
+                            </ul>
+                            <div class="row">
+                                <div class="col-lg-7">Tổng đài</div>
+                                <div class="col-lg-5">047.300.9779</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div>
+                    <h1 class="block-title">
+                        NẠP TIỀN - THANH TOÁN HỘ
+                    </h1>
+                    <hr align="left" class="line-break" />
+                    <div class="image-background">
+                        <div><img src="Images/1455788196anh-4-nap-tien.png" class="image-content" /></div>
+                        <div class="image-text-style">
+                            <ul class="ul-border">
+                                <li>Nạp tiền vào tài khoản alipay</li>
+                                <li>Tạo tài khoản alipay Trung Quốc</li>
+                                <li>Giao dịch trên tất cả các website Trung Quốc</li>
+                                <li>Đại diện thương mại</li>
+                                <li>Tỷ giá và phí chuyển tiền rẻ nhất</li>
+
+                            </ul>
+                            <div class="row">
+                                <div class="col-lg-7">Tổng đài</div>
+                                <div class="col-lg-5">047.300.9779</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="div2">
+    <div class="row">
+        <div class="col-sm-9">
+            <h1 class="block-title">
+                <span style="font-size:25px">
+                    <strong>QUÝ KHÁCH ĐƯỢC GÌ KHI ĐẾN VỚI NHẬP HÀNG TAOBAO:</strong>
+                </span>
+            </h1>
+            <hr align="left" class="line-break" />
+            <ul class="ul-1">
+                <li>
+                    <span class="tit">1</span>
+                    Nhập hàng taobao áp dụng hệ thống phần mềm đặt hàng thông minh, quý khách chủ động đặt hàng trực tiếp trên hệ thống của công ty và kiểm tra hành trình hàng, công nợ đơn hàng bất cứ thời điểm nào.
+                </li>
+                <li>
+                    <span class="tit">2</span>
+                    Hàng hóa được chúng tôi kiểm tra kỹ tại kho Quảng Châu trước khi gửi về Việt Nam.
+                </li>
+                <li>
+                    <span class="tit">3</span>
+                    Đội ngũ tư vấn kinh nghiệm, nhiệt tình và am hiểu tính chất cũng như đặc điểm các xưởng tại Quảng Châu. Luôn đảm bảo cho quý khách sự hài lòng khi hàng về tới Việt Nam.
+                </li>
+                <li>
+                    <span class="tit">4</span>
+                    Giá chúng tôi đưa ra khi báo giá là giá cuối cùng bạn phải thanh toán khi hàng về tới tay bạn, tuyệt đối không còn loại phí nào khác.
+                </li>
+                <li>
+                    <span class="tit">5</span>
+                    Thời gian ship hàng chỉ từ 2 - 3 ngày kể từ ngày ký nhận tại kho Quảng Châu
+                </li>
+                <li>
+                    <span class="tit">6</span>
+                    Cam kết không tắc biên
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-3">
+            <h1 class="block-title">
+                <span style="font-size:24px">
+                    <strong>DÀNH CHO KHÁCH HÀNG</strong>
+                </span>
+            </h1>
+            <hr class="line-break" />
+            <ul class="utilities-ctm">
+                <li><a href="#">Cam kết và quy định</a></li>
+                <li><a href="#">Bảng giá</a></li>
+                <li><a href="#">Thông tin thanh toán</a></li>
+                <li><a href="#">Hướng dẫn đặt hàng</a></li>
+                <li><a href="#">Hướng dẫn sử dụng dịch vụ ship hộ</a></li>
+                <li><a href="#">Danh sách link hàng Taobao</a></li>
+                <li><a href="#">Kỹ năng tìm kiếm hàng</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<div class="mid-content">
+    <div class="row">
+        <div class="col-sm-7">
+            <div class="col-content">
+                <h1 class="block-title">
+                    <span style="font-size:24px">
+                        <strong>VIDEO HƯỚNG DẪN ĐẶT HÀNG</strong>
+                    </span>
+                </h1>
+                <hr align="left" class="line-break" />
+                <p><iframe frameborder="0" style="height:420px;width:714px" src="https://www.youtube.com/embed/w7pAGsdXREU?rel=0&autoplay=1"> </iframe></p>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="col-content">
+                <h1  class="block-title">
+                    <span style="font-size:24px">
+                        <strong>PHẢN HỒI TỪ KHÁCH HÀNG</strong>
+                    </span>
+                </h1>
+                <hr align="left" class="line-break" />
+            </div>
+        </div>
+    </div>
+</div>

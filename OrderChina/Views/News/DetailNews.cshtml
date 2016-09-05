@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Tin tức";
+}
+@using OrderChina.Models;
+@model IEnumerable<OrderChina.Models.News>
+<div style="font-family: Arial, sans-serif ; padding: 50px 10px 20px 20px; background-color:white ">
+    <div style="background-color: #f5f5f5;height:40px"><p style="padding:8px 10px 10px 12px;font-size:13pt"><a href="#" style="color:#03aaff">Tin tức</a> / Tin tức về công ty</p> </div>
+    @foreach(var sp in Model)
+    {
+        <div style="padding:15px 0px 15px 20px"><h2 style="font-size:20px; color:#03aaff">@sp.Title</h2></div>
+        <div>
+           @sp.NewsContent
+        </div>
+    }   
+</div>

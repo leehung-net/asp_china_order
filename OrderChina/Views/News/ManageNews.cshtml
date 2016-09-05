@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "ManageNews";
+}
+
+<h2>ManageNews</h2>
+@using OrderChina.Models;
+@model PagedList.IPagedList<OrderChina.Models.News>
+@using PagedList;
+@using PagedList.Mvc;
+<div>Create</div>
+<div>
+    <table>
+        <tr>
+            <td>Mã tin tức</td>
+            <td>Tiêu đề</td>
+            <td>Thời gian cập nhật</td>
+            <td>Thao tác</td>
+        </tr>
+@foreach(var news in Model){
+        <tr>              
+            <td>@news.IDNews</td>
+            <td>@news.Title</td>
+            <td></td>
+            <td>
+                Sửa
+                Xóa
+            </td>
+        </tr>
+}
+    </table>
+</div>
