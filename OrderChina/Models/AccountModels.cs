@@ -439,6 +439,9 @@ namespace OrderChina.Models
         public string SaleManager { get; set; }
 
         public SaleManageInfo SaleManageInfo { get; set; }
+
+        public UserProfile Client { get; set; }
+
         public IEnumerable<OrderDetail> ListOrderDetails { get; set; }
         public string StatusText { get; set; }
     }
@@ -477,7 +480,9 @@ namespace OrderChina.Models
         [Display(Name = "Khách hàng confirm")]
         ClientConfirm = 6,
         [Display(Name = "Sale chốt đơn hàng")]
-        SaleConfirm = 7
+        SaleConfirm = 7,
+        [Display(Name = "Hàng về đã về kho")]
+        Receive = 8
     }
 
     public enum UserType

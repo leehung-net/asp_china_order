@@ -2,49 +2,52 @@
     ViewBag.Title = "_UpdateOrderDetail";
 }
 
-@using System.Web.UI.WebControls
-@using OrderChina.Models
 @model OrderChina.Models.OrderDetail
-@Scripts.Render("~/bundles/jquery")
+@Styles.Render("~/Content/css")
+@*@Scripts.Render("~/bundles/jquery")*@
 @Scripts.Render("~/bundles/bootstrap")
+
 @using (Html.BeginForm("UpdateOrderDetail", "Account", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">"Cập nhật thông tin đặt hàng"</h4>
+            <h4 class="modal-title" id="myModalLabel">@(ViewBag.IsOrderer ? "Cập nhật thông tin đặt hàng" : "Cập nhật thông tin nhận hàng")</h4>
         </div>
         <div class="modal-body">
             <div class="form-group row" style="width: 100%;font-size: 14px">
 
                 @Html.HiddenFor(m => m.OrderId)
                 @Html.HiddenFor(m => m.OrderDetailId)
-                if (ViewBag.IsOrderer)
+                @if (ViewBag.IsOrderer)
                 {
-                <div class="col-sm-4">
-                    @Html.LabelFor(m => m.QuantitySellPlace)
-                    @Html.TextBoxFor(m => m.QuantitySellPlace, new { @class = "form-control btn-flat", placeholder = "KL đặt được", autofocus = "autofocus" })
-                </div>
-                <div class="col-sm-2">
-                    @Html.LabelFor(m => m.Rate_Real)
-                    @Html.TextBoxFor(m => m.Rate_Real, new { @class = "form-control btn-flat", placeholder = "Tỷ giá đặt được" })
-                </div>
-                <div class="col-sm-2">
-                    @Html.LabelFor(m => m.Note)
-                    @Html.TextBoxFor(m => m.Note, new { @class = "form-control btn-flat", placeholder = "Ghi chú" })
-                </div>
+                    <div class="col-sm-3">
+                        @Html.LabelFor(m => m.QuantitySellPlace)
+                        @Html.TextBoxFor(m => m.QuantitySellPlace, new { @class = "form-control btn-flat", placeholder = "KL đặt được", autofocus = "autofocus" })
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.LabelFor(m => m.Rate_Real)
+                        @Html.TextBoxFor(m => m.Rate_Real, new { @class = "form-control btn-flat", placeholder = "Tỷ giá đặt được" })
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.LabelFor(m => m.Note)
+                        @Html.TextBoxFor(m => m.Note, new { @class = "form-control btn-flat", placeholder = "Ghi chú" })
+                    </div>
                 }
                 else
                 {
-                <div class="col-sm-4">
-                    @Html.LabelFor(m => m.QuantityInWarehouse)
-                    @Html.TextBoxFor(m => m.QuantityInWarehouse, new { @class = "form-control btn-flat", placeholder = "KL về kho", autofocus = "autofocus" })
-                </div>
-                <div class="col-sm-2">
-                    @Html.LabelFor(m => m.DeliveryDate)
-                    @Html.TextBoxFor(m => m.DeliveryDate, new { @class = "form-control btn-flat", placeholder = "Ngày xuất hàng", id = "DeliveryDate" })
-                </div>
+                    @Html.HiddenFor(m => m.QuantitySellPlace)
+                    @Html.HiddenFor(m => m.Rate_Real)
+                    @Html.HiddenFor(m => m.Note)
+                    <div class="col-sm-5">
+                        @Html.LabelFor(m => m.QuantityInWarehouse)
+                        @Html.TextBoxFor(m => m.QuantityInWarehouse, new { @class = "form-control btn-flat", placeholder = "KL về kho", autofocus = "autofocus" })
+                    </div>
+                    <div class="col-sm-5">
+                        @Html.LabelFor(m => m.DeliveryDate)
+                        @Html.TextBoxFor(m => m.DeliveryDate, new { @class = "form-control btn-flat", placeholder = "Ngày xuất hàng", id = "DeliveryDate" })
+                    </div>
                 }
 
 
@@ -59,7 +62,7 @@
 
 <script>
     $(function () {
-        $('#DeliveryDate input').datepicker({
+        $('#DeliveryDate').datepicker({
             orientation: "bottom auto",
             todayHighlight: true,
             format: "dd/mm/yyyy"

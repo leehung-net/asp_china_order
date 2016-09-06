@@ -292,6 +292,7 @@ body {
 
 .link-create-order {
 	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 @media (max-width: 766px) {

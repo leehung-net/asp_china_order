@@ -198,6 +198,10 @@ namespace OrderChina.Controllers
             {
                 listOrder = db.Orders.Where(a => a.Status == OrderStatus.Paid.ToString()).ToList();
             }
+            else if ((string)Session["UserType"] == UserType.Recieve.ToString())
+            {
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString()).ToList();
+            }
             else if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
             {
                 listOrder = db.Orders.ToList();
@@ -544,6 +548,15 @@ namespace OrderChina.Controllers
                         };
                     }
                 }
+
+                if (!string.IsNullOrEmpty(order.UserName))
+                {
+                    var user = db.UserProfiles.FirstOrDefault(a => a.Email == order.UserName);
+                    if (user != null)
+                    {
+                        model.Client = user;
+                    }
+                }
             }
             model.ListOrderDetails = orderDetail;
             ViewData["message"] = message;
@@ -578,6 +591,44 @@ namespace OrderChina.Controllers
         {
             var model = db.Orders.FirstOrDefault(a => a.OrderId == id);
             return PartialView("_AccountingConfirmOrderPartial", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult OrdererRejectOrder(string orderid)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            if (model != null)
+            {
+                model.Status = OrderStatus.ClientConfirm.ToString();
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult OrdererConfirmOrder(string orderid)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            if (model != null)
+            {
+                model.Status = OrderStatus.Order.ToString();
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+
+            }
         }
 
         [HttpPost]
