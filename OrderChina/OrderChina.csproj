@@ -248,6 +248,7 @@
     <Content Include="Content\fontawesome\font-awesome.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\hung-home.css" />
+    <Content Include="Content\normalize.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -457,6 +458,7 @@
     <Content Include="Views\News\DetailNews.cshtml" />
     <Content Include="Views\News\ManageNews.cshtml" />
     <Content Include="Views\Account\_AccountingConfirmOrderPartial.cshtml" />
+    <Content Include="Views\Account\_UpdateOrderDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -482,7 +484,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>3420</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8081/</IISUrl>
+          <IISUrl>http://localhost:8080/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

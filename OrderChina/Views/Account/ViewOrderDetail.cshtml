@@ -154,7 +154,20 @@
                                 }
                             }
                         }
-                        <a class="btn btn-facebook btn-xs pull-right" title="Cập nhật đặt hàng"><i class="fa fa-trash-o"></i> Cập nhật đặt hàng</a>
+                        @if (Session["UserType"] != null)
+                        {
+                            if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Orderer.ToString())
+                            {
+                                if (@Model.Status != OrderStatus.SaleConfirm.ToString())
+                                {
+                                    <a href="#" onclick=" bootbox.alert('Trạng thái lệnh không hợp lệ') " rel='tooltip' class="btn btn-facebook btn-xs pull-right" title="Cập nhật đặt hàng"><i class="fa fa-trash-o"></i> Cập nhật đặt hàng</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("AccountingConfirmOrder", "Account", new {id = Model.OrderId})" class="btn btn-facebook btn-xs pull-right" title="Cập nhật đặt hàng"><i class="fa fa-trash-o"></i> Cập nhật đặt hàng</a>
+                                }
+                            }
+                        }
                     </p>
                 </div>
             </div>
@@ -201,10 +214,10 @@
                                         @Html.DisplayFor(modelItem => item.Quantity)
                                     </td>
                                     <td class='text-center'>
-                                        0
+                                        @Html.DisplayFor(modelItem => item.QuantitySellPlace)
                                     </td>
                                     <td class='text-center'>
-                                        0
+                                        @Html.DisplayFor(modelItem => item.QuantityInWarehouse)
                                     </td>
                                     <td class='text-center'>
                                         @Html.DisplayFor(modelItem => item.Price)
@@ -212,11 +225,49 @@
                                     <td class='text-center'>
                                         @(item.Price * item.Quantity)
                                     </td>
-                                    <td class='text-center'></td>
-                                    <td class='text-center'></td>
                                     <td class='text-center'>
-                                        <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
-                                        <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                        @Html.DisplayFor(modelItem => item.DeliveryDate)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Note)
+                                    </td>
+                                    <td class='text-center'>
+                                        @if (Session["UserType"] != null)
+                                        {
+                                            if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
+                                            {
+                                                <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+                                                <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = true})" rel='tooltip' title="Cập nhật TT đặt hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
+                                                <a href="@Url.Action("UpdateOrderDetail", "Account", new { id = item.OrderDetailId,IsOrderer=false})" rel='tooltip' title="Cập nhật TT nhận hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
+                                                <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                            }
+                                            else if ((string)Session["UserType"] == UserType.Client.ToString())
+                                            {
+                                                if (Model.Status == OrderStatus.New.ToString())
+                                                {
+                                                    <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+                                                    <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                                }
+                                            }
+                                            else if ((string)Session["UserType"] == UserType.Sale.ToString())
+                                            {
+                                                <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+                                                <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                            }
+                                            else if ((string)Session["UserType"] == UserType.Orderer.ToString())
+                                            {
+                                                <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+                                                <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = true})" rel='tooltip' title="Cập nhật TT đặt hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
+                                                <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                            }
+                                            else if ((string)Session["UserType"] == UserType.Recieve.ToString())
+                                            {
+                                                <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+                                                <a href="@Url.Action("UpdateOrderDetail", "Account", new { id = item.OrderDetailId,IsOrderer=false})" rel='tooltip' title="Cập nhật TT nhận hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
+                                                <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                            }
+                                        }
+
                                     </td>
                                 </tr>
                             }
@@ -297,6 +348,33 @@
                 });
             });
             $('.btn-edit').click(function (e) {
+
+                /*
+                * hủy liên kết
+                *
+                * việc này quan trọng
+                * nếu không hủy liên kết, modal sẽ không được load đúng cách
+                * vì action sẽ trả về 1 trang html trống với partialview
+                *
+                * cách tương tự return false; cách này thực hiện ở cuối method
+                */
+                e.preventDefault();
+
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
+            $('.btn-edit-info').click(function (e) {
 
                 /*
                 * hủy liên kết

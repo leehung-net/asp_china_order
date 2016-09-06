@@ -686,6 +686,45 @@ namespace OrderChina.Controllers
             return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
         }
 
+        public ActionResult UpdateOrderDetail(int? id, bool IsOrderer)
+        {
+            var model = db.OrderDetails.FirstOrDefault(m => m.OrderDetailId == id);
+            ViewBag.IsOrderer = IsOrderer;
+            return PartialView("_UpdateOrderDetail", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateOrderDetail(OrderDetail model)
+        {
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var orderDetail = db.OrderDetails.FirstOrDefault(m => m.OrderDetailId == model.OrderDetailId);
+                    if (orderDetail != null)
+                    {
+                        orderDetail.DeliveryDate = model.DeliveryDate;
+                        orderDetail.QuantityInWarehouse = model.QuantityInWarehouse;
+                        orderDetail.QuantitySellPlace = model.QuantitySellPlace;
+                        orderDetail.Rate_Real = model.Rate_Real;
+                        db.SaveChanges();
+                    }
+
+                    dbContextTransaction.Commit();
+                }
+                catch
+                {
+                    ViewData["message"] = "Cập nhật link hàng thất bại";
+                    dbContextTransaction.Rollback();
+                }
+
+            }
+
+            return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
+        }
+
         public ActionResult DeletedOrderDetail(int id)
         {
             var orderDetail = db.OrderDetails.FirstOrDefault(m => m.OrderDetailId == id);

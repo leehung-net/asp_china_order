@@ -167,9 +167,14 @@ namespace OrderChina.Models
         [Required]
         public string Phone { get; set; }
 
-        public int QuantitySellPlace { get; set; }
+        [Display(Name = "Đặt được")]
+        public int? QuantitySellPlace { get; set; }
 
-        public int QuantityInWarehouse { get; set; }
+        [Display(Name = "Về kho")]
+        public int? QuantityInWarehouse { get; set; }
+
+        [Display(Name = "Tỷ giá đặt được")]
+        public double? Rate_Real { get; set; }
 
         public string Note { get; set; }
 
@@ -488,7 +493,9 @@ namespace OrderChina.Models
         [Display(Name = "Khách hàng")]
         Client = 5,
         [Display(Name = "Nhân viên đặt hàng")]
-        Orderer = 6
+        Orderer = 6,
+        [Display(Name = "Nhân viên nhận hàng")]
+        Recieve = 7
     }
     
 }
