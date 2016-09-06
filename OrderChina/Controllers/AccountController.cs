@@ -183,7 +183,7 @@ namespace OrderChina.Controllers
 
             if ((string)Session["UserType"] == UserType.Sale.ToString())
             {
-                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a=>a.User_Client).ToList();
+                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
                 listOrder = db.Orders.Where(a => listUserManage.Contains(a.UserName)).ToList();
             }
             else if ((string)Session["UserType"] == UserType.Client.ToString())
@@ -196,7 +196,7 @@ namespace OrderChina.Controllers
             }
             else if ((string)Session["UserType"] == UserType.Orderer.ToString())
             {
-                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Levy.ToString()).ToList();
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Paid.ToString()).ToList();
             }
             else if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
             {
@@ -204,7 +204,7 @@ namespace OrderChina.Controllers
             }
             if (!string.IsNullOrEmpty(username))
             {
-                listOrder = listOrder.FindAll(a => a.UserName.IndexOf(username, System.StringComparison.Ordinal) > 0 );
+                listOrder = listOrder.FindAll(a => a.UserName.IndexOf(username, System.StringComparison.Ordinal) > 0);
             }
 
             if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
@@ -279,7 +279,7 @@ namespace OrderChina.Controllers
 
             return new SelectList(list, "name", "display", value);
         }
-        
+
         #region Helpers
         private ActionResult RedirectToLocal(string returnUrl)
         {
@@ -527,6 +527,10 @@ namespace OrderChina.Controllers
                 model.CreateDate = order.CreateDate;
                 model.Fee = order.Fee;
                 model.Weight = order.Weight;
+                model.DownPayment = order.DownPayment;
+                model.AccountingCollected = order.AccountingCollected;
+
+
                 if (!string.IsNullOrEmpty(order.SaleManager))
                 {
                     var user = db.UserProfiles.FirstOrDefault(a => a.Email == order.SaleManager);
@@ -566,7 +570,31 @@ namespace OrderChina.Controllers
                 db.SaveChanges();
             }
 
-            return RedirectToAction("ViewOrderDetail", new { id = model.OrderId, message = "Cập nhật link hàng thành công" });
+            return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
+
+        }
+
+        public ActionResult AccountingConfirmOrder(int id)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId == id);
+            return PartialView("_AccountingConfirmOrderPartial", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult AccountingConfirmOrder(Order model)
+        {
+            var order = db.Orders.FirstOrDefault(m => m.OrderId == model.OrderId);
+            if (order != null)
+            {
+                order.DownPayment = model.DownPayment;
+                order.AccountingCollected = model.AccountingCollected;
+                order.Status = OrderStatus.Paid.ToString();
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
 
         }
         public ActionResult AddEditOrderDetail(int? id, int? orderId)

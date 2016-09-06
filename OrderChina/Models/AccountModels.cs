@@ -93,8 +93,7 @@ namespace OrderChina.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         [Display(Name = "Mã đơn hàng")]
         public int OrderId { get; set; }
-
-
+        
         public string UserName { get; set; }
         public string Phone { get; set; }
         [Display(Name = "Tỷ giá")]
@@ -102,6 +101,7 @@ namespace OrderChina.Models
         [Display(Name = "Trạng thái")]
         public string Status { get; set; }
         public double TotalPrice { get; set; }
+
         [Display(Name = "Tổng tiền")]
         public double TotalPriceConvert { get; set; }
 
@@ -117,6 +117,12 @@ namespace OrderChina.Models
 
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate { get; set; }
+
+        [Display(Name = "Tiền thu thêm")]
+        public double AccountingCollected { get; set; }
+
+        [Display(Name = "Tiền đặt cọc")]
+        public double DownPayment { get; set; }
         public string SaleManager { get; set; }
 
         public string getStatusText()
@@ -166,6 +172,9 @@ namespace OrderChina.Models
         public int QuantityInWarehouse { get; set; }
 
         public string Note { get; set; }
+
+        [Display(Name = "Ngày xuất kho")]
+        public DateTime? DeliveryDate { get; set; }
 
     }
 
@@ -413,6 +422,15 @@ namespace OrderChina.Models
         public double FeeShip { get; set; }
 
         public DateTime CreateDate { get; set; }
+
+        [Display(Name = "Ngày xuất kho")]
+        public DateTime DeliveryDate { get; set; }
+
+        [Display(Name = "Tiền thu thêm")]
+        public double AccountingCollected { get; set; }
+
+        [Display(Name = "Tiền đặt cọc")]
+        public double DownPayment { get; set; }
         public string SaleManager { get; set; }
 
         public SaleManageInfo SaleManageInfo { get; set; }
@@ -444,7 +462,7 @@ namespace OrderChina.Models
         [Display(Name = "Đơn mới")]
         New = 1,
         [Display(Name = "Đã thu tiền")]
-        Levy = 2,
+        Paid = 2,
         [Display(Name = "Đặt hàng")]
         Order = 3,
         [Display(Name = "Hoàn thành")]

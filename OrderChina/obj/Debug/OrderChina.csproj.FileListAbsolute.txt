@@ -298,3 +298,4 @@ C:\Users\NDC\asp_china_order\OrderChina\obj\Debug\OrderChina.csproj.App.config
 C:\Users\NDC\asp_china_order\OrderChina\obj\Debug\OrderChina.csprojResolveAssemblyReference.cache
 C:\Users\NDC\asp_china_order\OrderChina\obj\Debug\OrderChina.dll
 C:\Users\NDC\asp_china_order\OrderChina\obj\Debug\OrderChina.pdb
+C:\Users\hung.le\Documents\Visual Studio 2013\Projects\OrderChina - Copy\OrderChina\bin\WebActivatorEx.dll

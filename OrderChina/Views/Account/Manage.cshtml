@@ -23,17 +23,30 @@
                     <p>
                         @if (Session["UserType"] != null)
                         {
-                            if (Session["UserType"] != UserType.Client.ToString())
+                            if ((string)Session["UserType"] != UserType.Client.ToString())
                             {
                                 <div class='col-md-2' id="username" style="padding-left: inherit">
                                     <input class=" form-control btn-flat" placeholder="Khách hàng" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Khách hàng" name="username" type="text" value="@ViewBag.CurrentUserName">
                                 </div>
+
+                                <div class='col-md-2' id="fromDate">
+                                    <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class='col-md-2' id="fromDate" style="padding-left: inherit">
+                                    <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
+                                </div>
                             }
                         }
+                        else
+                        {
+                            <div class='col-md-2' id="fromDate" style="padding-left: inherit">
+                                <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
+                            </div>
+                        }
 
-                        <div class='col-md-2' id="fromDate">
-                            <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
-                        </div>
                         <div class='col-md-2' id="toDate">
                             <input class="form-control btn-flat" placeholder="Đến ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Đến ngày" name="toDate" type="text" value="@ViewBag.CurrentToDate">
                         </div>
@@ -59,7 +72,7 @@
                         <tr>
                             @if (Session["UserType"] != null)
                             {
-                                if (Session["UserType"] != UserType.Client.ToString())
+                                if ((string)Session["UserType"] != UserType.Client.ToString())
                                 {
                                     <th class='text-center' style="width: 10px;">Khách hàng</th>
                                 }
@@ -78,7 +91,7 @@
                             <tr>
                                 @if (Session["UserType"] != null)
                                 {
-                                    if (Session["UserType"] != UserType.Client.ToString())
+                                    if ((string)Session["UserType"] != UserType.Client.ToString())
                                     {
                                         <td class='text-center'>
                                             @Html.DisplayFor(modelItem => item.UserName)

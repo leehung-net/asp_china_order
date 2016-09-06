@@ -33,7 +33,6 @@ namespace OrderChina
                 "~/Content/bootstrap.css",
                 "~/Content/bootstrap-datepicker3.css",
                 "~/Content/hung-home.css",
-                "~/Content/font-awesome.css",
                 "~/Content/user.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
