@@ -1,13 +1,10 @@
-﻿@using System.Web.UI.WebControls
-@using OrderChina.Models
+﻿@using OrderChina.Models
 @using PagedList.Mvc
-@model PagedList.IPagedList<OrderChina.Models.Order>
-@if (ViewData["message"] != null)
-{
-    <script>
-        alert(ViewData["message"]);
-    </script>
+@model PagedList.IPagedList<Order>
+@{
+    ViewBag.Tilte = "Manage";
 }
+
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <section @*class='container'*@ style='padding: 20px;'>
     <div class='row'>

@@ -145,26 +145,18 @@
                         {
                             if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Sale.ToString())
                             {
-                                if (@Model.Status != OrderStatus.ClientConfirm.ToString())
+                                if (@Model.Status == OrderStatus.ClientConfirm.ToString())
                                 {
-                                    <a href="#" onclick=" bootbox.alert('Trạng thái lệnh không hợp lệ') " class="btn btn-facebook btn-xs pull-right" rel='tooltip' title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("SaleConfirmOrder", "Account", new {id = Model.OrderId})" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
+                                    <a href="@Url.Action("SaleConfirmOrder", "Account", new {id = Model.OrderId})" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
 
                                 }
                             }
 
                             if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString())
                             {
-                                if (@Model.Status != OrderStatus.SaleConfirm.ToString())
+                                if (@Model.Status == OrderStatus.SaleConfirm.ToString())
                                 {
-                                    <a href="#" onclick="bootbox.alert('Trạng thái lệnh không hợp lệ') " rel='tooltip' class="btn btn-facebook btn-xs pull-right" title="Chốt đơn"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("AccountingConfirmOrder", "Account", new {id = Model.OrderId})" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-account-confirm" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
+                                    <a href="@Url.Action("AccountingConfirmOrder", "Account", new {id = Model.OrderId})" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-account-confirm" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
                                 }
                             }
 
@@ -172,10 +164,10 @@
                             {
                                 if (@Model.Status == OrderStatus.Paid.ToString())
                                 {
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'2');" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'2');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
                                         <i class="fa fa-arrow-left"></i> Gửi sale
                                     </a>
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'3');" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'3');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
                                         <i class="fa fa-ticket"></i> Đặt hàng xong
                                     </a>
                                 }
@@ -184,13 +176,18 @@
                             {
                                 if (@Model.Status == OrderStatus.Order.ToString())
                                 {
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'4');" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'4');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
                                         <i class="fa fa-arrow-left"></i> Xác nhận hàng về
                                     </a>
-                                    <a href="@Url.Action("FinishOrder", "Account", new {id = Model.OrderId})" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
+
+                                }
+                                if (@Model.Status == OrderStatus.Receive.ToString())
+                                {
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'5');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
                                         <i class="fa fa-ticket"></i> Xác nhận giao hàng
                                     </a>
                                 }
+
                             }
                         }
                     </p>
@@ -613,6 +610,48 @@
                             });
                         } else {
                             bootbox.alert("Có lỗi trong quá trình xác nhận đặt hàng!", function () {
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error: function () {
+                        bootbox.alert("Lỗi");
+                    }
+                });
+            } else if (type == 4) {
+                $.ajax({
+                    url: "@Url.Action("ConfirmReceive", "Account")",
+                    type: 'POST',
+                    data: '{ \"orderId\" : \"' + orderId + '\"}',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            bootbox.alert("Xác nhận hàng về thành công!", function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            bootbox.alert("Có lỗi trong quá trình xác nhận hàng về!", function () {
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error: function () {
+                        bootbox.alert("Lỗi");
+                    }
+                });
+            } else if (type == 5) {
+                $.ajax({
+                    url: "@Url.Action("FinishOrder", "Account")",
+                    type: 'POST',
+                    data: '{ \"orderId\" : \"' + orderId + '\"}',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            bootbox.alert("Xác nhận đã giao hàng cho khách thành công!", function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            bootbox.alert("Có lỗi trong quá trình xác nhận giao hàng!", function () {
                                 window.location.reload();
                             });
                         }

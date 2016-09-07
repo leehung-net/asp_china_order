@@ -4,9 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Transactions;
+using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
@@ -45,7 +49,33 @@ namespace OrderChina.Controllers
         {
             if (IsValid(model.Email, model.Password))
             {
-                FormsAuthentication.SetAuthCookie(model.Email, false);
+                FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
+                //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
+                //var EncryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
+
+                //Response.Cookies.Add(authCookie);
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    if (db.Rates.Any())
+                    {
+                        var rate = db.Rates.FirstOrDefault();
+                        if (rate != null)
+                        {
+                            Session["Price"] = rate.Price.ToString("##,###");
+                            Session["fee1"] = rate.FormatPrice(rate.fee1);
+                            Session["fee2"] = rate.FormatPrice(rate.fee2);
+                            Session["fee3"] = rate.FormatPrice(rate.fee3);
+                        }
+                    }
+                    var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+                    if (userProfile != null)
+                    {
+                        Session["Name"] = userProfile.Name;
+                        Session["ID"] = userProfile.UserId;
+                        Session["UserType"] = userProfile.UserType;
+                    }
+                }
                 return RedirectToLocal(returnUrl);
             }
 
@@ -200,7 +230,7 @@ namespace OrderChina.Controllers
             }
             else if ((string)Session["UserType"] == UserType.Recieve.ToString())
             {
-                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString()).ToList();
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.Receive.ToString()).ToList();
             }
             else if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
             {
@@ -238,7 +268,7 @@ namespace OrderChina.Controllers
             ViewBag.CurrentUserName = username;
 
 
-            const int pageSize = 3;
+            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             return View(listOrder.ToPagedList(pageNumber, pageSize));
@@ -633,6 +663,46 @@ namespace OrderChina.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        public ActionResult ConfirmReceive(string orderid)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            if (model != null)
+            {
+                model.Status = OrderStatus.Receive.ToString();
+                db.SaveChanges();
+
+                //gửi mail
+                SendMail(model.UserName, model.OrderId);
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult FinishOrder(string orderid)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            if (model != null)
+            {
+
+                model.Status = OrderStatus.Finish.ToString();
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+
+            }
+        }
+        [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult AccountingConfirmOrder(Order model)
         {
@@ -852,7 +922,7 @@ namespace OrderChina.Controllers
             ViewBag.CurrentUserType = userType;
             ViewBag.CurrentUserName = userName;
 
-            const int pageSize = 3;
+            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             return View(userProfiles.ToPagedList(pageNumber, pageSize));
@@ -939,7 +1009,7 @@ namespace OrderChina.Controllers
 
         public ActionResult UpdateRate(string fromDate, string toDate, int? page)
         {
-            const int pageSize = 3;
+            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             var model = new RateModel();
@@ -1072,6 +1142,45 @@ namespace OrderChina.Controllers
             return RedirectToAction("Manage");
         }
         #endregion
+
+        public bool SendMail(string address, int orderid, List<string> listLink = null)
+        {
+            try
+            {
+                var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == address);
+                if (userProfile != null)
+                {
+                    var fromAddress = new MailAddress(WebConfigurationManager.AppSettings["Email"], WebConfigurationManager.AppSettings["Email_Name"]);
+                    var toAddress = new MailAddress(userProfile.Email, userProfile.Name);
+
+                    var fromPassword = WebConfigurationManager.AppSettings["Password"];
+                    var subject = WebConfigurationManager.AppSettings["Subject"];
+                    string body = "Công ty abc xin trân trọng kính báo đơn hàng : " + orderid + " đã về đến kho của chúng tôi. \n Kính mới quý khách đến lấy. Chúc quý khách làm ăn phát đạt. \n Regards.";
+
+                    var smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                    };
+                    using (var message = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = body, IsBodyHtml = true })
+                    {
+                        smtp.Send(message);
+                        return true;
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+            return false;
+        }
+
     }
 
 }
