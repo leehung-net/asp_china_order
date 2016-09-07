@@ -27,6 +27,7 @@ namespace OrderChina.Controllers
                 if (userProfile != null)
                 {
                     Session["Name"] = userProfile.Name;
+                    Session["ID"] = userProfile.UserId;
                     Session["UserType"] = userProfile.UserType;
                 }
             }

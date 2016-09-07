@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Đổi mật khẩu";
+}
+@if (ViewData["message"] != null)
+{
+    <script>
+        alert(ViewData["message"]);
+    </script>
+}
+<style>
+    .lab {
+        font-size: 17px;
+        padding-right: 15px;
+    }
+</style>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<section @*class='container'*@ style='padding: 20px;'>
+    <div class='row'>
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "Changepass", true } })
+
+        <div class="col-md-9 order-content">
+            <div class='row'>
+                <h3 class='text-center'>Đổi mật khẩu</h3>
+                <hr>
+                @using (Html.BeginForm("ChangePass", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    
+                    <table style="width:100%;text-align:right;padding-right:3%">
+                        <tr style="height:60px">
+                            <td style="width:28%"><label class="lab">Mật khẩu cũ</label></td>
+                            <td style="padding-right:2%">
+                                @Html.TextBox("Password", null, new { @class = "form-control btn-flat" })
+                                <span id="username_error" style="color:#ff0000"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="lab">Mật khẩu mới</label></td>
+                            <td style="padding-right:2%">
+                                @Html.TextBox("NewPassword", null, new { @class = "form-control btn-flat" })
+                                <span id="sdt_error" style="color:#ff0000"></span>
+                            </td>
+                        </tr>
+                        <tr style="height:60px">
+                            <td><label class="lab">Xác nhận</label></td>
+                            <td style="padding-right:2%">
+                                @Html.TextBox("RepPassword", null, new { @class = "form-control btn-flat" })
+                                <span id="email_error" style="color:#ff0000"></span>
+                            </td>
+                        <tr style="height:60px">
+                            <td></td>
+                            <td align="left">
+                                <button type="submit" class="btn btn-danger btn-flat " id="btnsubmit">Đổi mật khẩu</button>
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</section>
