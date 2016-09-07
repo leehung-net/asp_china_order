@@ -65,7 +65,7 @@
                 @using (Html.BeginForm("UpdateRate", "Account", FormMethod.Get))
                 {
                     <p>
-                        <div class='col-md-2' id="fromDate">
+                        <div class='col-md-2' id="fromDate" style="padding-left: inherit">
                             <input class="form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
                         </div>
                         <div class='col-md-2' id="toDate">
@@ -79,7 +79,9 @@
                         </div>
                     </p>
                 }
-                <hr>
+                <div class="col-sm-12">
+                    <hr>
+                </div>
                 <table class="table table-bordered">
                     <thead>
                         <tr>

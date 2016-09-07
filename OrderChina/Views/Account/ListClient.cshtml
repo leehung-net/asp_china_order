@@ -20,7 +20,7 @@
                     @Html.ActionLink("Tạo mới", "Register")
                     @using (Html.BeginForm("ListClient", "Account", FormMethod.Get))
                     {
-                        <div class='col-md-2'>
+                        <div class='col-md-2' style="padding-left: inherit">
                             <input class="form-control btn-flat " placeholder="Email" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Email" autofocus="autofocus" name="userName" value="@ViewBag.CurrentUserName" type="text">
                         </div>
 
@@ -35,7 +35,9 @@
 
                     }
                 </p>
-                <hr>
+                <div class="col-sm-12">
+                    <hr>
+                </div>
 
                 <table class="table table-bordered table-striped">
                     <thead>

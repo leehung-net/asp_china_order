@@ -2,9 +2,7 @@
     ViewBag.Title = "_AssignSalePartial";
 }
 @model OrderChina.Models.UserProfile
-<script src="/Scripts/jquery.validate.unobtrusive.js"></script>
-<script src="/Scripts/jquery.validate.js"></script>
-<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+
 @using (Html.BeginForm("ChangeUserType", "Account", FormMethod.Post))
 {
     @Html.AntiForgeryToken()

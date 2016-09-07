@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Diagnostics
+@{
     ViewBag.Title = "hung-header";
 }
 
@@ -24,12 +25,12 @@
         </div>
         <div class="collapse navbar-collapse" id="menu-top">
             <ul class="nav navbar-nav">
-                <li><a href="http://nhaphangtaobao.com.vn/trang-chu.html" style="font-size: 20px;"><span class="fa fa-home"></span></a></li>
+                <li><a href="@Url.Action("Index", "Home")" style="font-size: 20px;"><span class="fa fa-home"></span></a></li>
                 <li>
-                    <a href="http://nhaphangtaobao.com.vn/tin-tuc/quy-dinh.html" title="Quy định">Quy định</a>
+                    <a href="" title="Quy định">Quy định</a>
                 </li>
                 <li>
-                    <a href="http://nhaphangtaobao.com.vn/tin-tuc/huong-dan.html" title="Hướng dẫn khách hàng">Hướng dẫn khách hàng</a>
+                    <a href="" title="Hướng dẫn khách hàng">Hướng dẫn khách hàng</a>
                 </li>
                 <li>
                     <a href="@Url.Action("Introduce", "Home")" title="Giới thiệu">Giới thiệu</a>
@@ -120,35 +121,46 @@
                     </p>
                 </div>
             </div>
-            <p>
-                &nbsp;
-            </p>
-
-
         </div>
-    </div>
-    <section class='g-main-content container'>
-        <div class="row" style="padding-top:50px;">
-            <div class='col-md-12'>
-                <div class='text-center g-link'>
-                    <div>
-                        <h1>
-                            ĐEM SỰ TH&Agrave;NH C&Ocirc;NG TỚI BẠN L&Agrave; TR&Aacute;CH NHIỆM CỦA CH&Uacute;NG T&Ocirc;I
-                        </h1>
-                        <p class="extra-slogan">
-                            Chỉ 5 tới 7 ng&agrave;y cho một đơn h&agrave;ng được giao dịch th&agrave;nh c&ocirc;ng v&agrave; trả h&agrave;ng tận tay bạn
-                        </p>
-                        <p class="extra-slogan">
-                            &nbsp;
-                        </p>
-                    </div>
-                    <div class="text-center link-create-order">
-                        @Html.ActionLink("TẠO ĐƠN HÀNG", "CreateOrder", "Account", null, new { @class = "btn btn-order" })
-                        @*<a href="http://nhaphangtaobao.com.vn/tao-don-hang.html" class="btn btn-order">TẠO ĐƠN HÀNG &nbsp;<span class='fa fa-angle-right'></span></a>*@
-                        <a href="http://nhaphangtaobao.com.vn/tao-don-ky-gui.html" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class='fa fa-angle-right'></span></a>
+
+        @if (Request.Url != null && (!Request.Url.AbsolutePath.Contains("Home/Index") && Request.Url.AbsolutePath != "/"))
+        {
+            <div class="row banner-create-order" style="padding-top: 0px !important;">
+                <div class="col-md-12">
+                    <div class="text-center g-link">
+                        <div class="text-center link-create-order sub-layout-create-order">
+                            <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("CreateOrder","Account")" class="btn btn-order">TẠO ĐƠN HÀNG &nbsp;<span class="fa fa-angle-right"></span></a>
+                            <a style="padding: 10px !important;font-size: 14px !important;" href="http://nhaphangtaobao.com.vn/tao-don-ky-gui.html" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class="fa fa-angle-right"></span></a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        }
+    </div>
+    @if (Request.Url != null && (Request.Url.AbsolutePath.Contains("Home/Index") || Request.Url.AbsolutePath == "/"))
+    {
+        <section class='g-main-content container'>
+            <div class="row" style="padding-top: 50px;">
+                <div class='col-md-12'>
+                    <div class='text-center g-link'>
+                        <div>
+                            <h1>
+                                ĐEM SỰ TH&Agrave;NH C&Ocirc;NG TỚI BẠN L&Agrave; TR&Aacute;CH NHIỆM CỦA CH&Uacute;NG T&Ocirc;I
+                            </h1>
+                            <p class="extra-slogan">
+                                Chỉ 5 tới 7 ng&agrave;y cho một đơn h&agrave;ng được giao dịch th&agrave;nh c&ocirc;ng v&agrave; trả h&agrave;ng tận tay bạn
+                            </p>
+                            <p class="extra-slogan">
+                                &nbsp;
+                            </p>
+                        </div>
+                        <div class="text-center link-create-order">
+                            @Html.ActionLink("TẠO ĐƠN HÀNG", "CreateOrder", "Account", null, new { @class = "btn btn-order" })
+                            <a href="" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class='fa fa-angle-right'></span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
 </section>

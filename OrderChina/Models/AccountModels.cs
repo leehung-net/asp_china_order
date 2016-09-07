@@ -93,8 +93,7 @@ namespace OrderChina.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         [Display(Name = "Mã đơn hàng")]
         public int OrderId { get; set; }
-
-
+        
         public string UserName { get; set; }
         public string Phone { get; set; }
         [Display(Name = "Tỷ giá")]
@@ -102,9 +101,12 @@ namespace OrderChina.Models
         [Display(Name = "Trạng thái")]
         public string Status { get; set; }
         public double TotalPrice { get; set; }
+
         [Display(Name = "Tổng tiền")]
         public double TotalPriceConvert { get; set; }
 
+        [Display(Name = "Phí dịch vụ")]
+        [Required(ErrorMessage = "Phí dịch vụ bắt buộc nhập")]
         public double Fee { get; set; }
 
         public double FeeShipChina { get; set; }
@@ -115,6 +117,12 @@ namespace OrderChina.Models
 
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate { get; set; }
+
+        [Display(Name = "Tiền thu thêm")]
+        public double AccountingCollected { get; set; }
+
+        [Display(Name = "Tiền đặt cọc")]
+        public double DownPayment { get; set; }
         public string SaleManager { get; set; }
 
         public string getStatusText()
@@ -159,11 +167,19 @@ namespace OrderChina.Models
         [Required]
         public string Phone { get; set; }
 
-        public int QuantitySellPlace { get; set; }
+        [Display(Name = "Đặt được")]
+        public int? QuantitySellPlace { get; set; }
 
-        public int QuantityInWarehouse { get; set; }
+        [Display(Name = "Về kho")]
+        public int? QuantityInWarehouse { get; set; }
+
+        [Display(Name = "Tỷ giá đặt được")]
+        public double? Rate_Real { get; set; }
 
         public string Note { get; set; }
+
+        [Display(Name = "Ngày xuất kho")]
+        public DateTime? DeliveryDate { get; set; }
 
     }
 
@@ -411,9 +427,21 @@ namespace OrderChina.Models
         public double FeeShip { get; set; }
 
         public DateTime CreateDate { get; set; }
+
+        [Display(Name = "Ngày xuất kho")]
+        public DateTime DeliveryDate { get; set; }
+
+        [Display(Name = "Tiền thu thêm")]
+        public double AccountingCollected { get; set; }
+
+        [Display(Name = "Tiền đặt cọc")]
+        public double DownPayment { get; set; }
         public string SaleManager { get; set; }
 
         public SaleManageInfo SaleManageInfo { get; set; }
+
+        public UserProfile Client { get; set; }
+
         public IEnumerable<OrderDetail> ListOrderDetails { get; set; }
         public string StatusText { get; set; }
     }
@@ -442,7 +470,7 @@ namespace OrderChina.Models
         [Display(Name = "Đơn mới")]
         New = 1,
         [Display(Name = "Đã thu tiền")]
-        Levy = 2,
+        Paid = 2,
         [Display(Name = "Đặt hàng")]
         Order = 3,
         [Display(Name = "Hoàn thành")]
@@ -450,7 +478,11 @@ namespace OrderChina.Models
         [Display(Name = "Đơn hủy")]
         Cancel = 5,
         [Display(Name = "Khách hàng confirm")]
-        ClientConfirm = 6
+        ClientConfirm = 6,
+        [Display(Name = "Sale chốt đơn hàng")]
+        SaleConfirm = 7,
+        [Display(Name = "Hàng về đã về kho")]
+        Receive = 8
     }
 
     public enum UserType
@@ -466,7 +498,9 @@ namespace OrderChina.Models
         [Display(Name = "Khách hàng")]
         Client = 5,
         [Display(Name = "Nhân viên đặt hàng")]
-        Orderer = 6
+        Orderer = 6,
+        [Display(Name = "Nhân viên nhận hàng")]
+        Recieve = 7
     }
     
 }

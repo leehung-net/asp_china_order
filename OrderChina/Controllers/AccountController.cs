@@ -175,23 +175,51 @@ namespace OrderChina.Controllers
         //
         // GET: /Account/Manage
 
-        public ActionResult Manage(string listStatus, string fromDate, string toDate, string OrderId, int? page)
+        public ActionResult Manage(string username, string listStatus, string fromDate, string toDate, string OrderId, int? page)
         {
 
             ViewBag.ListStatus = GetListStatus(listStatus);
             List<Order> listOrder = new List<Order>();
+
+            if ((string)Session["UserType"] == UserType.Sale.ToString())
+            {
+                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
+                listOrder = db.Orders.Where(a => listUserManage.Contains(a.UserName)).ToList();
+            }
+            else if ((string)Session["UserType"] == UserType.Client.ToString())
+            {
+                listOrder = db.Orders.Where(a => a.UserName == User.Identity.Name).ToList();
+            }
+            else if ((string)Session["UserType"] == UserType.Accounting.ToString())
+            {
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.SaleConfirm.ToString()).ToList();
+            }
+            else if ((string)Session["UserType"] == UserType.Orderer.ToString())
+            {
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Paid.ToString()).ToList();
+            }
+            else if ((string)Session["UserType"] == UserType.Recieve.ToString())
+            {
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString()).ToList();
+            }
+            else if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
+            {
+                listOrder = db.Orders.ToList();
+            }
+            if (!string.IsNullOrEmpty(username))
+            {
+                listOrder = listOrder.FindAll(a => a.UserName.IndexOf(username, System.StringComparison.Ordinal) > 0);
+            }
+
             if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
             {
                 var fromdate = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var todate = DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                listOrder = (from order in db.Orders
+                listOrder = (from order in listOrder
                              where fromdate <= order.CreateDate && order.CreateDate <= todate
                              select order).ToList();
             }
-            else
-            {
-                listOrder = db.Orders.ToList();
-            }
+
             if (!string.IsNullOrEmpty(listStatus))
             {
                 listOrder = listOrder.FindAll(a => a.Status == listStatus);
@@ -201,15 +229,14 @@ namespace OrderChina.Controllers
                 listOrder = listOrder.FindAll(a => a.OrderId.ToString() == OrderId);
             }
 
-            if (Request.IsAuthenticated)
-            {
-                listOrder = listOrder.FindAll(a => a.UserName == User.Identity.Name);
-            }
+            listOrder = listOrder.OrderByDescending(a => a.CreateDate).ToList();
 
             ViewBag.CurrentToDate = toDate;
             ViewBag.CurrentFromDate = fromDate;
             ViewBag.CurrentStatus = listStatus;
             ViewBag.CurrentOrderId = OrderId;
+            ViewBag.CurrentUserName = username;
+
 
             const int pageSize = 3;
             int pageNumber = (page ?? 1);
@@ -255,16 +282,6 @@ namespace OrderChina.Controllers
             }
 
             return new SelectList(list, "name", "display", value);
-        }
-        //
-        // POST: /Account/Manage
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Manage(LocalPasswordModel model)
-        {
-            // If we got this far, something failed, redisplay form
-            return View();
         }
 
         #region Helpers
@@ -514,6 +531,10 @@ namespace OrderChina.Controllers
                 model.CreateDate = order.CreateDate;
                 model.Fee = order.Fee;
                 model.Weight = order.Weight;
+                model.DownPayment = order.DownPayment;
+                model.AccountingCollected = order.AccountingCollected;
+
+
                 if (!string.IsNullOrEmpty(order.SaleManager))
                 {
                     var user = db.UserProfiles.FirstOrDefault(a => a.Email == order.SaleManager);
@@ -527,12 +548,106 @@ namespace OrderChina.Controllers
                         };
                     }
                 }
+
+                if (!string.IsNullOrEmpty(order.UserName))
+                {
+                    var user = db.UserProfiles.FirstOrDefault(a => a.Email == order.UserName);
+                    if (user != null)
+                    {
+                        model.Client = user;
+                    }
+                }
             }
             model.ListOrderDetails = orderDetail;
             ViewData["message"] = message;
             return View(model);
         }
 
+
+        public ActionResult SaleConfirmOrder(int id)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId == id);
+            return PartialView("_SaleConfirmOrderPartial", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaleConfirmOrder(Order model)
+        {
+            var order = db.Orders.FirstOrDefault(m => m.OrderId == model.OrderId);
+            if (order != null)
+            {
+                order.Fee = model.Fee;
+                order.Status = OrderStatus.SaleConfirm.ToString();
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
+
+        }
+
+        public ActionResult AccountingConfirmOrder(int id)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId == id);
+            return PartialView("_AccountingConfirmOrderPartial", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult OrdererRejectOrder(string orderid)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            if (model != null)
+            {
+                model.Status = OrderStatus.ClientConfirm.ToString();
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult OrdererConfirmOrder(string orderid)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            if (model != null)
+            {
+                model.Status = OrderStatus.Order.ToString();
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false });
+
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult AccountingConfirmOrder(Order model)
+        {
+            var order = db.Orders.FirstOrDefault(m => m.OrderId == model.OrderId);
+            if (order != null)
+            {
+                order.DownPayment = model.DownPayment;
+                order.AccountingCollected = model.AccountingCollected;
+                order.Status = OrderStatus.Paid.ToString();
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
+
+        }
         public ActionResult AddEditOrderDetail(int? id, int? orderId)
         {
             if (id != null)
@@ -615,6 +730,45 @@ namespace OrderChina.Controllers
                         ViewData["message"] = "Cập nhật link hàng thất bại";
                         dbContextTransaction.Rollback();
                     }
+                }
+
+            }
+
+            return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
+        }
+
+        public ActionResult UpdateOrderDetail(int? id, bool IsOrderer)
+        {
+            var model = db.OrderDetails.FirstOrDefault(m => m.OrderDetailId == id);
+            ViewBag.IsOrderer = IsOrderer;
+            return PartialView("_UpdateOrderDetail", model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateOrderDetail(OrderDetail model)
+        {
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var orderDetail = db.OrderDetails.FirstOrDefault(m => m.OrderDetailId == model.OrderDetailId);
+                    if (orderDetail != null)
+                    {
+                        orderDetail.DeliveryDate = model.DeliveryDate;
+                        orderDetail.QuantityInWarehouse = model.QuantityInWarehouse;
+                        orderDetail.QuantitySellPlace = model.QuantitySellPlace;
+                        orderDetail.Rate_Real = model.Rate_Real;
+                        db.SaveChanges();
+                    }
+
+                    dbContextTransaction.Commit();
+                }
+                catch
+                {
+                    ViewData["message"] = "Cập nhật link hàng thất bại";
+                    dbContextTransaction.Rollback();
                 }
 
             }
