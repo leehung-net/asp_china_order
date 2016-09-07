@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Personal";
+}
+@if (ViewData["message"] != null)
+{
+    <script>
+        alert(ViewData["message"]);
+    </script>
+}
+<style>
+    .lab {
+        font-size: 17px;
+        padding-right: 15px;
+    }
+    .Gende input{
+        width:50px;
+    }
+</style>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<section @*class='container'*@ style='padding: 20px;'>
+    <div class='row'>
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "User", true } })
+
+        <div class="col-md-9 order-content">
+            <div class='row'>
+                <h3 class='text-center'>Đổi thông tin cá nhân</h3>
+                <hr>
+                @using (Html.BeginForm("Personal", "Account", FormMethod.Post))
+                {
+                    <table style="width:100%;text-align:right">
+                        <tr style="height:60px">
+                            <td style="width:20%"><label class="lab">Họ tên</label></td>
+                            <td>@Html.TextBox("Name", null, new { @class = "form-control btn-flat" })
+                                <span id="username_error" style="color:#ff0000"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="lab">Điện thoại</label></td>
+                            <td style="padding-left:2px">@Html.TextBox("Phone", null, new { @class = "form-control btn-flat" })
+                                <span id="sdt_error" style="color:#ff0000"></span>
+                            </td>
+                        </tr>
+                        <tr style="height:60px">
+                            <td><label class="lab">Webiste hoặc fanpage FB</label></td>
+                            <td>@Html.TextBox("Email", null, new { @class = "form-control btn-flat" })
+                                <span id="email_error" style="color:#ff0000"></span>
+</td>
+                        </tr>
+                        <tr>
+                            <td><label class="lab">Giới tính</label></td>
+                            <td align="left" class="Gende">
+                            @Html.RadioButton("Gender","Nam")<b>Nam</b>
+                            @Html.RadioButton("Gender", "Nữ")<b>Nữ</b>
+                            </td>
+                        </tr>
+                        <tr style="height:60px">
+                            <td><label class="lab">Địa chỉ kho nhận</label></td>
+                            <td align="left"><select class="form-control" style="width:200px">
+                                <option>Kho Hà Nội</option>
+                                <option>KHo Sài Gòn</option>
+                                </select></td>
+                        </tr>
+                        <tr>
+                            <td><label class="lab">Địa chỉ</label></td>
+                            <td>@Html.TextBox("Address", null, new { @class = "form-control btn-flat" })
+                                <span id="add_error" style="color:#ff0000"></span>
+                            </td>
+                        </tr>
+                        <tr style="height:60px">
+                            <td></td>
+                            <td align="left">
+                                <button type="submit" class="btn btn-danger btn-flat " id="btnsubmit">Cập nhật</button>
+                                <a style="font-size:14px;color:blue" href="@Url.Action("ChangePass", "Account", new { id = Session["ID"] })">Đổi mật khẩu</a>
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</section>

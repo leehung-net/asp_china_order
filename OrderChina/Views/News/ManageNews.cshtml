@@ -1,31 +1,92 @@
 ﻿@{
-    ViewBag.Title = "ManageNews";
+    
 }
 
-<h2>ManageNews</h2>
 @using OrderChina.Models;
 @model PagedList.IPagedList<OrderChina.Models.News>
 @using PagedList;
 @using PagedList.Mvc;
-<div>Create</div>
-<div>
-    <table>
-        <tr>
-            <td>Mã tin tức</td>
-            <td>Tiêu đề</td>
-            <td>Thời gian cập nhật</td>
-            <td>Thao tác</td>
-        </tr>
-@foreach(var news in Model){
-        <tr>              
-            <td>@news.IDNews</td>
-            <td>@news.Title</td>
-            <td></td>
-            <td>
-                Sửa
-                Xóa
-            </td>
-        </tr>
+@if (ViewData["message"] != null)
+{
+<a href="~/Views/Account/_AssignSalePartial.cshtml">~/Views/Account/_AssignSalePartial.cshtml</a>
+    <script>
+        alert(ViewData["message"]);
+    </script>
 }
-    </table>
-</div>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<script>
+    function Deleteconfirm() {
+        if (confirm("Bạn có chắc chắn muốn xóa sản phảm này này"))
+            return true;
+        else
+            return false;
+    }
+    FocusEvent = false;
+    checked = false;
+</script>
+
+<section @*class='container'*@ style='padding: 20px;'>
+    <div class="news">
+        <h2>ManageNews</h2>
+        <div class='row'>
+            @Html.Partial("~/Views/Account/_AsideMenuPartial.cshtml", new ViewDataDictionary { { "Node", true } })
+
+            <div class="col-md-9 order-content">
+                <div class='row'>
+                    <h3 class='text-center'>DANH SÁCH TIN TỨC</h3>
+
+                    <p>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                            Tạo mới tin tức
+                        </button>
+                    </p>
+                    <hr>
+
+                    <div>
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <td>Mã tin tức</td>
+                                <td>Tiêu đề</td>
+                                <td>Thời gian cập nhật</td>
+                                <td>Thao tác</td>
+                            </tr>
+                            @foreach (var news in Model)
+                            {
+                                <tr>
+                                    <td>@news.IDNews</td>
+                                    <td>@news.Title</td>
+                                    <td></td>
+                                    <td>
+                                        <a href="@Url.Action("Edit", "News", new { id = @news.IDNews })">
+                                            <i class="glyphicon glyphicon-pencil" title="Sửa"></i>
+                                        </a>
+                                        
+                                        @Html.ActionLink("Xóa","Delete", new { id = news.IDNews }, new { @onclick = "return Deleteconfirm() ", title = "Delete",  })
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <div style="float: right; padding-right: 1%">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Tạo mới tin tức</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        @Html.Partial("Create")
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

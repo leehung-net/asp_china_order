@@ -855,6 +855,68 @@ namespace OrderChina.Controllers
         }
         #endregion
 
+        #region Personal
+        public ActionResult Personal(int id)
+        {
+            return View(db.UserProfiles.Find(id));
+        }
+
+        [HttpPost]
+        public ActionResult Personal(int id, FormCollection collection)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = db.UserProfiles.First(m => m.UserId == id);
+                string name = collection["Name"];
+                string phone = collection["Phone"];
+                string mail = collection["Email"];
+                string gerna = collection["Gender"];
+                string addres = collection["Address"];
+                user.Name = name;
+                user.Phone = phone;
+                user.Email = mail;
+                user.Gender = gerna;
+                user.Address = addres;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Personal");
+        }
+        #endregion
+        #region ChangePass
+
+        public ActionResult ChangePass()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ChangePass(int id, FormCollection collection)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = db.UserProfiles.First(m => m.UserId == id);
+                string oldpass = collection["Password"];
+                string newpass = collection["NewPassword"];
+                string reppass = collection["RepPassword"];
+                //if (user.Password != oldpass)
+                //{
+                //    ModelState.AddModelError("", "Mật khẩu sai.");
+
+                //}
+                //else if (newpass != reppass)
+                //{
+                //    ModelState.AddModelError("", "Xác nhận mật khẩu không chính xác");
+                //}
+                //else
+                //{
+                user.Password = newpass;
+                db.SaveChanges();
+
+                //}
+
+            }
+            return RedirectToAction("Manage");
+        }
+        #endregion
     }
 
 }

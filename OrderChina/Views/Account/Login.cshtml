@@ -2,83 +2,75 @@
 
 @{
     ViewBag.Title = "Log in";
+    Layout = null;
 }
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
 <style>
     .login {
-        font-size: 0.8em;
+        align-items:center;
+        font-size: 14px;
         max-width: 700px;
-        min-height: 335px;
         margin: auto;
-        margin-top:5%;
-        border: solid 1px #b6fffd;
+        margin-top: 5%;
+        padding:10px 30px;
         box-shadow: 0px 0px 6px rgba(0, 0, 0, 10);
         -moz-box-shadow: 0px 0px 6px rgba(0, 0, 0, 10);
         -webkit-box-shadow: 0px 0px 6px rgba(0, 0, 0, 10);
+        font-family: 'Open Sans',sans-serif;
     }
 </style>
-<div style="min-width: 100%; min-height: 450px; background-color: white">
+<div style="max-width: 100%; height: 100%; background-color: white">
+
     <div class="login">
+        <div style="min-width:640px;min-height:238px;margin:auto;margin-top:50px">
+            <p style="font-size: 20px; color: #888;text-align:center"><b>Đăng nhập</b></p>
             @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true)    
-                    <table align="center" style="max-width:100%;min-height:100%; ">
-                        <tr>
-                            <td colspan="3" align="center"><p style="font-size:1.5em"><b>Đăng nhập</b></p></td>
+                @Html.ValidationSummary(true)
 
-                        </tr>
-                        <tr>
-                            <td align="right" style="width:25%"><p> @Html.LabelFor(m => m.Email):</p></td>
-                            <td colspan="2">
-                                <p style="margin-left:5%;font-size:14px; ">
-                                    @Html.TextBoxFor(m => m.Email)
-                                    <br />
-                                    @Html.ValidationMessageFor(m => m.Password)
-                                </p>
+                <div class="form-group ">
+                    <div class="col-sm-3 control-label"><p style="font-size:15px;margin-top:7px" align="right"> @Html.LabelFor(m => m.Email)</p></div>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        <br />
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                </div>
+                <div>
+                    <div class="col-sm-3 control-label">
+                        <p style="font-size:15px;margin-top:7px" align="right">@Html.LabelFor(m => m.Password)</p>
+                    </div>
+                    <div class="col-sm-8">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        <br />
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                </div>
 
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td align="right" style="width:25%"><p>@Html.LabelFor(m => m.Password):</p></td>
-                            <td colspan="2">
-                                <p style="margin-left:5%">
-                                    @Html.PasswordFor(m => m.Password)
-                                    <br />
-                                    @Html.ValidationMessageFor(m => m.Password)
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td width="40%">
-                                <p style="font-size:0.7em">
-                                    @Html.CheckBoxFor(m => m.RememberMe)
-                                    @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-                                </p>
-
-                            </td>
-                            <td>
-                                <input type="submit" value="Đăng nhập" class="btn btn-danger"  style="background-color: #d9534f; height: 35px" />
-                                <input type="reset" value="Hủy" class="btn btn-default" style="width:50px" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <p style="font-size:14px">
-                                    Nếu  bạn chưa có tài khoản hãy<i style="color:blue"> @Html.ActionLink("Đăng ký", "Register")</i>
-                                </p>
-                            </td>
-                            <td></td>
-                        </tr>
-
-
-
-                    </table>
-
+                <div class="col-sm-8" style="float:right">
+                    <label class="col-sm-3 control-label"></label>
+                    <div class="check-store pull-left">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                    </div>
+                    <div class="btn-controls pull-right">
+                        <button type="submit" value="" class="btn btn-danger" >Đăng nhập</button>
+                        <button type="reset" value="" class="btn btn-default" style="width:50px" >Hủy</button>
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <div class="text-right col-sm-8" style="float:right">
+                        <p style="font-size:14px">
+                            Nếu  bạn chưa có tài khoản hãy<i style="color:blue"> @Html.ActionLink("Đăng ký", "Register")</i>
+                        </p>
+                    </div>
+                </div>
             }
-     
+        </div>
     </div>
 </div>
 @section Scripts {

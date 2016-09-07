@@ -1,0 +1,89 @@
+﻿@{
+
+}
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script src="~/Content/ckeditor_asp/_Samples/ckeditor/ckeditor.js"></script>
+<script src="~/Content/ckfinder/ckfinder.js"></script>
+<script type="text/javascript">
+    function BrowseServer() {
+        var finder = new CKFinder();
+        finder.selectActionFunction = SetFileField;
+        finder.popup();
+    }
+    function SetFileField(fileUrl) {
+        document.getElementById('Img').value = fileUrl;
+    }
+    var ckeditor;
+    function createEditor(languageCode, id) {
+        var editor = CKEDITOR.replace(id, { language: languageCode })
+    }
+    $(function () { createEditor('vi', 'editor') })
+</script>
+@if (ViewData["message"] != null)
+{
+    <a href="~/Views/Account/_AssignSalePartial.cshtml">~/Views/Account/_AssignSalePartial.cshtml</a>
+    <script>
+        alert(ViewData["message"]);
+    </script>
+}<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<style>
+    .news {
+        width: 70%;
+        margin: auto 5%;
+    }
+</style>
+<section @*class='container'*@ style='padding: 20px;'>
+    <div class="news">
+        <h2>Sửa tin tức</h2>
+        <div class='row'>
+            @Html.Partial("~/Views/Account/_AsideMenuPartial.cshtml", new ViewDataDictionary { { "Node", true } })
+
+            <div class="col-md-9 order-content">
+                <div class='row'>
+                    <h3 class='text-center'>QUẢN LÍ TIN TỨC</h3>
+                    <hr>
+                    @using (Html.BeginForm("Edit", "News", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="editor-label">
+                            Tiêu đề tin tức:
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("Title", null, new { @class = "form-control" })
+                        </div>
+
+                        <div class="editor-label">
+                            Mô tả cơ bản:
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("Titlebig", null, new { @class = "form-control" })
+                        </div>
+
+                        <div class="editor-label">
+                            Nội dung chi tiết:
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextArea("NewsContent", null, new { id = "editor" })
+
+                        </div>
+
+                        <div class="editor-label">
+                            Hình ảnh mô tả:
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("Img", null, new { @class = "form-control" })
+                            <button class="btn btn-success" type="button" value="" onclick="BrowseServer();" style="width:150px">Chọn Ảnh ...</button>
+                        </div>
+
+                        <p align="center">
+                            <button type="submit" value="" class="btn btn-primary">Sửa</button>
+                        </p>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
