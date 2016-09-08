@@ -31,9 +31,9 @@
         Tài Khoản
     </h3>
     <ul class="list-group">
-        <li class="list-group-item ">
+        @*<li class="list-group-item ">
             <a href="#">Lịch sử giao dịch <sup class='label label-danger btn-flat pull-right'>new</sup></a>
-        </li>
+        </li>*@
         @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString()))
         {
             if (ViewData["ListClient"] != null)
@@ -79,7 +79,7 @@
                 </li>
             }
         }
-        <li class="list-group-item "><a href="#">Thông báo</a></li>
+        @*<li class="list-group-item "><a href="#">Thông báo</a></li>*@
         @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString()))
         {
             var id = Session["ID"];
@@ -97,7 +97,7 @@
             }
         }
         <li class="list-group-item ">
-            <a href="#">Đổi mật khẩu</a>
+            <a href="@Url.Action("ChangePass", "Account", new { id = Session["ID"] })">Đổi mật khẩu</a>
         </li>
         <li class="list-group-item ">
             <a href="#">Điều khoản sử dụng</a>
