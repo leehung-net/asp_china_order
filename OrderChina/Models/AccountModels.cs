@@ -325,7 +325,6 @@ namespace OrderChina.Models
 
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Email bắt buộc nhập.")]
         [Remote("IsCheckEmail", "Account", "")]
         [Display(Name = "Email *")]
         public string Email { get; set; }

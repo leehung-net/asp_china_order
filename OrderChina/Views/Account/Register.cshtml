@@ -46,7 +46,7 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.Phone, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
-                        @Html.EditorFor(m => m.Phone)
+                        @(string.IsNullOrEmpty(@Model.Phone) ? Html.TextBoxFor(m => m.Phone) : Html.TextBoxFor(m => m.Phone, new { @readonly = "readonly" }))
                     </div>
                     @Html.ValidationMessageFor(m => m.Phone)
                 </div>

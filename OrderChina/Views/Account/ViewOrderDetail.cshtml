@@ -110,9 +110,12 @@
                             }
                             else
                             {
-                                <p class='col-md-3'>
-                                    @Html.ActionLink("Tạo tài khoản khách hàng", "Register")
-                                </p>
+                                if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Sale.ToString()))
+                                {
+                                    <p class='col-md-3'>
+                                        @Html.ActionLink("Tạo tài khoản khách hàng", "Register", "Account", new { phone = @Model.ListOrderDetails.ElementAt(0).Phone }, new { @class = "btn btn-danger btn-xs" })
+                                    </p>
+                                }
                             }
                         }
                     }

@@ -82,14 +82,14 @@
                                     @if (item.UserType == UserType.Client.ToString())
                                     {
                                         <a rel='tooltip' title="Gán sale quản lý"
-                                           href=@Url.Action("AssignSaleForClient", "Account", new { id = item.Email, userSale = item.SaleManage }) class="btn btn-xs btn-primary btn-assign">
+                                           href=@Url.Action("AssignSaleForClient", "Account", new { id = item.Phone, userSale = item.SaleManage }) class="btn btn-xs btn-primary btn-assign">
                                             <i class="fa fa-file"></i>
                                         </a>
                                     }
                                     @if (item.UserType != UserType.Admin.ToString() && item.UserType != UserType.Client.ToString())
                                     {
                                         <a rel='tooltip' title="Thay đổi quyền"
-                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Email }) class="btn btn-xs btn-primary btn-change">
+                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Phone }) class="btn btn-xs btn-primary btn-change">
                                             <i class="fa fa-cog"></i>
                                         </a>
                                     }

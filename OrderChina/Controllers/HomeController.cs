@@ -23,7 +23,7 @@ namespace OrderChina.Controllers
             }
             if (Request.IsAuthenticated)
             {
-                var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == User.Identity.Name);
+                var userProfile = db.UserProfiles.FirstOrDefault(a => a.Phone == User.Identity.Name);
                 if (userProfile != null)
                 {
                     Session["Name"] = userProfile.Name;

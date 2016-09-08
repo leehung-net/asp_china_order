@@ -3,10 +3,12 @@
 }
 
 @model OrderChina.Models.OrderDetail
-@Styles.Render("~/Content/css")
-@*@Scripts.Render("~/bundles/jquery")*@
-@Scripts.Render("~/bundles/bootstrap")
 
+@if (!ViewBag.IsOrderer)
+{
+    <link href="/Content/bootstrap-datepicker3.css" rel="stylesheet">
+    <script src="/Scripts/bootstrap-datepicker.min.js"></script>
+}
 @using (Html.BeginForm("UpdateOrderDetail", "Account", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -69,6 +71,3 @@
         });
     });
 </script>
-
-
-
