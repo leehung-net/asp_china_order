@@ -9,7 +9,6 @@ using System.Net.Mail;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Transactions;
-using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -26,7 +25,7 @@ namespace OrderChina.Controllers
     [InitializeSimpleMembership]
     public class AccountController : Controller
     {
-        DBContext db = new DBContext();
+        readonly DBContext db = new DBContext();
 
         #region User
         //
@@ -52,30 +51,33 @@ namespace OrderChina.Controllers
                 if (IsValid(model.Email, model.Password))
                 {
                     var user = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
-                    FormsAuthentication.SetAuthCookie(user.Phone, model.RememberMe);
-                    //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
-                    //var EncryptedTicket = FormsAuthentication.Encrypt(authTicket);
-                    //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
-
-                    //Response.Cookies.Add(authCookie);
-                    if (!string.IsNullOrEmpty(returnUrl))
+                    if (user != null)
                     {
-                        if (db.Rates.Any())
+                        FormsAuthentication.SetAuthCookie(user.Phone, model.RememberMe);
+                        //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
+                        //var EncryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                        //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
+
+                        //Response.Cookies.Add(authCookie);
+                        if (!string.IsNullOrEmpty(returnUrl))
                         {
-                            var rate = db.Rates.FirstOrDefault();
-                            if (rate != null)
+                            if (db.Rates.Any())
                             {
-                                Session["Price"] = rate.Price.ToString("##,###");
-                                Session["fee1"] = rate.FormatPrice(rate.fee1);
-                                Session["fee2"] = rate.FormatPrice(rate.fee2);
-                                Session["fee3"] = rate.FormatPrice(rate.fee3);
+                                var rate = db.Rates.FirstOrDefault();
+                                if (rate != null)
+                                {
+                                    Session["Price"] = rate.Price.ToString("##,###");
+                                    Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                    Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                    Session["fee3"] = rate.FormatPrice(rate.fee3);
+                                }
                             }
+
+                            Session["Name"] = user.Name;
+                            Session["ID"] = user.UserId;
+                            Session["UserType"] = user.UserType;
+
                         }
-
-                        Session["Name"] = user.Name;
-                        Session["ID"] = user.UserId;
-                        Session["UserType"] = user.UserType;
-
                     }
                     return RedirectToLocal(returnUrl);
                 }
@@ -207,6 +209,16 @@ namespace OrderChina.Controllers
                     };
                     db.UserProfiles.Add(userProfile);
                     db.SaveChanges();
+
+                    //create wallet, default currency = VND
+                    db.Wallets.Add(new Wallet
+                    {
+                        LastUpdate = DateTime.Now,
+                        User_Update = "",
+                        Client = userProfile.Phone,
+                        Currency = "VND",
+                        Money = 0
+                    });
 
                     if (!Request.IsAuthenticated)
                     {
@@ -727,7 +739,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult OrdererRejectOrder(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
             if (model != null)
             {
                 model.Status = OrderStatus.ClientConfirm.ToString();
@@ -735,18 +747,14 @@ namespace OrderChina.Controllers
 
                 return Json(new { success = true });
             }
-            else
-            {
-                return Json(new { success = false });
-
-            }
+            return Json(new { success = false });
         }
 
         [HttpPost]
         [AllowAnonymous]
         public ActionResult OrdererConfirmOrder(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
             if (model != null)
             {
                 model.Status = OrderStatus.Order.ToString();
@@ -754,18 +762,14 @@ namespace OrderChina.Controllers
 
                 return Json(new { success = true });
             }
-            else
-            {
-                return Json(new { success = false });
-
-            }
+            return Json(new { success = false });
         }
 
         [HttpPost]
         [AllowAnonymous]
         public ActionResult ConfirmReceive(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
             if (model != null)
             {
                 model.Status = OrderStatus.Receive.ToString();
@@ -775,18 +779,14 @@ namespace OrderChina.Controllers
                 SendMail(model.UserName, model.OrderId);
                 return Json(new { success = true });
             }
-            else
-            {
-                return Json(new { success = false });
-
-            }
+            return Json(new { success = false });
         }
 
         [HttpPost]
         [AllowAnonymous]
         public ActionResult FinishOrder(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
             if (model != null)
             {
 
@@ -795,11 +795,7 @@ namespace OrderChina.Controllers
 
                 return Json(new { success = true });
             }
-            else
-            {
-                return Json(new { success = false });
-
-            }
+            return Json(new { success = false });
         }
         [HttpPost]
         [AllowAnonymous]
@@ -971,7 +967,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult Cancel_Order(string orderId)
         {
-            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString() == orderId);
+            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString(CultureInfo.InvariantCulture) == orderId);
             if (order != null)
             {
                 order.Status = OrderStatus.Cancel.ToString();
@@ -984,7 +980,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult Confirm_Order(string orderId)
         {
-            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString() == orderId);
+            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString(CultureInfo.InvariantCulture) == orderId);
             if (order != null)
             {
                 order.Status = OrderStatus.ClientConfirm.ToString();
@@ -1241,6 +1237,10 @@ namespace OrderChina.Controllers
             }
             return RedirectToAction("Manage");
         }
+        #endregion
+
+        #region wallet
+
         #endregion
 
         public bool SendMail(string address, int orderid, List<string> listLink = null)

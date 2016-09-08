@@ -82,10 +82,10 @@
                 <div class="col-sm-12">
                     <hr>
                 </div>
-                <table class="table table-bordered">
+                <table class="table table-bordered table-striped" style="font-size: 12px">
                     <thead>
                         <tr>
-                            <th class='text-center' style="width: 100px;">Tỷ giá</th>
+                            <th class='text-center'>Tỷ giá</th>
                             <th class='text-center'>Cước vc 1</th>
                             <th class='text-center'>Cước vc 2</th>
                             <th class='text-center'>Cước vc 3</th>
@@ -93,7 +93,7 @@
                             <th class='text-center'>Thời gian cập nhật</th>
                         </tr>
                     </thead>
-                    <tbody id='link-container'>
+                    <tbody>
                         @if (Model.ListRateHistory != null)
                         {
                             foreach (var item in Model.ListRateHistory)

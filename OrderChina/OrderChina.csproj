@@ -246,9 +246,11 @@
     <Compile Include="App_Start\FontAwesomeBundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\Utilities.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\WalletController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -402,11 +404,9 @@
     <Content Include="Views\Shared\_HeaderPartial.cshtml" />
     <Content Include="Views\Shared\_FooterPartial.cshtml" />
     <Content Include="Views\Account\CreateOrder.cshtml" />
-    <Content Include="Views\Account\_AsideMenuPartial.cshtml" />
     <Content Include="Views\Account\ViewOrderDetail.cshtml" />
     <Content Include="Views\Account\_AddOrderDetailPartial.cshtml" />
     <Content Include="Views\Account\ListClient.cshtml" />
-    <Content Include="Views\Account\_AssignSalePartial.cshtml" />
     <Content Include="Views\Home\Introduce.cshtml" />
     <Content Include="Views\Home\Banggia.cshtml" />
     <Content Include="Views\Home\thanhtoan.cshtml" />
@@ -424,6 +424,11 @@
     <Content Include="Views\Account\ChangePass.cshtml" />
     <Content Include="Views\Account\_AccountingConfirmOrderPartial.cshtml" />
     <Content Include="Views\Account\_UpdateOrderDetail.cshtml" />
+    <Content Include="Views\Wallet\Index.cshtml" />
+    <Content Include="Views\Shared\_AsideMenuPartial.cshtml" />
+    <Content Include="Views\Wallet\_CreateWallet.cshtml" />
+    <Content Include="Views\Wallet\_AdditionWallet.cshtml" />
+    <Content Include="Views\Wallet\ListClient.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

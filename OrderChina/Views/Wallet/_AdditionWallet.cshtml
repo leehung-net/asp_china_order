@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "AdditionWallet";
+}
+@model OrderChina.Models.AdditionModel
+@Scripts.Render("~/bundles/jqueryval")
+
+
+@using (Html.BeginForm("AdditionWallet", "Wallet", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">@(ViewBag.isaddition ? "Công tiền cho ví" : "Trừ tiền cho ví")</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group row" style="width: 100%;font-size: 14px">
+                @Html.HiddenFor(m => m.walletid)
+                <div class="col-sm-5">
+                    <label>Số tiền</label>
+                    @Html.TextBoxFor(m => m.money, new { @class = "form-control btn-flat", autofocus = "autofocus", placeholder = "Nhập số tiền" })
+                </div>
+                <div class="col-sm-5">
+                    <label>Lý do</label>
+                    @Html.TextBoxFor(m => m.reason, new { @class = "form-control btn-flat", placeholder = "Nhập lý do" })
+                    @Html.ValidationMessageFor(m => m.reason)
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if (ViewBag.isaddition == true)
+                {
+                    <button type="submit" id="btnUpdate" value="addition" name="cmd" class="btn btn-primary">Cập nhật</button>
+                }
+                else
+                {
+                    <button type="submit" value="subtract" id="btnSave" name="cmd" class="btn btn-primary">Cập nhật</button>
+                }
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+}

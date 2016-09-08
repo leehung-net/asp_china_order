@@ -128,8 +128,8 @@
                     </div>
 
                     <div class="col-md-6">
-                        <p><font>(1) Tiền hàng</font><font style="float:right">@Model.TotalPriceConvert<sup>đ</sup></font></p>
-                        <p><font>(2) Phí dịch vụ (@Model.Fee%)</font><font style="float:right">@Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven)<sup>đ</sup></font></p>
+                        <p><font>(1) Tiền hàng</font><font style="float:right">@Model.TotalPriceConvert.ToString("##,###")<sup>đ</sup></font></p>
+                        <p><font>(2) Phí dịch vụ (@Model.Fee%)</font><font style="float:right">@Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven).ToString("##,###")<sup>đ</sup></font></p>
                         <p><font>(3) Ship nội địa TQ</font><font style="float:right">@Model.FeeShipChina<sup>đ</sup></font></p>
                         <p><font>(4) Trọng lượng</font><font style="float:right">@Model.Weight<sup>kg</sup></font></p>
                         <p><font>(5) Cước vận chuyển</font><font style="float:right">@Model.FeeShip<sup>đ</sup></font></p>
@@ -137,10 +137,10 @@
                     </div>
                     <div class="col-md-6">
                         <p><font>(6) Phí phát sinh (nếu có)</font><font style="float:right">0<sup>đ</sup></font></p>
-                        <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@(Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip)<sup>đ</sup></font></p>
-                        <p><font>(8) Đặt cọc</font><font style="float:right">@Model.DownPayment<sup>đ</sup></font></p>
-                        <p><font>(9) Đã thu thêm</font><font style="float:right">@Model.AccountingCollected<sup>đ</sup></font></p>
-                        <p><font>(10) Còn thiếu</font><font style="float:right">@((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip) - @Model.DownPayment - @Model.AccountingCollected)<sup>đ</sup></font></p>
+                        <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip).ToString("##,###"))<sup>đ</sup></font></p>
+                        <p><font>(8) Đặt cọc</font><font style="float:right">@Model.DownPayment.ToString("##,###")<sup>đ</sup></font></p>
+                        <p><font>(9) Đã thu thêm</font><font style="float:right">@Model.AccountingCollected.ToString("##,###")<sup>đ</sup></font></p>
+                        <p><font>(10) Còn thiếu</font><font style="float:right">@((ASP(Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip) - @Model.DownPayment - @Model.AccountingCollected).ToString("##,###"))<sup>đ</sup></font></p>
                     </div>
                     <span class="clearfix"></span>
                     <p class="col-md-6 pull-right">

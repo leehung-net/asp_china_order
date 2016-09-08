@@ -31,9 +31,36 @@
         Tài Khoản
     </h3>
     <ul class="list-group">
-        @*<li class="list-group-item ">
-            <a href="#">Lịch sử giao dịch <sup class='label label-danger btn-flat pull-right'>new</sup></a>
-        </li>*@
+        @if ((string)Session["UserType"] == UserType.Client.ToString())
+        {
+            if (ViewData["wallet"] != null)
+            {
+                <li class="list-group-item  active">
+                    <a href="@Url.Action("Index", "Wallet")">Ví điện tử</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item ">
+                    <a href="@Url.Action("Index", "Wallet")">Ví điện tử</a>
+                </li>
+            }
+        }
+        @if ((string)Session["UserType"] == UserType.Accounting.ToString())
+        {
+            if (ViewData["walletmanage"] != null)
+            {
+                <li class="list-group-item  active">
+                    <a href="@Url.Action("ListClient", "Wallet")">Quản lý ví điện tử</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item ">
+                    <a href="@Url.Action("ListClient", "Wallet")">Quản lý ví điện tử</a>
+                </li>
+            }
+        }
         @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString()))
         {
             if (ViewData["ListClient"] != null)

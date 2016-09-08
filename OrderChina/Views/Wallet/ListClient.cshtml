@@ -10,23 +10,19 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <section @*class='container'*@ style='padding: 20px;'>
     <div class='row'>
-        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "ListClient", true } })
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "walletmanage", true } })
 
         <div class="col-md-9 order-content">
             <div class='row'>
                 <h3 class='text-center'>DANH SÁCH NGƯỜI SỬ DỤNG</h3>
 
                 <p>
-                    @Html.ActionLink("Tạo mới", "Register")
-                    @using (Html.BeginForm("ListClient", "Account", FormMethod.Get))
+                    @using (Html.BeginForm("ListClient", "Wallet", FormMethod.Get))
                     {
                         <div class='col-md-2' style="padding-left: inherit">
                             <input class="form-control btn-flat " placeholder="Số điện thoại" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Email" autofocus="autofocus" name="userName" value="@ViewBag.CurrentUserName" type="text">
                         </div>
 
-                        <div class="col-md-3">
-                            @Html.DropDownList("userType", (IEnumerable<SelectListItem>)ViewBag.ListUserType, "--Loại người dùng--", new { @class = "form-control flat" })
-                        </div>
                         <div class="col-md-1">
                             <button name="submit" type="submit" class="btn btn-primary">
                                 <i class="fa fa-filter"></i>
@@ -45,10 +41,8 @@
                             <th class='text-center'>Email</th>
                             <th class='text-center'>Họ tên</th>
                             <th class='text-center'>Số điện thoại</th>
-                            <th class='text-center'>Loại người dùng</th>
                             <th class="text-center">Ngày sinh</th>
                             <th class="text-center">Số tài khoản</th>
-                            <th class="text-center">Người quản lý</th>
                             <th class='text-center'>Thao tác</th>
                         </tr>
                     </thead>
@@ -67,34 +61,15 @@
                                 </td>
 
                                 <td class='text-center'>
-                                    @item.getUserTypeText()
-                                </td>
-                                <td class='text-center'>
                                     @item.Birthday.ToString("dd/MM/yyyy")
                                 </td>
                                 <td class='text-center'>
                                     @Html.DisplayFor(modelItem => item.Account)
                                 </td>
                                 <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.SaleManage)
-                                </td>
-                                <td class='text-center'>
-                                    @if (item.UserType == UserType.Client.ToString())
-                                    {
-                                        <a rel='tooltip' title="Gán sale quản lý" href=@Url.Action("AssignSaleForClient", "Account", new { id = item.Phone, userSale = item.SaleManage }) class="btn btn-xs btn-primary btn-assign">
-                                            <i class="fa fa-file"></i>
-                                        </a>
-                                        <a rel='tooltip' title="Ví điện tử" href=@Url.Action("Index", "Wallet", new { id = item.Phone }) class="btn btn-xs btn-primary">
-                                            <i class="fa fa-money"></i>
-                                        </a>
-                                    }
-                                    @if (item.UserType != UserType.Admin.ToString() && item.UserType != UserType.Client.ToString())
-                                    {
-                                        <a rel='tooltip' title="Thay đổi quyền"
-                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Phone }) class="btn btn-xs btn-primary btn-change">
-                                            <i class="fa fa-cog"></i>
-                                        </a>
-                                    }
+                                    <a rel='tooltip' title="Ví điện tử" href=@Url.Action("Index", "Wallet", new { id = item.Phone }) class="btn btn-xs btn-primary">
+                                        <i class="fa fa-money"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -117,53 +92,3 @@
         </div>
     </div>
 </section>
-
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
-    <script>
-        $(document).ready(function () {
-
-            $('.btn-assign').click(function (e) {
-
-
-                e.preventDefault();
-
-                var $modal = $('#myModal');
-                var $modalDialog = $('.modal-dialog');
-                var href = $(this).prop('href');
-
-                // không cho phép tắt modal khi click bên ngoài modal
-                var option = { backdrop: 'static' };
-
-                // kiểm tra (logic, điều kiện...)
-
-                // load modal
-                $modalDialog.load(href, function () {
-                    $modal.modal(option, 'show');
-                });
-            });
-            $('.btn-change').click(function (e) {
-
-
-                e.preventDefault();
-
-                var $modal = $('#myModal');
-                var $modalDialog = $('.modal-dialog');
-                var href = $(this).prop('href');
-
-                // không cho phép tắt modal khi click bên ngoài modal
-                var option = { backdrop: 'static' };
-
-                // kiểm tra (logic, điều kiện...)
-
-                // load modal
-                $modalDialog.load(href, function () {
-                    $modal.modal(option, 'show');
-                });
-            });
-        }); // document ready
-
-    </script>
-}
