@@ -28,10 +28,15 @@ namespace OrderChina.Models
         public DbSet<RateHistory> RateHistorys { get; set; }
         public DbSet<SaleManageClient> SaleManageClients { get; set; }
         public DbSet<News> News { get; set; }
+<<<<<<< HEAD
+        public DbSet<DepositOrders> DepositOrders { get; set; }
+        
+=======
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<WalletHistory> WalletHistorys { get; set; }
         public DbSet<Currency> Currencys { get; set; }
 
+>>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253
     }
 
     [Table("News")]
@@ -45,6 +50,30 @@ namespace OrderChina.Models
         public string Titlebig { get; set; }
         public string Img { get; set; }
 
+    }
+
+    [Table("DepositOrders")]
+    public class DepositOrders
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; } 
+        public int UserId { get; set; }
+        public string EmailUser { get; set; }
+        public string IDDepOders { get; set; }
+        [Display(Name = "Cân nặng")]
+        public string Weight { get; set; }
+        [Display(Name = "Loại hàng")]
+        public string Catalogy { get; set; }
+        public string SizeOder { get; set; }
+        [Display(Name = "Ghi chú")]
+        public string Content { get; set; }
+        [Display(Name = "Tổng tiền")]
+        public double TotalPriceConvert { get; set; }
+        [Display(Name = "Trạng thái")]
+        public string Status { get; set; }
+        [Display(Name = "Ngày tạo")]
+        public DateTime CreateDate { get; set; }
     }
 
     [Table("UserProfile")]
@@ -461,8 +490,6 @@ namespace OrderChina.Models
         [Display(Name = "Loại tài khoản")]
         public string UserType { get; set; }
     }
-
-
     public class ExternalLogin
     {
         public string Provider { get; set; }
@@ -619,7 +646,15 @@ namespace OrderChina.Models
         [Display(Name = "Nhân viên nhận hàng")]
         Recieve = 7
     }
+<<<<<<< HEAD
+    #region DepositOrders
+    public class NewDepositOrders
+    {
+        public IEnumerable<DepositOrders> ListDepositOrders { get; set; }
+    }
+=======
 
+<<<<<<< HEAD
     public enum WalletUpdateType
     {
         [Display(Name = "Thêm tiền")]
@@ -628,5 +663,8 @@ namespace OrderChina.Models
         Subtract = 2
     }
 
+=======
+>>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253
+>>>>>>> e0e8716bdf6344a036ab627c0424e1545779c029
     #endregion
 }

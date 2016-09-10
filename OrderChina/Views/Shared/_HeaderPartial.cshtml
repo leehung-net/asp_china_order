@@ -61,7 +61,7 @@
         <div class="container">
             <div class="row" style="padding-top:0px;">
                 <h1 class="col-md-3 text-center">
-                    <img alt="" src="https://c1.staticflickr.com/9/8718/28618667000_dbf2547cc2_b.jpg" style="height: 120px;">
+                    <img alt="" src="~/Images/logo.jpg" style="height: 120px;">
                 </h1>
                 <div class="box-search col-md-6">
                     <form accept-charset="UTF-8" action="http://nhaphangtaobao.com.vn/tim-kiem-tu-khoa.html" method="POST" target="_blank">
@@ -117,7 +117,7 @@
                         </b>
                     </p>
                     <p class="hot-line">
-                        Tổng đài <b>0977.261.061</b>
+                        Tổng đài <b>096.119.3333</b>
                     </p>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                     <div class="text-center g-link">
                         <div class="text-center link-create-order sub-layout-create-order">
                             <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("CreateOrder","Account")" class="btn btn-order">TẠO ĐƠN HÀNG &nbsp;<span class="fa fa-angle-right"></span></a>
-                            <a style="padding: 10px !important;font-size: 14px !important;" href="http://nhaphangtaobao.com.vn/tao-don-ky-gui.html" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class="fa fa-angle-right"></span></a>
+                            <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("DepositOrders", "Account")" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class="fa fa-angle-right"></span></a>
                         </div>
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                         </div>
                         <div class="text-center link-create-order">
                             @Html.ActionLink("TẠO ĐƠN HÀNG", "CreateOrder", "Account", null, new { @class = "btn btn-order" })
-                            <a href="" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class='fa fa-angle-right'></span></a>
+                            <a href="@Url.Action("DepositOrders", "Account")" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class='fa fa-angle-right'></span></a>
                         </div>
                     </div>
                 </div>

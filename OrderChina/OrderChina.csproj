@@ -322,12 +322,11 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Images\1455768819anh-1-dich-vu-order.png" />
-    <Content Include="Images\1455769795anh-2-dich-vu-ship-ho.png" />
-    <Content Include="Images\1455786567anh-3-tu-van-ho-tro.png" />
-    <Content Include="Images\1455788196anh-4-nap-tien.png" />
+    <Content Include="Images\1a93601c31401c88a171686e6b033b1c_logistic_4.jpg" />
+    <Content Include="Images\naptien.jpg" />
     <Content Include="Images\News\maxresdefault-2_xqxw-240x160.jpg" />
     <Content Include="Images\News\tq1-240x160.jpg" />
+    <Content Include="Images\order.jpg" />
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
@@ -424,6 +423,8 @@
     <Content Include="Views\Account\ChangePass.cshtml" />
     <Content Include="Views\Account\_AccountingConfirmOrderPartial.cshtml" />
     <Content Include="Views\Account\_UpdateOrderDetail.cshtml" />
+    <Content Include="Views\Account\DepositOrders.cshtml" />
+    <Content Include="Views\Account\MangeDepositOrders.cshtml" />
     <Content Include="Views\Wallet\Index.cshtml" />
     <Content Include="Views\Shared\_AsideMenuPartial.cshtml" />
     <Content Include="Views\Wallet\_CreateWallet.cshtml" />
@@ -448,7 +449,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>3420</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
