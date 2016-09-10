@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@using OrderChina.Models
+@model IEnumerable<OrderChina.Models.Wallet>
+
+<section @*class='container'*@ style='padding: 20px;'>
+    <div class='row'>
+        @(ViewBag.isadmin != null ?
+        Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "ListClient", true } }) :
+                ViewBag.isacc != null ? Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "walletmanage", true } }) : Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "wallet", true } }))
+
+        <div class="col-md-9 order-content">
+            @if (ViewBag.isadmin != null)
+            {
+                <a rel='tooltip' title="Tạo mới ví"
+                   href=@Url.Action("CreateWallet", "Wallet", new { id = ViewBag.phone }) class="btn btn-xs btn-primary btn-create">
+                    <i class="fa fa-file"></i>
+                    Tạo mới ví
+                </a>
+            }
+            @foreach (var item in Model)
+            {
+                <li>
+                    <i class="fa fa-money">@item.Currency</i>
+                    <div class="content-container">
+                        <span class="name">Số tiền trong ví: </span>
+                        <span class="txt">@item.Money.ToString("##,###")</span>
+                    </div>
+                    @if (@OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
+                    {
+                        <div>
+                            <a href="@Url.Action("AdditionWallet", "Wallet", new { id = item.Id, cmd = "add" })" rel='tooltip' title="Thêm tiền" class='btn btn-info btn-xs btn-addition'><i class="fa fa-plus"></i></a>
+                            <a href="@Url.Action("AdditionWallet", "Wallet", new { id = item.Id, cmd = "sub" })" rel='tooltip' title='Trừ tiền' class='btn btn-info btn-xs btn-subtract'><i class="fa fa-minus"></i></a>
+                        </div>
+                    }
+                </li>
+            }
+        </div>
+    </div>
+    <div class="modal fade"
+         id="myModal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- empty -->
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('.btn-create').click(function (e) {
+
+
+                e.preventDefault();
+
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
+            $('.btn-addition').click(function (e) {
+
+
+                e.preventDefault();
+
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
+            $('.btn-subtract').click(function (e) {
+
+
+                e.preventDefault();
+
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
+        }); // document ready
+
+    </script>
+}

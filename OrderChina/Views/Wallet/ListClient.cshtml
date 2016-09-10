@@ -1,0 +1,94 @@
+﻿@using OrderChina.Models
+@using PagedList.Mvc
+@model PagedList.IPagedList<OrderChina.Models.UserProfile>
+@if (ViewData["message"] != null)
+{
+    <script>
+        alert(ViewData["message"]);
+    </script>
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<section @*class='container'*@ style='padding: 20px;'>
+    <div class='row'>
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "walletmanage", true } })
+
+        <div class="col-md-9 order-content">
+            <div class='row'>
+                <h3 class='text-center'>DANH SÁCH NGƯỜI SỬ DỤNG</h3>
+
+                <p>
+                    @using (Html.BeginForm("ListClient", "Wallet", FormMethod.Get))
+                    {
+                        <div class='col-md-2' style="padding-left: inherit">
+                            <input class="form-control btn-flat " placeholder="Số điện thoại" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Email" autofocus="autofocus" name="userName" value="@ViewBag.CurrentUserName" type="text">
+                        </div>
+
+                        <div class="col-md-1">
+                            <button name="submit" type="submit" class="btn btn-primary">
+                                <i class="fa fa-filter"></i>
+                            </button>
+                        </div>
+
+                    }
+                </p>
+                <div class="col-sm-12">
+                    <hr>
+                </div>
+
+                <table class="table table-bordered table-striped" style="font-size: 12px">
+                    <thead>
+                        <tr>
+                            <th class='text-center'>Email</th>
+                            <th class='text-center'>Họ tên</th>
+                            <th class='text-center'>Số điện thoại</th>
+                            <th class="text-center">Ngày sinh</th>
+                            <th class="text-center">Số tài khoản</th>
+                            <th class='text-center'>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
+
+                                <td class='text-center'>
+                                    @item.Birthday.ToString("dd/MM/yyyy")
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Account)
+                                </td>
+                                <td class='text-center'>
+                                    <a rel='tooltip' title="Ví điện tử" href=@Url.Action("Index", "Wallet", new { id = item.Phone }) class="btn btn-xs btn-primary">
+                                        <i class="fa fa-money"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action("ListClient", new { page, userType = ViewBag.CurrentUserType, userName = ViewBag.CurrentUserName }))
+            </div>
+        </div>
+    </div>
+    <div class="modal fade"
+         id="myModal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- empty -->
+        </div>
+    </div>
+</section>

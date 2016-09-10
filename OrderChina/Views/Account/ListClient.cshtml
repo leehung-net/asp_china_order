@@ -22,7 +22,7 @@
                     @using (Html.BeginForm("ListClient", "Account", FormMethod.Get))
                     {
                         <div class='col-md-2' style="padding-left: inherit">
-                            <input class="form-control btn-flat " placeholder="Email" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Email" autofocus="autofocus" name="userName" value="@ViewBag.CurrentUserName" type="text">
+                            <input class="form-control btn-flat " placeholder="Số điện thoại" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Email" autofocus="autofocus" name="userName" value="@ViewBag.CurrentUserName" type="text">
                         </div>
 
                         <div class="col-md-3">
@@ -40,17 +40,17 @@
                     <hr>
                 </div>
 
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" style="font-size: 12px">
                     <thead>
                         <tr>
-                            <th class='text-center' style="width: 150px;">Email</th>
-                            <th class='text-center' style="width: 100px;">Họ tên</th>
-                            <th class='text-center' style="width: 60px;">Số điện thoại</th>
-                            <th class='text-center' style="width: 60px;">Loại người dùng</th>
-                            <th class="text-center" style="width: 60px;">Ngày sinh</th>
-                            <th class="text-center" style="width: 150px;">Số tài khoản</th>
-                            <th class="text-center" style="width: 150px;">Người quản lý</th>
-                            <th class='text-center' style="width: 100px;">Thao tác</th>
+                            <th class='text-center'>Email</th>
+                            <th class='text-center'>Họ tên</th>
+                            <th class='text-center'>Số điện thoại</th>
+                            <th class='text-center'>Loại người dùng</th>
+                            <th class="text-center">Ngày sinh</th>
+                            <th class="text-center">Số tài khoản</th>
+                            <th class="text-center">Người quản lý</th>
+                            <th class='text-center'>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,15 +82,17 @@
                                 <td class='text-center'>
                                     @if (item.UserType == UserType.Client.ToString())
                                     {
-                                        <a rel='tooltip' title="Gán sale quản lý"
-                                           href=@Url.Action("AssignSaleForClient", "Account", new { id = item.Email, userSale = item.SaleManage }) class="btn btn-xs btn-primary btn-assign">
+                                        <a rel='tooltip' title="Gán sale quản lý" href=@Url.Action("AssignSaleForClient", "Account", new { id = item.Phone, userSale = item.SaleManage }) class="btn btn-xs btn-primary btn-assign">
                                             <i class="fa fa-file"></i>
+                                        </a>
+                                        <a rel='tooltip' title="Ví điện tử" href=@Url.Action("Index", "Wallet", new { id = item.Phone }) class="btn btn-xs btn-primary">
+                                            <i class="fa fa-money"></i>
                                         </a>
                                     }
                                     @if (item.UserType != UserType.Admin.ToString() && item.UserType != UserType.Client.ToString())
                                     {
                                         <a rel='tooltip' title="Thay đổi quyền"
-                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Email }) class="btn btn-xs btn-primary btn-change">
+                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Phone }) class="btn btn-xs btn-primary btn-change">
                                             <i class="fa fa-cog"></i>
                                         </a>
                                     }

@@ -9,9 +9,10 @@ using System.Web.Mvc;
 
 namespace OrderChina.Models
 {
+    #region Database
+
     public class DBContext : DbContext
     {
-        #region Database
         public DBContext()
             : base("DefaultConnection")
         {
@@ -27,9 +28,17 @@ namespace OrderChina.Models
         public DbSet<RateHistory> RateHistorys { get; set; }
         public DbSet<SaleManageClient> SaleManageClients { get; set; }
         public DbSet<News> News { get; set; }
+<<<<<<< HEAD
         public DbSet<DepositOrders> DepositOrders { get; set; }
         
+=======
+        public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<WalletHistory> WalletHistorys { get; set; }
+        public DbSet<Currency> Currencys { get; set; }
+
+>>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253
     }
+
     [Table("News")]
     public class News
     {
@@ -118,7 +127,7 @@ namespace OrderChina.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         [Display(Name = "Mã đơn hàng")]
         public int OrderId { get; set; }
-        
+
         public string UserName { get; set; }
         public string Phone { get; set; }
         [Display(Name = "Tỷ giá")]
@@ -288,7 +297,7 @@ namespace OrderChina.Models
                 }
             }
 
-            return index.ToString();
+            return index.ToString(CultureInfo.InvariantCulture);
         }
     }
 
@@ -326,7 +335,75 @@ namespace OrderChina.Models
         public DateTime LastUpdate { get; set; }
 
     }
-        #endregion
+
+    [Table("Wallet")]
+    public class Wallet
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public string Client { get; set; } //phone
+
+        [Display(Name = "Loại tiền")]
+        public string Currency { get; set; }
+
+        [Display(Name = "Tiền")]
+
+        public double Money { get; set; }
+        public string User_Update { get; set; }
+        public DateTime LastUpdate { get; set; }
+
+        public WalletHistory CloneHistory(string reason)
+        {
+            return new WalletHistory()
+            {
+                Currency = Currency,
+                LastUpdate = DateTime.Now,
+                User_Update = User_Update,
+                Client = Client,
+                Money = Money,
+                Reason = reason,
+                WalletId = Id
+            };
+        }
+    }
+
+    [Table("WalletHistory")]
+
+    public class WalletHistory
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int WalletId { get; set; }
+        public string Client { get; set; }
+
+        public string Currency { get; set; }
+
+        public double Money { get; set; }
+
+        public string Reason { get; set; }
+
+        public string User_Update { get; set; }
+
+        public DateTime LastUpdate { get; set; }
+
+    }
+
+    public class Currency
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public string Code { get; set; }
+
+        public string Description { get; set; }
+
+    }
+    #endregion
 
     #region User
     public class LoginModel
@@ -350,7 +427,6 @@ namespace OrderChina.Models
 
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Email bắt buộc nhập.")]
         [Remote("IsCheckEmail", "Account", "")]
         [Display(Name = "Email *")]
         public string Email { get; set; }
@@ -488,6 +564,22 @@ namespace OrderChina.Models
     }
     #endregion
 
+    #region Wallet
+
+    public class AdditionModel
+    {
+        public int walletid { get; set; }
+
+        public double money { get; set; }
+
+        [Required(ErrorMessage = "Bắt buộc phải nhập lý do điều chỉnh!")]
+        public string reason { get; set; }
+
+    }
+    #endregion
+
+    #region Enum
+
     public enum OrderStatus
     {
         [Display(Name = "Đơn mới")]
@@ -525,10 +617,14 @@ namespace OrderChina.Models
         [Display(Name = "Nhân viên nhận hàng")]
         Recieve = 7
     }
+<<<<<<< HEAD
     #region DepositOrders
     public class NewDepositOrders
     {
         public IEnumerable<DepositOrders> ListDepositOrders { get; set; }
     }
+=======
+
+>>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253
     #endregion
 }

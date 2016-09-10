@@ -1,102 +1,229 @@
-h1, h2, h3, h4, h5, h6{
-	margin: 0;
-	padding: 0;
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
 }
-a{
-	color: #2a6496;
-	text-decoration: none;
+
+a {
+    color: #2a6496;
+    text-decoration: none;
 }
-a:hover, a:focus{
-	color: #2a6496;
-	text-decoration: underline;
+
+    a:hover, a:focus {
+        color: #2a6496;
+        text-decoration: underline;
+    }
+
+.btn-flat {
+    border-radius: 0 !important;
 }
-.btn-flat{
-	border-radius: 0 !important;
+
+#user-page {
+    display: block;
+    margin: auto;
+    font-family: 'Open Sans',sans-serif;
+    font-size: 13px;
+    background: url('../../../uploads/backgrounds/background.jpg');
 }
-#user-page{
-	display: block;
-	margin: auto;
-	font-family: 'Open Sans',sans-serif;
-	font-size: 13px;
-	background: url('../../../uploads/backgrounds/background.jpg');
+
+.logo {
+    width: 107px;
+    height: 42px;
+    background: url('../../image/logo.jpg');
+    margin: 10px auto;
 }
-.logo{
-	width: 107px;
-	height: 42px;
-	background: url('../../image/logo.jpg');
-	margin: 10px auto;
+
+.main-wrapper {
+    display: block;
+    margin: auto;
+    color: #333;
 }
-.main-wrapper{
-	display: block;
-	margin: auto;
-	color: #333;
+
+.form-box {
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 5px rgba(0, 0, 0, .4);
+    padding: 10px 30px;
+    margin: 5% auto;
+    max-width: 700px;
+    display: block;
 }
-.form-box{
-	background: rgba(255, 255, 255, 0.6);
-	box-shadow: 0 0 5px rgba(0, 0, 0, .4);
-	padding: 10px 30px;
-	margin: 5% auto;
-	max-width: 700px;
-	display: block;
+
+.form-control {
+    color: #333;
 }
-.form-control{
-	color: #333;
+
+.form-horizontal .control-label {
+    color: #333;
+    font-weight: 400;
 }
-.form-horizontal .control-label{
-	color: #333;
-	font-weight: 400;
+
+.form-user {
+    margin-top: 20px;
 }
-.form-user{
-	margin-top: 20px;
+
+.buttonFacebook {
+    padding-top: 30px;
+    padding-bottom: 20px;
+    border-top: 1px solid #999;
+    box-shadow: 0 1px 0 #fff inset;
 }
-.buttonFacebook{
-	padding-top: 30px;
-	padding-bottom: 20px;
-	border-top: 1px solid #999;
-	box-shadow: 0 1px 0 #fff inset;
+
+.check-store label {
+    font-weight: 400;
 }
-.check-store label{
-	font-weight: 400;
-}
-.check-store label > input{
-	margin-top: 2px;
-}
-.content-title .title{
-	font-weight: bold;
-	font-size: 20px;
-	color: #888;
-	margin: 10px 0px;
-	font-family: "Open Sans", sans-serif;
+
+    .check-store label > input {
+        margin-top: 2px;
+    }
+
+.content-title .title {
+    font-weight: bold;
+    font-size: 20px;
+    color: #888;
+    margin: 10px 0px;
+    font-family: "Open Sans", sans-serif;
 }
 /*NETWORKSOCIA*/
 .btn-facebook {
-	background-color: #3b5998;
-	border-color: rgba(0, 0, 0, 0.2);
-	color: #ffffff;
-	padding: 0px 15px 0px 0px;
+    background-color: #3b5998;
+    border-color: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    padding: 0px 15px 0px 0px;
 }
-.btn-facebook:hover, .btn-facebook:focus, .btn-facebook:active, .btn-facebook.active, .open .dropdown-toggle.btn-facebook {
-	background-color: #30487b;
-	border-color: rgba(0, 0, 0, 0.2);
-	color: #ffffff;
-}
-.btn-facebook:active, .btn-facebook.active, .open .dropdown-toggle.btn-facebook {
-	background-image: none;
-}
-.btn-facebook.disabled, .btn-facebook[disabled], fieldset[disabled] .btn-facebook, .btn-facebook.disabled:hover, .btn-facebook[disabled]:hover, fieldset[disabled] .btn-facebook:hover, .btn-facebook.disabled:focus, .btn-facebook[disabled]:focus, fieldset[disabled] .btn-facebook:focus, .btn-facebook.disabled:active, .btn-facebook[disabled]:active, fieldset[disabled] .btn-facebook:active, .btn-facebook.disabled.active, .btn-facebook.active[disabled], fieldset[disabled] .btn-facebook.active {
-	background-color: #3b5998;
-	border-color: rgba(0, 0, 0, 0.2);
-}
-.btn-facebook .badge {
-	background-color: #ffffff;
-	color: #3b5998;
-}
+
+    .btn-facebook:hover, .btn-facebook:focus, .btn-facebook:active, .btn-facebook.active, .open .dropdown-toggle.btn-facebook {
+        background-color: #30487b;
+        border-color: rgba(0, 0, 0, 0.2);
+        color: #ffffff;
+    }
+
+    .btn-facebook:active, .btn-facebook.active, .open .dropdown-toggle.btn-facebook {
+        background-image: none;
+    }
+
+        .btn-facebook.disabled, .btn-facebook[disabled], fieldset[disabled] .btn-facebook, .btn-facebook.disabled:hover, .btn-facebook[disabled]:hover, fieldset[disabled] .btn-facebook:hover, .btn-facebook.disabled:focus, .btn-facebook[disabled]:focus, fieldset[disabled] .btn-facebook:focus, .btn-facebook.disabled:active, .btn-facebook[disabled]:active, fieldset[disabled] .btn-facebook:active, .btn-facebook.disabled.active, .btn-facebook.active[disabled], fieldset[disabled] .btn-facebook.active {
+            background-color: #3b5998;
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+    .btn-facebook .badge {
+        background-color: #ffffff;
+        color: #3b5998;
+    }
+
 .btn-social *:first-child {
-	border-right: 1px solid rgba(0, 0, 0, 0.2);
-	font-size: 15px;
-	line-height: 32px;
-	text-align: center;
-	top: 0;
-	width: 35px;
-	margin-right: 5px;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 15px;
+    line-height: 32px;
+    text-align: center;
+    top: 0;
+    width: 35px;
+    margin-right: 5px;
+}
+
+.name {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+ul.list li .content-container .name {
+    font-weight: bold;
+    padding: 0 0 0 20px;
+    font-size: 1em;
+}
+
+ul.list li .content-container .phone {
+    padding: 0 0 0 20px;
+    font-size: 0.8em;
+    display: block;
+    margin-bottom: -4px;
+}
+
+ul.list li .content-container .txt {
+    padding: 0 0 0 20px;
+    font-size: 0.9em;
+}
+
+ul.list li .content-container .meta {
+    font-size: 0.7em;
+    padding: 0 0 0 20px;
+    color: #999;
+}
+
+.list-phone,
+.list-text,
+.list-account,
+.list-chat {
+    display: none;
+    height: 100%;
+}
+
+    .list-phone.shown,
+    .list-text.shown,
+    .list-account.shown,
+    .list-chat.shown {
+        display: block;
+        animation: fade 0.444s 1 ease-out;
+        animation-fill-mode: both;
+    }
+
+    .list-phone .meta-bar,
+    .list-text .meta-bar,
+    .list-account .meta-bar,
+    .list-chat .meta-bar {
+        border-bottom: 1px solid #7daefe;
+        padding: 0 0 0 25px;
+        height: 40px;
+        position: relative;
+        width: 100%;
+        background-color: white;
+    }
+
+        .list-phone .meta-bar.chat,
+        .list-text .meta-bar.chat,
+        .list-account .meta-bar.chat,
+        .list-chat .meta-bar.chat {
+            border-top: 1px solid lightgrey;
+            background: white;
+            border-bottom: none;
+            position: absolute;
+            bottom: 50px;
+        }
+
+        @keyframes anim-mat-ripple-tiny {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(15);
+    opacity: 0;
+  }
+}
+@keyframes anim-mat-ripple {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(40);
+    opacity: 0;
+  }
+}
+
+.ripple {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 100%;
+  animation: anim-mat-ripple 0.55s 1 cubic-bezier(0, 0.005, 0, 0.99);
+  position: absolute;
+}
+.ripple.tiny {
+  animation: anim-mat-ripple-tiny 0.55s 1 cubic-bezier(0, 0.005, 0, 0.99);
+  position: absolute;
 }

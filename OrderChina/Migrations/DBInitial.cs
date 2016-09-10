@@ -22,7 +22,7 @@ namespace OrderChina.Migrations
                 Account = "123456789",
                 Gender = "Nam",
                 Birthday = DateTime.Now
-            } );
+            });
             context.UserProfiles.Add(new UserProfile
             {
                 Email = "Accounting@gmail.com",
@@ -81,6 +81,62 @@ namespace OrderChina.Migrations
                 userUpdate = "admin@gmail.com",
                 lastUpdated = DateTime.Now
             });
+
+            context.Currencys.Add(new Currency
+            {
+                Code = "AUD",
+                Description = "Australia Dollar"
+            });
+            context.Currencys.Add(new Currency
+            {
+                Code = "CAD",
+                Description = "Canada Dollar"
+            }); context.Currencys.Add(new Currency
+            {
+                Code = "CNY",
+                Description = "China Yuan Renminbi"
+            });
+            context.Currencys.Add(new Currency
+            {
+                Code = "EUR",
+                Description = "Euro Member Countries"
+            }); context.Currencys.Add(new Currency
+            {
+                Code = "HKD",
+                Description = "Hong Kong Dollar"
+            }); context.Currencys.Add(new Currency
+            {
+                Code = "JPY",
+                Description = "Japan Yen"
+            }); context.Currencys.Add(new Currency
+            {
+                Code = "RUB",
+                Description = "Russia Ruble"
+            });
+            context.Currencys.Add(new Currency
+            {
+                Code = "THB",
+                Description = "Thailand Baht"
+            }); context.Currencys.Add(new Currency
+            {
+                Code = "USD",
+                Description = "United States Dollar"
+            }); context.Currencys.Add(new Currency
+            {
+                Code = "VND",
+                Description = "Viet Nam Dong"
+            });
+
+            //Australia Dollar	AUD		
+            //Canada Dollar	CAD		
+            //China Yuan Renminbi	CNY	
+            //Euro Member Countries	EUR	
+            //Hong Kong Dollar	HKD	
+            //Japan Yen	JPY		
+            //Russia Ruble	RUB		
+            //Thailand Baht	THB	
+            //United States Dollar	USD	
+            //Viet Nam Dong	VND	 
         }
     }
 }

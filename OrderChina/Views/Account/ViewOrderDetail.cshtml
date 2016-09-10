@@ -110,9 +110,12 @@
                             }
                             else
                             {
-                                <p class='col-md-3'>
-                                    @Html.ActionLink("Tạo tài khoản khách hàng", "Register")
-                                </p>
+                                if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Sale.ToString()))
+                                {
+                                    <p class='col-md-3'>
+                                        @Html.ActionLink("Tạo tài khoản khách hàng", "Register", "Account", new { phone = @Model.ListOrderDetails.ElementAt(0).Phone }, new { @class = "btn btn-danger btn-xs" })
+                                    </p>
+                                }
                             }
                         }
                     }
@@ -125,8 +128,8 @@
                     </div>
 
                     <div class="col-md-6">
-                        <p><font>(1) Tiền hàng</font><font style="float:right">@Model.TotalPriceConvert<sup>đ</sup></font></p>
-                        <p><font>(2) Phí dịch vụ (@Model.Fee%)</font><font style="float:right">@Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven)<sup>đ</sup></font></p>
+                        <p><font>(1) Tiền hàng</font><font style="float:right">@Model.TotalPriceConvert.ToString("##,###")<sup>đ</sup></font></p>
+                        <p><font>(2) Phí dịch vụ (@Model.Fee%)</font><font style="float:right">@Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven).ToString("##,###")<sup>đ</sup></font></p>
                         <p><font>(3) Ship nội địa TQ</font><font style="float:right">@Model.FeeShipChina<sup>đ</sup></font></p>
                         <p><font>(4) Trọng lượng</font><font style="float:right">@Model.Weight<sup>kg</sup></font></p>
                         <p><font>(5) Cước vận chuyển</font><font style="float:right">@Model.FeeShip<sup>đ</sup></font></p>
@@ -134,10 +137,10 @@
                     </div>
                     <div class="col-md-6">
                         <p><font>(6) Phí phát sinh (nếu có)</font><font style="float:right">0<sup>đ</sup></font></p>
-                        <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@(Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip)<sup>đ</sup></font></p>
-                        <p><font>(8) Đặt cọc</font><font style="float:right">@Model.DownPayment<sup>đ</sup></font></p>
-                        <p><font>(9) Đã thu thêm</font><font style="float:right">@Model.AccountingCollected<sup>đ</sup></font></p>
-                        <p><font>(10) Còn thiếu</font><font style="float:right">@((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip) - @Model.DownPayment - @Model.AccountingCollected)<sup>đ</sup></font></p>
+                        <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip).ToString("##,###"))<sup>đ</sup></font></p>
+                        <p><font>(8) Đặt cọc</font><font style="float:right">@Model.DownPayment.ToString("##,###")<sup>đ</sup></font></p>
+                        <p><font>(9) Đã thu thêm</font><font style="float:right">@Model.AccountingCollected.ToString("##,###")<sup>đ</sup></font></p>
+                        <p><font>(10) Còn thiếu</font><font style="float:right">@((ASP(Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip) - @Model.DownPayment - @Model.AccountingCollected).ToString("##,###"))<sup>đ</sup></font></p>
                     </div>
                     <span class="clearfix"></span>
                     <p class="col-md-6 pull-right">
@@ -145,26 +148,18 @@
                         {
                             if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Sale.ToString())
                             {
-                                if (@Model.Status != OrderStatus.ClientConfirm.ToString())
+                                if (@Model.Status == OrderStatus.ClientConfirm.ToString())
                                 {
-                                    <a href="#" onclick=" bootbox.alert('Trạng thái lệnh không hợp lệ') " class="btn btn-facebook btn-xs pull-right" rel='tooltip' title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("SaleConfirmOrder", "Account", new {id = Model.OrderId})" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
+                                    <a href="@Url.Action("SaleConfirmOrder", "Account", new {id = Model.OrderId})" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
 
                                 }
                             }
 
                             if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString())
                             {
-                                if (@Model.Status != OrderStatus.SaleConfirm.ToString())
+                                if (@Model.Status == OrderStatus.SaleConfirm.ToString())
                                 {
-                                    <a href="#" onclick="bootbox.alert('Trạng thái lệnh không hợp lệ') " rel='tooltip' class="btn btn-facebook btn-xs pull-right" title="Chốt đơn"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("AccountingConfirmOrder", "Account", new {id = Model.OrderId})" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-account-confirm" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
+                                    <a href="@Url.Action("AccountingConfirmOrder", "Account", new {id = Model.OrderId})" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-account-confirm" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
                                 }
                             }
 
@@ -172,10 +167,10 @@
                             {
                                 if (@Model.Status == OrderStatus.Paid.ToString())
                                 {
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'2');" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'2');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
                                         <i class="fa fa-arrow-left"></i> Gửi sale
                                     </a>
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'3');" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'3');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
                                         <i class="fa fa-ticket"></i> Đặt hàng xong
                                     </a>
                                 }
@@ -184,13 +179,18 @@
                             {
                                 if (@Model.Status == OrderStatus.Order.ToString())
                                 {
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'4');" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'4');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
                                         <i class="fa fa-arrow-left"></i> Xác nhận hàng về
                                     </a>
-                                    <a href="@Url.Action("FinishOrder", "Account", new {id = Model.OrderId})" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
+
+                                }
+                                if (@Model.Status == OrderStatus.Receive.ToString())
+                                {
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'5');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
                                         <i class="fa fa-ticket"></i> Xác nhận giao hàng
                                     </a>
                                 }
+
                             }
                         }
                     </p>
@@ -613,6 +613,48 @@
                             });
                         } else {
                             bootbox.alert("Có lỗi trong quá trình xác nhận đặt hàng!", function () {
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error: function () {
+                        bootbox.alert("Lỗi");
+                    }
+                });
+            } else if (type == 4) {
+                $.ajax({
+                    url: "@Url.Action("ConfirmReceive", "Account")",
+                    type: 'POST',
+                    data: '{ \"orderId\" : \"' + orderId + '\"}',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            bootbox.alert("Xác nhận hàng về thành công!", function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            bootbox.alert("Có lỗi trong quá trình xác nhận hàng về!", function () {
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error: function () {
+                        bootbox.alert("Lỗi");
+                    }
+                });
+            } else if (type == 5) {
+                $.ajax({
+                    url: "@Url.Action("FinishOrder", "Account")",
+                    type: 'POST',
+                    data: '{ \"orderId\" : \"' + orderId + '\"}',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.success) {
+                            bootbox.alert("Xác nhận đã giao hàng cho khách thành công!", function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            bootbox.alert("Có lỗi trong quá trình xác nhận giao hàng!", function () {
                                 window.location.reload();
                             });
                         }

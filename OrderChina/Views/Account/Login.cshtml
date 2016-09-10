@@ -1,4 +1,5 @@
-﻿@model OrderChina.Models.LoginModel
+﻿@using System.Web.UI.WebControls
+@model OrderChina.Models.LoginModel
 
 @{
     ViewBag.Title = "Log in";
@@ -10,12 +11,12 @@
 @Scripts.Render("~/bundles/bootstrap")
 <style>
     .login {
-        align-items:center;
+        align-items: center;
         font-size: 14px;
         max-width: 700px;
         margin: auto;
         margin-top: 5%;
-        padding:10px 30px;
+        padding: 10px 30px;
         box-shadow: 0px 0px 6px rgba(0, 0, 0, 10);
         -moz-box-shadow: 0px 0px 6px rgba(0, 0, 0, 10);
         -webkit-box-shadow: 0px 0px 6px rgba(0, 0, 0, 10);
@@ -33,9 +34,9 @@
                 @Html.ValidationSummary(true)
 
                 <div class="form-group ">
-                    <div class="col-sm-3 control-label"><p style="font-size:15px;margin-top:7px" align="right"> @Html.LabelFor(m => m.Email)</p></div>
+                    <div class="col-sm-3 control-label"><p style="font-size:15px;margin-top:7px" align="right"> Email or Phone</p></div>
                     <div class="col-sm-8">
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email or Phone" })
                         <br />
                         @Html.ValidationMessageFor(m => m.Password)
                     </div>
@@ -58,11 +59,11 @@
                         @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
                     </div>
                     <div class="btn-controls pull-right">
-                        <button type="submit" value="" class="btn btn-danger" >Đăng nhập</button>
-                        <button type="reset" value="" class="btn btn-default" style="width:50px" >Hủy</button>
+                        <button type="submit" value="" class="btn btn-danger">Đăng nhập</button>
+                        <button type="reset" value="" class="btn btn-default" style="width:50px">Hủy</button>
                     </div>
                 </div>
-                <div class="form-group" >
+                <div class="form-group">
                     <div class="text-right col-sm-8" style="float:right">
                         <p style="font-size:14px">
                             Nếu  bạn chưa có tài khoản hãy<i style="color:blue"> @Html.ActionLink("Đăng ký", "Register")</i>
@@ -73,6 +74,3 @@
         </div>
     </div>
 </div>
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

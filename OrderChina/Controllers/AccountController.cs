@@ -4,9 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Transactions;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
@@ -22,8 +25,12 @@ namespace OrderChina.Controllers
     [InitializeSimpleMembership]
     public class AccountController : Controller
     {
+<<<<<<< HEAD
         DBContext db = new DBContext();
         DateTime date = new DateTime();
+=======
+        readonly DBContext db = new DBContext();
+>>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253
 
         #region User
         //
@@ -44,11 +51,79 @@ namespace OrderChina.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (IsValid(model.Email, model.Password))
+            if (IsEmail(model.Email))
             {
-                FormsAuthentication.SetAuthCookie(model.Email, false);
-                return RedirectToLocal(returnUrl);
+                if (IsValid(model.Email, model.Password))
+                {
+                    var user = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+                    if (user != null)
+                    {
+                        FormsAuthentication.SetAuthCookie(user.Phone, model.RememberMe);
+                        //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
+                        //var EncryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                        //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
+
+                        //Response.Cookies.Add(authCookie);
+                        if (!string.IsNullOrEmpty(returnUrl))
+                        {
+                            if (db.Rates.Any())
+                            {
+                                var rate = db.Rates.FirstOrDefault();
+                                if (rate != null)
+                                {
+                                    Session["Price"] = rate.Price.ToString("##,###");
+                                    Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                    Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                    Session["fee3"] = rate.FormatPrice(rate.fee3);
+                                }
+                            }
+
+                            Session["Name"] = user.Name;
+                            Session["ID"] = user.UserId;
+                            Session["UserType"] = user.UserType;
+
+                        }
+                    }
+                    return RedirectToLocal(returnUrl);
+                }
             }
+            else
+            {
+                //phone
+                if (IsValidPhone(model.Email, model.Password))
+                {
+
+                    FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
+                    //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
+                    //var EncryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                    //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
+
+                    //Response.Cookies.Add(authCookie);
+                    if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        if (db.Rates.Any())
+                        {
+                            var rate = db.Rates.FirstOrDefault();
+                            if (rate != null)
+                            {
+                                Session["Price"] = rate.Price.ToString("##,###");
+                                Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                Session["fee3"] = rate.FormatPrice(rate.fee3);
+                            }
+                        }
+                        var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+                        if (userProfile != null)
+                        {
+                            Session["Name"] = userProfile.Name;
+                            Session["ID"] = userProfile.UserId;
+                            Session["UserType"] = userProfile.UserType;
+                        }
+                    }
+                    return RedirectToLocal(returnUrl);
+                }
+            }
+
 
             // If we got this far, something failed, redisplay form
             ModelState.AddModelError("", "The user name or password provided is incorrect.");
@@ -70,12 +145,29 @@ namespace OrderChina.Controllers
 
             return IsValid;
         }
+        private bool IsValidPhone(string phone, string password)
+        {
+            bool IsValid = false;
 
+            var user = db.UserProfiles.FirstOrDefault(u => u.Phone == phone);
+            if (user != null)
+            {
+                if (user.Password == password)
+                {
+                    IsValid = true;
+                }
+            }
 
+            return IsValid;
+        }
 
         public ActionResult LogOff()
         {
             WebSecurity.Logout();
+
+            Session.Remove("Name");
+            Session.Remove("ID");
+            Session.Remove("UserType");
 
             return RedirectToAction("Index", "Home");
         }
@@ -84,10 +176,10 @@ namespace OrderChina.Controllers
         // GET: /Account/Register
 
         [AllowAnonymous]
-        public ActionResult Register()
+        public ActionResult Register(string phone)
         {
-            var model = new RegisterModel();
-            model.Birthday = DateTime.Now;
+
+            var model = new RegisterModel { Phone = phone, Birthday = DateTime.Now };
             ViewBag.listUserType = GetListUserType();
 
             return View(model);
@@ -123,6 +215,16 @@ namespace OrderChina.Controllers
                     db.UserProfiles.Add(userProfile);
                     db.SaveChanges();
 
+                    //create wallet, default currency = VND
+                    db.Wallets.Add(new Wallet
+                    {
+                        LastUpdate = DateTime.Now,
+                        User_Update = "",
+                        Client = userProfile.Phone,
+                        Currency = "VND",
+                        Money = 0
+                    });
+
                     if (!Request.IsAuthenticated)
                     {
                         FormsAuthentication.SetAuthCookie(model.Email, false);
@@ -130,7 +232,35 @@ namespace OrderChina.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("ListClient", "Account");
+                        if (Session["UserType"] != null && (string)Session["UserType"] != UserType.Sale.ToString())
+                        {
+                            //sale manage
+                            var salemanage = new SaleManageClient
+                            {
+                                User_Client = userProfile.Phone,
+                                User_Sale = User.Identity.Name,
+                                LastUpdate = DateTime.Now,
+                                User_Update = User.Identity.Name
+                            };
+                            db.SaleManageClients.Add(salemanage);
+                            db.SaveChanges();
+
+                            //get order
+                            var listOrder =
+                                db.Orders.Where(a => a.Phone == userProfile.Phone && string.IsNullOrEmpty(a.SaleManager));
+                            foreach (var order in listOrder)
+                            {
+                                order.SaleManager = User.Identity.Name;
+                            }
+                            db.SaveChanges();
+
+                            return RedirectToAction("Manage", "Account");
+
+                        }
+                        else
+                        {
+                            return RedirectToAction("ListClient", "Account");
+                        }
                     }
 
                 }
@@ -185,11 +315,11 @@ namespace OrderChina.Controllers
             if ((string)Session["UserType"] == UserType.Sale.ToString())
             {
                 var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
-                listOrder = db.Orders.Where(a => listUserManage.Contains(a.UserName)).ToList();
+                listOrder = db.Orders.Where(a => listUserManage.Contains(a.Phone) || string.IsNullOrEmpty(a.SaleManager)).ToList();
             }
             else if ((string)Session["UserType"] == UserType.Client.ToString())
             {
-                listOrder = db.Orders.Where(a => a.UserName == User.Identity.Name).ToList();
+                listOrder = db.Orders.Where(a => a.Phone == User.Identity.Name).ToList();
             }
             else if ((string)Session["UserType"] == UserType.Accounting.ToString())
             {
@@ -201,7 +331,7 @@ namespace OrderChina.Controllers
             }
             else if ((string)Session["UserType"] == UserType.Recieve.ToString())
             {
-                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString()).ToList();
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.Receive.ToString()).ToList();
             }
             else if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
             {
@@ -209,7 +339,7 @@ namespace OrderChina.Controllers
             }
             if (!string.IsNullOrEmpty(username))
             {
-                listOrder = listOrder.FindAll(a => a.UserName.IndexOf(username, System.StringComparison.Ordinal) > 0);
+                listOrder = listOrder.FindAll(a => a.Phone.IndexOf(username, System.StringComparison.Ordinal) > 0);
             }
 
             if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
@@ -239,7 +369,7 @@ namespace OrderChina.Controllers
             ViewBag.CurrentUserName = username;
 
 
-            const int pageSize = 3;
+            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             return View(listOrder.ToPagedList(pageNumber, pageSize));
@@ -370,6 +500,9 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult IsCheckEmail(string Email)
         {
+            if (string.IsNullOrEmpty(Email))
+                return Json(true, JsonRequestBehavior.AllowGet);
+
             var str = Email.ToLower();
             //kiem tra cac ki tu
             const String pattern =
@@ -388,6 +521,18 @@ namespace OrderChina.Controllers
                 return Json("Email đã tồn tại trong hệ thống", JsonRequestBehavior.AllowGet);
             }
             return Json(true, JsonRequestBehavior.AllowGet);
+        }
+        public bool IsEmail(string Email)
+        {
+            var str = Email.ToLower();
+            //kiem tra cac ki tu
+            const String pattern =
+                   @"^([0-9a-zA-Z]" + //Start with a digit or alphabetical
+                   @"([\+\-_\.][0-9a-zA-Z]+)*" + // No continuous or ending +-_. chars in email
+                   @")+" +
+                   @"@(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]*\.)+[a-zA-Z0-9]{2,17})$";
+
+            return Regex.IsMatch(str, pattern);
         }
         #endregion
 
@@ -413,7 +558,7 @@ namespace OrderChina.Controllers
                     try
                     {
                         var rate = db.Rates.FirstOrDefault();
-                        var user = db.UserProfiles.First(a => a.Email == User.Identity.Name);
+                        var user = db.UserProfiles.First(a => a.Phone == User.Identity.Name);
                         var order = new Order
                         {
                             CreateDate = DateTime.Now,
@@ -424,7 +569,7 @@ namespace OrderChina.Controllers
                             Phone = user.Phone,
                             UserName = user.Email
                         };
-                        var saleManage = db.SaleManageClients.FirstOrDefault(a => a.User_Client == user.Email);
+                        var saleManage = db.SaleManageClients.FirstOrDefault(a => a.User_Client == user.Phone);
                         order.TotalPriceConvert = order.TotalPrice * order.Rate;
                         if (saleManage != null) order.SaleManager = saleManage.User_Sale;
                         db.Entry(order).State = EntityState.Added;
@@ -527,6 +672,7 @@ namespace OrderChina.Controllers
                 model.TotalPrice = order.TotalPrice;
                 model.SaleManager = order.SaleManager;
                 model.UserName = order.UserName;
+                model.Phone = order.Phone;
                 model.FeeShip = order.FeeShip;
                 model.FeeShipChina = order.FeeShipChina;
                 model.CreateDate = order.CreateDate;
@@ -538,7 +684,7 @@ namespace OrderChina.Controllers
 
                 if (!string.IsNullOrEmpty(order.SaleManager))
                 {
-                    var user = db.UserProfiles.FirstOrDefault(a => a.Email == order.SaleManager);
+                    var user = db.UserProfiles.FirstOrDefault(a => a.Phone == order.SaleManager);
                     if (user != null)
                     {
                         model.SaleManageInfo = new SaleManageInfo
@@ -550,9 +696,9 @@ namespace OrderChina.Controllers
                     }
                 }
 
-                if (!string.IsNullOrEmpty(order.UserName))
+                if (!string.IsNullOrEmpty(order.Phone))
                 {
-                    var user = db.UserProfiles.FirstOrDefault(a => a.Email == order.UserName);
+                    var user = db.UserProfiles.FirstOrDefault(a => a.Phone == order.Phone);
                     if (user != null)
                     {
                         model.Client = user;
@@ -598,7 +744,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult OrdererRejectOrder(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
             if (model != null)
             {
                 model.Status = OrderStatus.ClientConfirm.ToString();
@@ -606,18 +752,14 @@ namespace OrderChina.Controllers
 
                 return Json(new { success = true });
             }
-            else
-            {
-                return Json(new { success = false });
-
-            }
+            return Json(new { success = false });
         }
 
         [HttpPost]
         [AllowAnonymous]
         public ActionResult OrdererConfirmOrder(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
             if (model != null)
             {
                 model.Status = OrderStatus.Order.ToString();
@@ -625,13 +767,41 @@ namespace OrderChina.Controllers
 
                 return Json(new { success = true });
             }
-            else
-            {
-                return Json(new { success = false });
-
-            }
+            return Json(new { success = false });
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ConfirmReceive(string orderid)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
+            if (model != null)
+            {
+                model.Status = OrderStatus.Receive.ToString();
+                db.SaveChanges();
+
+                //gửi mail
+                SendMail(model.UserName, model.OrderId);
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult FinishOrder(string orderid)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
+            if (model != null)
+            {
+
+                model.Status = OrderStatus.Finish.ToString();
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -674,8 +844,8 @@ namespace OrderChina.Controllers
                     try
                     {
                         //
-                        var user = db.UserProfiles.FirstOrDefault(a => a.Email == User.Identity.Name);
-                        if (user != null) model.Phone = user.Phone;
+                        //var user = db.UserProfiles.FirstOrDefault(a => a.Phone == User.Identity.Name);
+                        //if (user != null) model.em = user.Phone;
                         db.OrderDetails.Add(model);
                         db.SaveChanges();
 
@@ -802,7 +972,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult Cancel_Order(string orderId)
         {
-            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString() == orderId);
+            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString(CultureInfo.InvariantCulture) == orderId);
             if (order != null)
             {
                 order.Status = OrderStatus.Cancel.ToString();
@@ -815,7 +985,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult Confirm_Order(string orderId)
         {
-            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString() == orderId);
+            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString(CultureInfo.InvariantCulture) == orderId);
             if (order != null)
             {
                 order.Status = OrderStatus.ClientConfirm.ToString();
@@ -835,7 +1005,7 @@ namespace OrderChina.Controllers
             userProfiles = !string.IsNullOrEmpty(userType) ? db.UserProfiles.Where(a => a.UserType == userType).ToList() : db.UserProfiles.ToList();
             if (!string.IsNullOrEmpty(userName))
             {
-                userProfiles = userProfiles.FindAll(a => !String.Equals(a.Email, User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) && a.Email.ToLower().Contains(userName.ToLower()));
+                userProfiles = userProfiles.FindAll(a => !String.Equals(a.Phone, User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) && a.Phone.ToLower().Contains(userName.ToLower()));
             }
             foreach (var userProfile in userProfiles)
             {
@@ -843,7 +1013,7 @@ namespace OrderChina.Controllers
                 {
                     //get sale
                     var salemanage =
-                        db.SaleManageClients.FirstOrDefault(a => a.User_Client == userProfile.Email);
+                        db.SaleManageClients.FirstOrDefault(a => a.User_Client == userProfile.Phone);
                     if (salemanage != null)
                     {
                         userProfile.SaleManage = salemanage.User_Sale;
@@ -853,7 +1023,7 @@ namespace OrderChina.Controllers
             ViewBag.CurrentUserType = userType;
             ViewBag.CurrentUserName = userName;
 
-            const int pageSize = 3;
+            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             return View(userProfiles.ToPagedList(pageNumber, pageSize));
@@ -862,8 +1032,8 @@ namespace OrderChina.Controllers
         public ActionResult AssignSaleForClient(string id, string userSale)
         {
             var model = new SaleManageClient { User_Client = id, User_Sale = userSale };
-            var listSale = db.UserProfiles.Where(a => a.UserType == UserType.Sale.ToString()).Select(a => new { email = a.Email, display = a.Name });
-            ViewBag.listSale = new SelectList(listSale, "email", "display", userSale);
+            var listSale = db.UserProfiles.Where(a => a.UserType == UserType.Sale.ToString()).Select(a => new { phone = a.Phone, display = a.Name });
+            ViewBag.listSale = new SelectList(listSale, "phone", "display", userSale);
             return PartialView("_AssignSalePartial", model);
         }
 
@@ -886,7 +1056,7 @@ namespace OrderChina.Controllers
 
                         //truong hop khach hang moi duoc gan sale
                         //update sale vao don hang moi chua co sale manage
-                        var listOrder = db.Orders.Where(a => a.UserName == model.User_Client && string.IsNullOrEmpty(a.SaleManager)).ToList();
+                        var listOrder = db.Orders.Where(a => a.Phone == model.User_Client && string.IsNullOrEmpty(a.SaleManager)).ToList();
                         foreach (var order in listOrder)
                         {
                             order.SaleManager = model.User_Sale;
@@ -914,7 +1084,7 @@ namespace OrderChina.Controllers
 
         public ActionResult ChangeUserType(string id, string userType)
         {
-            var model = db.UserProfiles.FirstOrDefault(a => a.Email == id);
+            var model = db.UserProfiles.FirstOrDefault(a => a.Phone == id);
             if (model == null)
                 return RedirectToAction("ListClient");
 
@@ -928,7 +1098,7 @@ namespace OrderChina.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ChangeUserType(UserProfile model)
         {
-            var userUpdate = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+            var userUpdate = db.UserProfiles.FirstOrDefault(a => a.Phone == model.Phone);
             if (userUpdate != null)
             {
                 userUpdate.UserType = model.UserType;
@@ -940,7 +1110,7 @@ namespace OrderChina.Controllers
 
         public ActionResult UpdateRate(string fromDate, string toDate, int? page)
         {
-            const int pageSize = 3;
+            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             var model = new RateModel();
@@ -1126,6 +1296,49 @@ namespace OrderChina.Controllers
             
         }
         #endregion
+
+        #region wallet
+
+        #endregion
+
+        public bool SendMail(string address, int orderid, List<string> listLink = null)
+        {
+            try
+            {
+                var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == address);
+                if (userProfile != null)
+                {
+                    var fromAddress = new MailAddress(WebConfigurationManager.AppSettings["Email"], WebConfigurationManager.AppSettings["Email_Name"]);
+                    var toAddress = new MailAddress(userProfile.Email, userProfile.Name);
+
+                    var fromPassword = WebConfigurationManager.AppSettings["Password"];
+                    var subject = WebConfigurationManager.AppSettings["Subject"];
+                    string body = "Công ty abc xin trân trọng kính báo đơn hàng : " + orderid + " đã về đến kho của chúng tôi. \n Kính mới quý khách đến lấy. Chúc quý khách làm ăn phát đạt. \n Regards.";
+
+                    var smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                    };
+                    using (var message = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = body, IsBodyHtml = true })
+                    {
+                        smtp.Send(message);
+                        return true;
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+            return false;
+        }
+
     }
 
 }

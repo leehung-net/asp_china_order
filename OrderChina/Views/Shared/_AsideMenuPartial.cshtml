@@ -1,0 +1,164 @@
+﻿@using OrderChina.Models
+<aside class='col-md-3 order-sidebar'>
+    <h3 class='text-center'><i class="fa fa-gavel"></i> Đơn hàng</h3>
+    <ul class="list-group btn-flat">
+        @if (ViewData["manage"] != null)
+        {
+            <li class="list-group-item active">
+                <a href=@Url.Action("Manage","Account") title="Đơn hàng của bạn">
+                    Đơn hàng
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="list-group-item">
+                <a href=@Url.Action("Manage","Account") title="Đơn hàng của bạn">
+                    Đơn hàng
+                </a>
+            </li>
+        }
+        @if (ViewData["Deposit"] != null)
+        {
+            <li class="list-group-item active">
+                <a href=@Url.Action("MangeDepositOrders", "Account") title="Đơn ký gửi của bạn">
+                    Đơn hàng
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="list-group-item">
+                <a href=@Url.Action("MangeDepositOrders", "Account") title="Đơn ký gửi của bạn">
+                    Đơn hàng
+                </a>
+            </li>
+        }
+
+    </ul>
+
+    <h3 class="text-center">
+        <i class="fa fa-user"></i>
+        Tài Khoản
+    </h3>
+    <ul class="list-group">
+        @if ((string)Session["UserType"] == UserType.Client.ToString())
+        {
+            if (ViewData["wallet"] != null)
+            {
+                <li class="list-group-item  active">
+                    <a href="@Url.Action("Index", "Wallet")">Ví điện tử</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item ">
+                    <a href="@Url.Action("Index", "Wallet")">Ví điện tử</a>
+                </li>
+            }
+        }
+        @if ((string)Session["UserType"] == UserType.Accounting.ToString())
+        {
+            if (ViewData["walletmanage"] != null)
+            {
+                <li class="list-group-item  active">
+                    <a href="@Url.Action("ListClient", "Wallet")">Quản lý ví điện tử</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item ">
+                    <a href="@Url.Action("ListClient", "Wallet")">Quản lý ví điện tử</a>
+                </li>
+            }
+        }
+        @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString()))
+        {
+            if (ViewData["ListClient"] != null)
+            {
+                <li class="list-group-item active">
+                    <a href="@Url.Action("ListClient", "Account")">Danh sách người sử dụng</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("ListClient", "Account")">Danh sách người sử dụng</a>
+                </li>
+            }
+        }
+        @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString()))
+        {
+            if (ViewData["Rate"] != null)
+            {
+                <li class="list-group-item active">
+                    <a href="@Url.Action("UpdateRate", "Account")">Cập nhật tỷ giá</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("UpdateRate", "Account")">Cập nhật tỷ giá</a>
+                </li>
+            }
+        }
+        @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString()))
+        {
+            if (ViewData["Node"] != null)
+            {
+                <li class="list-group-item active">
+                    <a href="@Url.Action("ManageNews", "News")">Quản lí tin tức</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("ManageNews", "News")">Quản lí tin tức</a>
+                </li>
+            }
+        }
+        @*<li class="list-group-item "><a href="#">Thông báo</a></li>*@
+        @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString()))
+        {
+            var id = Session["ID"];
+            if (ViewData["User"] != null)
+            {
+                <li class="list-group-item active">
+                    <a href="@Url.Action("Personal", "Account", new { id = id })">Thông tin cá nhân</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("Personal", "Account", new { id = id })">Thông tin cá nhân</a>
+                </li>
+            }
+        } 
+        @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString()))
+        {
+            var id = Session["ID"];
+            if (ViewData["ChangePass"] != null)
+            {
+                <li class="list-group-item active">
+                    <a href="@Url.Action("ChangePass", "Account", new { id = id })">Đổi mật khẩu</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("ChangePass", "Account", new { id = id })">Đổi mật khẩu</a>
+                </li>
+            }
+        }
+<<<<<<< HEAD:OrderChina/Views/Account/_AsideMenuPartial.cshtml
+        
+=======
+        <li class="list-group-item ">
+            <a href="@Url.Action("ChangePass", "Account", new { id = Session["ID"] })">Đổi mật khẩu</a>
+        </li>
+>>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253:OrderChina/Views/Shared/_AsideMenuPartial.cshtml
+        <li class="list-group-item ">
+            <a href="#">Điều khoản sử dụng</a>
+        </li>
+    </ul>
+</aside>
