@@ -18,12 +18,23 @@
                 </a>
             </li>
         }
+        @if (ViewData["Deposit"] != null)
+        {
+            <li class="list-group-item active">
+                <a href=@Url.Action("MangeDepositOrders", "Account") title="Đơn ký gửi của bạn">
+                    Đơn hàng
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="list-group-item">
+                <a href=@Url.Action("MangeDepositOrders", "Account") title="Đơn ký gửi của bạn">
+                    Đơn hàng
+                </a>
+            </li>
+        }
 
-        <li class="list-group-item ">
-            <a href="#" title="Đơn ký gửi của bạn">
-                Đơn ký gửi
-            </a>
-        </li>
     </ul>
 
     <h3 class="text-center">
@@ -95,10 +106,24 @@
                     <a href="@Url.Action("Personal", "Account", new { id = id })">Thông tin cá nhân</a>
                 </li>
             }
+        } 
+        @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString()))
+        {
+            var id = Session["ID"];
+            if (ViewData["ChangePass"] != null)
+            {
+                <li class="list-group-item active">
+                    <a href="@Url.Action("ChangePass", "Account", new { id = id })">Đổi mật khẩu</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("ChangePass", "Account", new { id = id })">Đổi mật khẩu</a>
+                </li>
+            }
         }
-        <li class="list-group-item ">
-            <a href="#">Đổi mật khẩu</a>
-        </li>
+        
         <li class="list-group-item ">
             <a href="#">Điều khoản sử dụng</a>
         </li>

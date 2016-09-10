@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "MangeDepositOrders";
+}
+
+@using OrderChina.Models;
+@model PagedList.IPagedList<OrderChina.Models.DepositOrders>
+@using PagedList;
+@using PagedList.Mvc;
+@if (ViewData["message"] != null)
+{
+    <a href="~/Views/Account/_AssignSalePartial.cshtml">~/Views/Account/_AssignSalePartial.cshtml</a>
+    <script>
+        alert(ViewData["message"]);
+    </script>
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<section @*class='container'*@ style='padding: 20px;'>
+    <div>
+        <h2>ManageNews</h2>
+        <div class='row'>
+            @Html.Partial("~/Views/Account/_AsideMenuPartial.cshtml", new ViewDataDictionary { { "Deposit", true } })
+
+            <div class="col-md-9 order-content">
+                <div class='row'>
+                    <h3 class='text-center'>DANH SÁCH ĐƠN KÝ GỬI</h3>
+                    <hr>
+                    <div>
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <td>Mã Đơn</td>
+                            <td>Trọng lượng</td>
+                            <td>Trạng thái</td>
+                            <td>Tổng tiền</td>
+                            <td>Ghi chú</td>
+                            <td>Ngày tạo</td>
+                            <td>Thao tác</td>
+                        </tr>
+                        @foreach (var news in Model)
+                        {
+                            <tr>
+                                <td>@news.ID</td>
+                                <td>@news.Weight</td>
+                                <td>@news.Status</td>
+                                <td>@news.TotalPriceConvert<sub>đ</sub></td>
+                                <td>@news.Content</td>
+                                <td>@news.CreateDate</td>
+                                <td>
+                                    <i class="fa fa-search-plus"></i>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+                    <div style="float: right; padding-right: 1%">
+                        @Html.PagedListPager(Model, page => Url.Action("MangeDepositOrders", new { page = page }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -27,6 +27,7 @@ namespace OrderChina.Models
         public DbSet<RateHistory> RateHistorys { get; set; }
         public DbSet<SaleManageClient> SaleManageClients { get; set; }
         public DbSet<News> News { get; set; }
+        public DbSet<DepositOrders> DepositOrders { get; set; }
         
     }
     [Table("News")]
@@ -40,6 +41,30 @@ namespace OrderChina.Models
         public string Titlebig { get; set; }
         public string Img { get; set; }
 
+    }
+
+    [Table("DepositOrders")]
+    public class DepositOrders
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; } 
+        public int UserId { get; set; }
+        public string EmailUser { get; set; }
+        public string IDDepOders { get; set; }
+        [Display(Name = "Cân nặng")]
+        public string Weight { get; set; }
+        [Display(Name = "Loại hàng")]
+        public string Catalogy { get; set; }
+        public string SizeOder { get; set; }
+        [Display(Name = "Ghi chú")]
+        public string Content { get; set; }
+        [Display(Name = "Tổng tiền")]
+        public double TotalPriceConvert { get; set; }
+        [Display(Name = "Trạng thái")]
+        public string Status { get; set; }
+        [Display(Name = "Ngày tạo")]
+        public DateTime CreateDate { get; set; }
     }
 
     [Table("UserProfile")]
@@ -369,8 +394,6 @@ namespace OrderChina.Models
         [Display(Name = "Loại tài khoản")]
         public string UserType { get; set; }
     }
-
-
     public class ExternalLogin
     {
         public string Provider { get; set; }
@@ -502,5 +525,10 @@ namespace OrderChina.Models
         [Display(Name = "Nhân viên nhận hàng")]
         Recieve = 7
     }
-    
+    #region DepositOrders
+    public class NewDepositOrders
+    {
+        public IEnumerable<DepositOrders> ListDepositOrders { get; set; }
+    }
+    #endregion
 }

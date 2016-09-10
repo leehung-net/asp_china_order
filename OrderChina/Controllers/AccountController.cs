@@ -23,6 +23,7 @@ namespace OrderChina.Controllers
     public class AccountController : Controller
     {
         DBContext db = new DBContext();
+        DateTime date = new DateTime();
 
         #region User
         //
@@ -1016,16 +1017,19 @@ namespace OrderChina.Controllers
         }
 
         [HttpPost]
-        public ActionResult Personal(int id, FormCollection collection)
+        public ActionResult Personal(int id , FormCollection collection)
         {
+
             if (ModelState.IsValid)
             {
+               
                 var user = db.UserProfiles.First(m => m.UserId == id);
                 string name = collection["Name"];
                 string phone = collection["Phone"];
                 string mail = collection["Email"];
                 string gerna = collection["Gender"];
                 string addres = collection["Address"];
+
                 user.Name = name;
                 user.Phone = phone;
                 user.Email = mail;
@@ -1051,25 +1055,75 @@ namespace OrderChina.Controllers
                 var user = db.UserProfiles.First(m => m.UserId == id);
                 string oldpass = collection["Password"];
                 string newpass = collection["NewPassword"];
-                string reppass = collection["RepPassword"];
-                //if (user.Password != oldpass)
-                //{
-                //    ModelState.AddModelError("", "Mật khẩu sai.");
+                if (user.Password != oldpass)
+                {
+                    ModelState.AddModelError("", "Mật khẩu cũ sai mời bạn nhập lại đầy đủ thông tin");
 
-                //}
-                //else if (newpass != reppass)
-                //{
-                //    ModelState.AddModelError("", "Xác nhận mật khẩu không chính xác");
-                //}
-                //else
-                //{
-                user.Password = newpass;
-                db.SaveChanges();
-
-                //}
-
+                }
+                else
+                {
+                    user.Password = newpass;
+                    db.SaveChanges();
+                    return RedirectToAction("Manage");
+                }
+                
             }
-            return RedirectToAction("Manage");
+            return View();
+            
+        }
+        #endregion
+
+        #region DepositOrders
+        [AllowAnonymous]
+        public ActionResult DepositOrders()
+        {
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult DepositOrders(NewDepositOrders model)
+        {
+            date = DateTime.Now;
+            var email = Session["Email"].ToString();
+            if (ModelState.IsValid)
+            {
+                foreach (var order in model.ListDepositOrders)
+                {
+                    order.EmailUser = email ;
+                    order.Status = "Đơn mới"; 
+                    order.TotalPriceConvert = 0;
+                    db.DepositOrders.Add(order);
+                    order.CreateDate = date;
+                    db.SaveChanges();
+                    return RedirectToAction("MangeDepositOrders", "Account");
+                }
+            }
+            return View();
+        }
+        #endregion
+        #region ManageDepositOrders
+        public ActionResult MangeDepositOrders(int? page)
+        {
+            var email = Session["Email"].ToString();
+            var type = Session["UserType"].ToString();
+            if (type == "Client")
+            {
+                int pageSize = 8;
+                int pageNum = (page ?? 1);
+                List<DepositOrders> deporder = new List<DepositOrders>();
+                deporder = (from a in db.DepositOrders where a.EmailUser == email select a).ToList();
+                return View(deporder.ToPagedList(pageNum, pageSize));
+            }
+            else
+            {
+                int pageSize = 8;
+                int pageNum = (page ?? 1);
+                List<DepositOrders> deporder = new List<DepositOrders>();
+                deporder = (from a in db.DepositOrders select a).ToList();
+                return View(deporder.ToPagedList(pageNum, pageSize));
+            }
+
+            
         }
         #endregion
     }

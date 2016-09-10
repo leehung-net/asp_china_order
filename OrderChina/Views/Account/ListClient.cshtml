@@ -17,7 +17,8 @@
                 <h3 class='text-center'>DANH SÁCH NGƯỜI SỬ DỤNG</h3>
 
                 <p>
-                    @Html.ActionLink("Tạo mới", "Register")
+                    <a style="background-color:#ffeded" href="@Url.Action("Register","Account")"><button class="btn btn-primary btn-flat">Tạo mới</button></a>
+                    <span>Tìm kiếm</span>
                     @using (Html.BeginForm("ListClient", "Account", FormMethod.Get))
                     {
                         <div class='col-md-2' style="padding-left: inherit">

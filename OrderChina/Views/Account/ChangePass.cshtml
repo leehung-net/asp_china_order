@@ -16,7 +16,7 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <section @*class='container'*@ style='padding: 20px;'>
     <div class='row'>
-        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "Changepass", true } })
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "ChangePass", true } })
 
         <div class="col-md-9 order-content">
             <div class='row'>
@@ -25,33 +25,33 @@
                 @using (Html.BeginForm("ChangePass", "Account", FormMethod.Post))
                 {
                     @Html.AntiForgeryToken()
+    
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    
                     <table style="width:100%;text-align:right;padding-right:3%">
                         <tr style="height:60px">
                             <td style="width:28%"><label class="lab">Mật khẩu cũ</label></td>
-                            <td style="padding-right:2%">
-                                @Html.TextBox("Password", null, new { @class = "form-control btn-flat" })
-                                <span id="username_error" style="color:#ff0000"></span>
+                            <td style="padding-right: 2%;text-align:left">
+                               @Html.TextBox("Password", null, new { @class = "form-control btn-flat", placeholder = "Mật khẩu cũ" })
+                                <span id="pass_error" style="color:#ff0000"></span>
                             </td>
                         </tr>
                         <tr>
                             <td><label class="lab">Mật khẩu mới</label></td>
-                            <td style="padding-right:2%">
-                                @Html.TextBox("NewPassword", null, new { @class = "form-control btn-flat" })
-                                <span id="sdt_error" style="color:#ff0000"></span>
+                            <td style="padding-right: 2%; text-align: left">
+                                @Html.TextBox("NewPassword", null, new { @class = "form-control btn-flat",placeholder ="Mật khẩu mới" })
+                                <span id="newpass_error" style="color:#ff0000"></span>
                             </td>
                         </tr>
                         <tr style="height:60px">
                             <td><label class="lab">Xác nhận</label></td>
-                            <td style="padding-right:2%">
-                                @Html.TextBox("RepPassword", null, new { @class = "form-control btn-flat" })
-                                <span id="email_error" style="color:#ff0000"></span>
+                            <td style="padding-right:2%;text-align:left">
+                                @Html.TextBox("RepPassword", null, new { @class = "form-control btn-flat" ,placeholder ="Nhập lại mật khẩu"})
+                                <span id="repass_error" style="color:#ff0000"></span>
                             </td>
                         <tr style="height:60px">
-                            <td></td>
+                            <td><span id="pass_error" style="color:#ff0000"></span></td>
                             <td align="left">
-                                <button type="submit" class="btn btn-danger btn-flat " id="btnsubmit">Đổi mật khẩu</button>
+                                <button type="submit" class="btn btn-danger btn-flat " onclick="return Submid() ">Đổi mật khẩu</button>
                             </td>
                         </tr>
                     </table>
@@ -59,4 +59,31 @@
             </div>
         </div>
     </div>
+    <script>
+        function Submid() {
+                var pass = $.trim($('#Password').val());
+                var newspass = $.trim($('#NewPassword').val());
+                var reppass = $.trim($('#RepPassword').val());
+                var flag = true;
+                if (newspass.length < 6) {
+                    $('#pass_error').text('Mật khẩu  phải hơn 6 kí tự');
+                    flag = false;
+                } else {
+                    $('#pass_error').text('');
+                }
+                if (newspass.length < 6) {
+                    $('#newpass_error').text('Mật khẩu mới phải hơn 6 kí tự');
+                    flag = false;
+                } else {
+                    $('#newpass_error').text('');           
+                }
+                if (newspass != reppass ||reppass.length < 6) {
+                    $('#repass_error').text('Bạn chưa nhập lại mật khẩu mới hoặc mật khẩu nhập lại không giống với mật khẩu cũ');
+                    flag = false;
+                } else {
+                    $('#repass_error').text('');
+                }                  
+                return flag;
+        }
+    </script>
 </section>

@@ -1,0 +1,128 @@
+﻿@model OrderChina.Models.NewDepositOrders
+@{
+    ViewBag.Title = "Tạo đơn ký gửi";
+}
+@if (ViewData["message"] != null)
+{
+    <script>
+        alert(ViewData["message"]);
+    </script>
+}
+<div @*class='container'*@>
+    <h3 class='text-center'>Tạo đơn hàng ký gửi từ hệ thống website</h3>
+    <div class="alert alert-warning alert-default btn-flat">
+        <p class="notification">
+        <p>
+            <em><u><strong>Chú ý:</strong></u></em><br />
+            Mỗi dòng dữ liệu tương ứng với 1 link sản phẩm, quý khách điền thông tin chi tết để thuận lợi trong quá trình giao dịch.<br />
+            Hàng được ký nhận tại kho Trung Quốc và trả hàng tại kho Việt Nam của China Express.<br />
+            Trước khi tạo đơn hàng, quý khách đọc kỹ quy định và bảng giá của China Express:<br />
+            - <em>Hướng dẫn:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/dich-vu-dat-hang.html">http://nhaphangtaobao.com.vn/tin-tuc/dich-vu-dat-hang.html</a><br />
+            - <em>Quy định:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/quy-dinh/quy-dinh-voi-khach-hang-order.html">http://nhaphangtaobao.com.vn/tin-tuc/quy-dinh/quy-dinh-voi-khach-hang-order.html</a><br />
+            - <em>Bảng giá:</em> <a href="http://nhaphangtaobao.com.vn/tin-tuc/bang-gia.html">http://nhaphangtaobao.com.vn/tin-tuc/bang-gia.html</a><br />
+            Quý khách chốt đơn hàng có nghĩa là quý khách đã <u><em><strong>đồng ý và thực hiện</strong></em></u> theo quy định của <strong>China Express!!!</strong>
+        </p>
+        </p>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @using (Html.BeginForm("DepositOrders", "Account", FormMethod.Post))
+        {
+            <div class="form-horizontal" style="font-size:14px">
+                <div class="form-group">
+                    <div class="col-sm-12 ">
+                        <label class="control-label" style="font-size:18px">Ghi chú đơn ký gửi</label>
+                        <textarea class="form-control btn-flat" rows="3" placeholder="Ghi chú đơn ký gửi" style="width:75%;min-height:100px" name="ListOrderDetail[0].Content"></textarea>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="col-sm-3">
+                            <label class="control-label">Mã vận đơn</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Trọng lượng</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label">Loại hàng</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label">Kích thước</label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="orderDetail" class="form-group">
+                    @Html.EditorFor(m => m.ListDepositOrders)
+                    <div class="form-group" style="width: 100%;">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control btn-flat" id="IDDepOders" name="ListDepositOrders[0].IDDepOders" placeholder='Mã vận đơn' autofocus="autofocus" required="true">
+                               
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="number" class="form-control btn-flat" name="ListDepositOrders[0].Weight" placeholder='Trọng lượng'>
+                               
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control btn-flat" name="ListDepositOrders[0].Catalogy" placeholder='Loại hàng'>
+                               
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="number" class="form-control btn-flat" name="ListDepositOrders[0].SizeOder" placeholder='Kích thước' required="true">                          
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <button name="submit" value="addOrder" class="btn btn-primary btn-flat" onclick="AddCust();">
+                            <i class="glyphicon glyphicon-shopping-cart"></i>
+                            Thêm hàng mới
+                        </button>
+                        <button name="submit" value="Process" class="btn btn-default pull-right btn-flat" type="submit">
+                            <i class="glyphicon glyphicon-shopping-cart"></i>
+                            Gửi đơn hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+
+    <script>
+        function AddCust() {
+            var m = $('#orderDetail .form-group:last-child .col-sm-3 input:first').attr("name");
+            var index = 0;
+            if (m != null && m.length > 0) {
+                index = m.split('ListDepositOrders[')[1].replace('].IDDepOders', '');
+                index++;
+            }
+
+            var html = '<div class="form-group col-lg-12 col-md-12 col-sm-12" style="width: 100%;">' +
+                '<div class="col-sm-3  col-reset-order">' +
+                '<input type="text" class="form-control btn-flat" name="ListDepositOrders[' + index + '].IDDepOders" placeholder=\'Mã vận đơn\' autofocus="autofocus" required="true">' +
+                '</div>' +
+                '<div class="col-sm-2 col-reset-order">' +
+                '<input type="number" class="form-control btn-flat" name="ListDepositOrders[' + index + '].Weight" placeholder=\'Trọng lượng\'>' +
+                '</div>' +
+                '<div class="col-sm-3 col-reset-order">' +
+                '<input type="text" class="form-control btn-flat" name="ListDepositOrders[' + index + '].Catalogy" placeholder=\'Loại hàng\'>' +
+                '</div>' +
+                '<div class="col-sm-2 col-reset-order">' +
+                '<input type="number" class="form-control btn-flat" name="ListDepositOrders[' + index + '].SizeOder"  placeholder=\'Kích thước\' required="true">' +
+                '</div>' +
+                '<div class="col-sm-2 col-reset-order text-center"><a class="btn btn-danger" onclick=\'$(this).parent().parent(".form-group").remove()\'><i class="fa fa-trash-o"></i></a></div> ' +       
+                '</div>';
+            $('#orderDetail').append(html);
+        };
+    </script>
+}
