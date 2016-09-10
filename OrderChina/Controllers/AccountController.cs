@@ -25,12 +25,7 @@ namespace OrderChina.Controllers
     [InitializeSimpleMembership]
     public class AccountController : Controller
     {
-<<<<<<< HEAD
-        DBContext db = new DBContext();
-        DateTime date = new DateTime();
-=======
         readonly DBContext db = new DBContext();
->>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253
 
         #region User
         //
@@ -1195,12 +1190,12 @@ namespace OrderChina.Controllers
         }
 
         [HttpPost]
-        public ActionResult Personal(int id , FormCollection collection)
+        public ActionResult Personal(int id, FormCollection collection)
         {
 
             if (ModelState.IsValid)
             {
-               
+
                 var user = db.UserProfiles.First(m => m.UserId == id);
                 string name = collection["Name"];
                 string phone = collection["Phone"];
@@ -1244,10 +1239,10 @@ namespace OrderChina.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Manage");
                 }
-                
+
             }
             return View();
-            
+
         }
         #endregion
 
@@ -1261,17 +1256,16 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult DepositOrders(NewDepositOrders model)
         {
-            date = DateTime.Now;
             var email = Session["Email"].ToString();
             if (ModelState.IsValid)
             {
                 foreach (var order in model.ListDepositOrders)
                 {
-                    order.EmailUser = email ;
-                    order.Status = "Đơn mới"; 
+                    order.EmailUser = email;
+                    order.Status = "Đơn mới";
                     order.TotalPriceConvert = 0;
                     db.DepositOrders.Add(order);
-                    order.CreateDate = date;
+                    order.CreateDate = DateTime.Now;
                     db.SaveChanges();
                     return RedirectToAction("MangeDepositOrders", "Account");
                 }
@@ -1301,7 +1295,7 @@ namespace OrderChina.Controllers
                 return View(deporder.ToPagedList(pageNum, pageSize));
             }
 
-            
+
         }
         #endregion
 

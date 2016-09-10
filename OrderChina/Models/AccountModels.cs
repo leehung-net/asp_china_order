@@ -28,15 +28,12 @@ namespace OrderChina.Models
         public DbSet<RateHistory> RateHistorys { get; set; }
         public DbSet<SaleManageClient> SaleManageClients { get; set; }
         public DbSet<News> News { get; set; }
-<<<<<<< HEAD
         public DbSet<DepositOrders> DepositOrders { get; set; }
         
-=======
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<WalletHistory> WalletHistorys { get; set; }
         public DbSet<Currency> Currencys { get; set; }
 
->>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253
     }
 
     [Table("News")]
@@ -646,15 +643,7 @@ namespace OrderChina.Models
         [Display(Name = "Nhân viên nhận hàng")]
         Recieve = 7
     }
-<<<<<<< HEAD
-    #region DepositOrders
-    public class NewDepositOrders
-    {
-        public IEnumerable<DepositOrders> ListDepositOrders { get; set; }
-    }
-=======
 
-<<<<<<< HEAD
     public enum WalletUpdateType
     {
         [Display(Name = "Thêm tiền")]
@@ -663,8 +652,13 @@ namespace OrderChina.Models
         Subtract = 2
     }
 
-=======
->>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253
->>>>>>> e0e8716bdf6344a036ab627c0424e1545779c029
+    #endregion
+
+    #region DepositOrders
+    public class NewDepositOrders
+    {
+        public IEnumerable<DepositOrders> ListDepositOrders { get; set; }
+    }
+    
     #endregion
 }
