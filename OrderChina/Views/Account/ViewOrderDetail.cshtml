@@ -50,49 +50,52 @@
                 </div>
 
                 <div class='row'>
-                    <p class="col-md-3">
-                        @if (@Model.Status == OrderStatus.Cancel.ToString())
-                        {
-                            <a href="#controller" onclick="alert('Đơn hàng này đã hủy!');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
-                            <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
-                        }
-                        else if (@Model.Status != OrderStatus.New.ToString())
-                        {
-                            <a href="#controller" onclick="alert('Đơn hàng này đã xác nhận!');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
-                            <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
-                        }
-                        else
-                        {
-                            <a href="#controller" onclick="confirm_order(@Model.OrderId ,'1');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
-                            <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
-                        }
+                    @*<p class="col-md-3">
+                            @if (@Model.Status == OrderStatus.Cancel.ToString())
+                            {
+                                <a href="#controller" onclick="alert('Đơn hàng này đã hủy!');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
+                                <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
+                            }
+                            else if (@Model.Status != OrderStatus.New.ToString())
+                            {
+                                <a href="#controller" onclick="alert('Đơn hàng này đã xác nhận!');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
+                                <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
+                            }
+                            else
+                            {
+                                <a href="#controller" onclick="confirm_order(@Model.OrderId ,'1');" class='btn btn-primary btn-xs ' title="Xác nhận đơn hàng"><i class="fa fa-check"></i> Xác nhận đơn hàng</a>
+                                <br /><font style="font-size:12px">(Click khi muốn đặt đơn hàng này)</font>
+                            }
 
-                    </p>
-                    <p class="col-md-3">
-                        @if (@Model.Status == OrderStatus.Cancel.ToString())
-                        {
-                            <a href="#controller" onclick="alert('Đơn hàng này đã hủy!');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
-                            <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
-                        }
-                        else if (@Model.Status != OrderStatus.New.ToString())
-                        {
-                            <a href="#controller" onclick="alert('Đơn hàng này đã xác nhận!');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
-                            <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
-                        }
-                        else
-                        {
-                            <a href="#controller" onclick="confirm_order(@Model.OrderId,'0');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
-                            <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
-                        }
-                    </p>
-                    <p class="col-md-3">1 NDT = @Model.Rate.ToString("##,###") <sup>đ</sup></p>
+                        </p>*@
+
+
+                    <p class="col-md-6">1 NDT = @Model.Rate.ToString("##,###") <sup>đ</sup></p>
                     @if (Session["UserType"] != null)
                     {
                         if ((string)Session["UserType"] == UserType.Client.ToString())
                         {
+                            <p class="col-md-3">
+                                @if (@Model.Status == OrderStatus.Cancel.ToString())
+                                {
+                                    <a href="#controller" onclick="alert('Đơn hàng này đã hủy!');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                                    <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
+                                }
+                                else if (@Model.Status != OrderStatus.New.ToString())
+                                {
+                                    <a href="#controller" onclick="alert('Đơn hàng này đã xác nhận!');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                                    <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
+                                }
+                                else
+                                {
+                                    <a href="#controller" onclick="confirm_order(@Model.OrderId,'0');" class='btn btn-danger btn-xs ' title="Hủy đơn hàng"><i class="fa fa-trash-o"></i> Hủy bỏ đơn hàng</a>
+                                    <br /><font style="font-size:12px">(Click khi muốn hủy đơn hàng này)</font>
+                                }
+                            </p>
+
                             if (Model.SaleManageInfo != null)
                             {
-                                <p class='col-md-3'>
+                                <p class='col-md-6'>
                                     Nhân viên KD: <b>@(Model.SaleManageInfo.SaleName + " : " + Model.SaleManageInfo.SalePhoneCompany)</b><br />
                                     <font style="font-size: 14px"><i class='fa fa-phone'></i> @Model.SaleManageInfo.SalePhone</font>
                                 </p>
@@ -110,7 +113,7 @@
                             }
                             else
                             {
-                                if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Sale.ToString()))
+                                if (((string)Session["UserType"] == UserType.Sale.ToString()))
                                 {
                                     <p class='col-md-3'>
                                         @Html.ActionLink("Tạo tài khoản khách hàng", "Register", "Account", new { phone = @Model.ListOrderDetails.ElementAt(0).Phone }, new { @class = "btn btn-danger btn-xs" })
@@ -140,30 +143,30 @@
                         <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip).ToString("##,###"))<sup>đ</sup></font></p>
                         <p><font>(8) Đặt cọc</font><font style="float:right">@Model.DownPayment.ToString("##,###")<sup>đ</sup></font></p>
                         <p><font>(9) Đã thu thêm</font><font style="float:right">@Model.AccountingCollected.ToString("##,###")<sup>đ</sup></font></p>
-                        <p><font>(10) Còn thiếu</font><font style="float:right">@((ASP(Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip) - @Model.DownPayment - @Model.AccountingCollected).ToString("##,###"))<sup>đ</sup></font></p>
+                        <p><font>(10) Còn thiếu</font><font style="float:right">@(((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip) - @Model.DownPayment - @Model.AccountingCollected).ToString("##,###"))<sup>đ</sup></font></p>
                     </div>
                     <span class="clearfix"></span>
                     <p class="col-md-6 pull-right">
                         @if (Session["UserType"] != null)
                         {
-                            if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Sale.ToString())
+                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Sale.ToString()))
                             {
-                                if (@Model.Status == OrderStatus.ClientConfirm.ToString())
+                                if (@Model.Status == OrderStatus.New.ToString())
                                 {
                                     <a href="@Url.Action("SaleConfirmOrder", "Account", new {id = Model.OrderId})" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
 
                                 }
                             }
 
-                            if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString())
+                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
                             {
-                                if (@Model.Status == OrderStatus.SaleConfirm.ToString())
+                                if (@Model.Status == OrderStatus.SaleConfirm.ToString() || @Model.Status == OrderStatus.Receive.ToString())
                                 {
                                     <a href="@Url.Action("AccountingConfirmOrder", "Account", new {id = Model.OrderId})" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-account-confirm" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
                                 }
                             }
 
-                            if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Orderer.ToString())
+                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Orderer.ToString()))
                             {
                                 if (@Model.Status == OrderStatus.Paid.ToString())
                                 {
@@ -175,18 +178,18 @@
                                     </a>
                                 }
                             }
-                            if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Recieve.ToString())
+                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Recieve.ToString()))
                             {
                                 if (@Model.Status == OrderStatus.Order.ToString())
                                 {
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'4');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'4');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Xác nhận hàng về">
                                         <i class="fa fa-arrow-left"></i> Xác nhận hàng về
                                     </a>
 
                                 }
-                                if (@Model.Status == OrderStatus.Receive.ToString())
+                                if (@Model.Status == OrderStatus.FullCollect.ToString())
                                 {
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'5');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'5');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Xác nhận đã gửi hàng cho KH">
                                         <i class="fa fa-ticket"></i> Xác nhận giao hàng
                                     </a>
                                 }

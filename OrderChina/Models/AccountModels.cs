@@ -357,10 +357,30 @@ namespace OrderChina.Models
 
         public string Reason { get; set; }
 
+        public string UpdateType { get; set; }
+
         public string User_Update { get; set; }
 
         public DateTime LastUpdate { get; set; }
 
+        public string getUpdateTypeText()
+        {
+            foreach (FieldInfo fieldInfo in typeof(WalletUpdateType).GetFields())
+            {
+                if (fieldInfo.FieldType.Name != "WalletUpdateType")
+                    continue;
+                if (fieldInfo.Name.ToLower() == UpdateType.ToLower())
+                {
+                    var attribute = Attribute.GetCustomAttribute(fieldInfo, typeof(DisplayAttribute)) as DisplayAttribute;
+
+                    if (attribute != null)
+                        return attribute.Name;
+                }
+
+            }
+
+            return UpdateType;
+        }
     }
 
     public class Currency
@@ -549,6 +569,13 @@ namespace OrderChina.Models
         public string reason { get; set; }
 
     }
+
+    public class IndexWalletModel
+    {
+        public IEnumerable<Wallet> Wallets { get; set; }
+        public PagedList.IPagedList<WalletHistory> WalletHistorys { get; set; }
+
+    }
     #endregion
 
     #region Enum
@@ -557,9 +584,9 @@ namespace OrderChina.Models
     {
         [Display(Name = "Đơn mới")]
         New = 1,
-        [Display(Name = "Đã thu tiền")]
+        [Display(Name = "Đã thu tiền đặt cọc")]
         Paid = 2,
-        [Display(Name = "Đặt hàng")]
+        [Display(Name = "Hàng chờ về")]
         Order = 3,
         [Display(Name = "Hoàn thành")]
         Finish = 4,
@@ -570,7 +597,9 @@ namespace OrderChina.Models
         [Display(Name = "Sale chốt đơn hàng")]
         SaleConfirm = 7,
         [Display(Name = "Hàng về đã về kho")]
-        Receive = 8
+        Receive = 8,
+        [Display(Name = "Đã thu đủ tiền")]
+        FullCollect = 9
     }
 
     public enum UserType
@@ -589,6 +618,14 @@ namespace OrderChina.Models
         Orderer = 6,
         [Display(Name = "Nhân viên nhận hàng")]
         Recieve = 7
+    }
+
+    public enum WalletUpdateType
+    {
+        [Display(Name = "Thêm tiền")]
+        Addition = 1,
+        [Display(Name = "Trừ tiền")]
+        Subtract = 2
     }
 
     #endregion

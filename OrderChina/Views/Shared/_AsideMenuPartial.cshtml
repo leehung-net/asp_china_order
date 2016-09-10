@@ -46,7 +46,7 @@
                 </li>
             }
         }
-        @if ((string)Session["UserType"] == UserType.Accounting.ToString())
+        @if (Session["UserType"] != null && (string)Session["UserType"] == UserType.Accounting.ToString())
         {
             if (ViewData["walletmanage"] != null)
             {

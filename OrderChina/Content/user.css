@@ -122,7 +122,6 @@ a {
 
 .name {
     font-weight: bold;
-    display: flex;
     justify-content: space-between;
 }
 
@@ -226,4 +225,14 @@ ul.list li .content-container .meta {
 .ripple.tiny {
   animation: anim-mat-ripple-tiny 0.55s 1 cubic-bezier(0, 0.005, 0, 0.99);
   position: absolute;
+}
+
+ul.my-row {
+  display: table;
+  width: 100%;
+  text-align: center;
+}
+
+ul.my-row > li {
+  display: table-cell;
 }

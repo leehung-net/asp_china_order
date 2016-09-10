@@ -805,9 +805,17 @@ namespace OrderChina.Controllers
             var order = db.Orders.FirstOrDefault(m => m.OrderId == model.OrderId);
             if (order != null)
             {
-                order.DownPayment = model.DownPayment;
-                order.AccountingCollected = model.AccountingCollected;
-                order.Status = OrderStatus.Paid.ToString();
+                if (model.Status == OrderStatus.SaleConfirm.ToString())
+                {
+                    order.DownPayment = model.DownPayment;
+                    order.Status = OrderStatus.Paid.ToString();
+
+                }
+                else if (model.Status == OrderStatus.Receive.ToString())
+                {
+                    order.AccountingCollected = model.AccountingCollected;
+                    order.Status = OrderStatus.FullCollect.ToString();
+                }
                 db.SaveChanges();
             }
 

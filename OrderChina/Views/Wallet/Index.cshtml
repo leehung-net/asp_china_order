@@ -2,8 +2,10 @@
     ViewBag.Title = "Index";
 }
 @using OrderChina.Models
-@model IEnumerable<OrderChina.Models.Wallet>
+@using PagedList.Mvc
+@model IndexWalletModel
 
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <section @*class='container'*@ style='padding: 20px;'>
     <div class='row'>
         @(ViewBag.isadmin != null ?
@@ -19,23 +21,70 @@
                     Tạo mới ví
                 </a>
             }
-            @foreach (var item in Model)
-            {
-                <li>
-                    <i class="fa fa-money">@item.Currency</i>
-                    <div class="content-container">
-                        <span class="name">Số tiền trong ví: </span>
-                        <span class="txt">@item.Money.ToString("##,###")</span>
-                    </div>
-                    @if (@OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
-                    {
-                        <div>
-                            <a href="@Url.Action("AdditionWallet", "Wallet", new { id = item.Id, cmd = "add" })" rel='tooltip' title="Thêm tiền" class='btn btn-info btn-xs btn-addition'><i class="fa fa-plus"></i></a>
-                            <a href="@Url.Action("AdditionWallet", "Wallet", new { id = item.Id, cmd = "sub" })" rel='tooltip' title='Trừ tiền' class='btn btn-info btn-xs btn-subtract'><i class="fa fa-minus"></i></a>
+            <ul class="my-row">
+                @foreach (var item in Model.Wallets)
+                {
+                    <li>
+                        <i class="fa fa-money">@item.Currency</i>
+                        <div class="content-container">
+                            <span class="name">Số tiền trong ví: </span>
+                            <span class="txt">@item.Money.ToString("##,###")</span>
                         </div>
+                        @if (@OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
+                        {
+                            <div>
+                                <a href="@Url.Action("AdditionWallet", "Wallet", new { id = item.Id, cmd = "add" })" rel='tooltip' title="Thêm tiền" class='btn btn-info btn-xs btn-addition'><i class="fa fa-plus"></i></a>
+                                <a href="@Url.Action("AdditionWallet", "Wallet", new { id = item.Id, cmd = "sub" })" rel='tooltip' title='Trừ tiền' class='btn btn-info btn-xs btn-subtract'><i class="fa fa-minus"></i></a>
+                            </div>
+                        }
+                    </li>
+                }
+            </ul>
+
+            <div class="col-sm-12">
+                <hr>
+            </div>
+
+            <table class="table table-bordered table-striped" style="font-size: 12px">
+                <thead>
+                    <tr>
+                        <th class='text-center'>Ví</th>
+                        <th class='text-center'>Số tiền cập nhật</th>
+                        <th class='text-center'>Loại cập nhật</th>
+                        <th class='text-center'>Lý do</th>
+                        <th class="text-center">Người cập nhật</th>
+                        <th class='text-center'>Ngày</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.WalletHistorys)
+                    {
+                        <tr>
+                            <td class='text-center'>
+                                @Html.DisplayFor(modelItem => item.Currency)
+                            </td>
+                            <td class='text-center'>
+                                @Html.DisplayFor(modelItem => item.Money)
+                            </td>
+                            <td class='text-center'>
+                                @Html.DisplayFor(modelItem => item.getUpdateTypeText())
+                            </td>
+                            <td class='text-center'>
+                                @Html.DisplayFor(modelItem => item.Reason)
+                            </td>
+                            <td class='text-center'>
+                                @Html.DisplayFor(modelItem => item.UpdateType)
+                            </td>
+                            <td class='text-center'>
+                                @Html.DisplayFor(modelItem => item.LastUpdate.ToString("dd/MM/yyyy HH:mm:yyyy"))
+                            </td>
+                        </tr>
                     }
-                </li>
-            }
+                </tbody>
+            </table>
+            <br />
+            Page @(Model.WalletHistorys.PageCount < Model.WalletHistorys.PageNumber ? 0 : Model.WalletHistorys.PageNumber) of @Model.WalletHistorys.PageCount
+            @Html.PagedListPager(Model.WalletHistorys, page => Url.Action("Index", new { page, userType = ViewBag.CurrentUserType, userName = ViewBag.CurrentUserName }))
         </div>
     </div>
     <div class="modal fade"
