@@ -10,17 +10,18 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    @Html.Partial("_HeaderPartial")
+    @Html.Partial("_MenuPartial")
 
-    <div id="body">
+    <div>
         @*@RenderSection("featured", required: false)*@
         <section>
             @RenderBody()
         </section>
     </div>
-    <footer>
+    @if (Request.Url != null && (Request.Url.AbsolutePath.Contains("Home/Index") || Request.Url.AbsolutePath == "/"))
+    {
         @Html.Partial("_FooterPartial")
-    </footer>
+    }
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

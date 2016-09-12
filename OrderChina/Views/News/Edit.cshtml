@@ -20,13 +20,7 @@
     }
     $(function () { createEditor('vi', 'editor') })
 </script>
-@if (ViewData["message"] != null)
-{
-    <a href="~/Views/Account/_AssignSalePartial.cshtml">~/Views/Account/_AssignSalePartial.cshtml</a>
-    <script>
-        alert(ViewData["message"]);
-    </script>
-}<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <style>
     .news {
         width: 70%;
@@ -37,7 +31,7 @@
     <div class="news">
         <h2>Sửa tin tức</h2>
         <div class='row'>
-            @Html.Partial("~/Views/Account/_AsideMenuPartial.cshtml", new ViewDataDictionary { { "Node", true } })
+            @Html.Partial("_AsideMenuPartial.cshtml", new ViewDataDictionary { { "Node", true } })
 
             <div class="col-md-9 order-content">
                 <div class='row'>

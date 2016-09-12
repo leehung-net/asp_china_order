@@ -12,9 +12,6 @@
 
         <div class="col-md-9 order-content">
             <div class='row'>
-                @Html.ActionLink("Tạo mới", "Register")
-
-
                 @using (Html.BeginForm("Manage", "Account", FormMethod.Get))
                 {
                     <p>
@@ -101,13 +98,13 @@
                                     @Html.DisplayFor(modelItem => item.OrderId)
                                 </td>
                                 <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.Rate.ToString("##,###"))
+                                    @item.Rate.ToString("##,###")
                                 </td>
                                 <td class='text-center'>
                                     @item.getStatusText()
                                 </td>
                                 <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.TotalPriceConvert.ToString("##,###"))
+                                    @item.TotalPriceConvert.ToString("##,###")
                                 </td>
                                 <td class='text-center'>
                                     @item.CreateDate.ToString("dd/MM/yyyy")

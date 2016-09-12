@@ -400,7 +400,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Shared\_HeaderPartial.cshtml" />
+    <Content Include="Views\Shared\_MenuPartial.cshtml" />
     <Content Include="Views\Shared\_FooterPartial.cshtml" />
     <Content Include="Views\Account\CreateOrder.cshtml" />
     <Content Include="Views\Account\ViewOrderDetail.cshtml" />
@@ -430,6 +430,9 @@
     <Content Include="Views\Wallet\_CreateWallet.cshtml" />
     <Content Include="Views\Wallet\_AdditionWallet.cshtml" />
     <Content Include="Views\Wallet\ListClient.cshtml" />
+    <Content Include="Views\Shared\_HeaderPartial.cshtml" />
+    <Content Include="Views\Account\_UpdateOrderPartial.cshtml" />
+    <Content Include="Views\Account\TransactionHistory.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

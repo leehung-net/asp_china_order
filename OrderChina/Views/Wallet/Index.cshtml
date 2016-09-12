@@ -28,7 +28,7 @@
                         <i class="fa fa-money">@item.Currency</i>
                         <div class="content-container">
                             <span class="name">Số tiền trong ví: </span>
-                            <span class="txt">@item.Money.ToString("##,###")</span>
+                            <span class="txt">@item.Money.ToString("##,##0")</span>
                         </div>
                         @if (@OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
                         {
@@ -67,16 +67,16 @@
                                 @Html.DisplayFor(modelItem => item.Money)
                             </td>
                             <td class='text-center'>
-                                @Html.DisplayFor(modelItem => item.getUpdateTypeText())
+                                @item.getUpdateTypeText()
                             </td>
                             <td class='text-center'>
                                 @Html.DisplayFor(modelItem => item.Reason)
                             </td>
                             <td class='text-center'>
-                                @Html.DisplayFor(modelItem => item.UpdateType)
+                                @Html.DisplayFor(modelItem => item.User_Update)
                             </td>
                             <td class='text-center'>
-                                @Html.DisplayFor(modelItem => item.LastUpdate.ToString("dd/MM/yyyy HH:mm:yyyy"))
+                                @item.LastUpdate.ToString("dd/MM/yyyy HH:mm:yyyy")
                             </td>
                         </tr>
                     }
@@ -84,7 +84,7 @@
             </table>
             <br />
             Page @(Model.WalletHistorys.PageCount < Model.WalletHistorys.PageNumber ? 0 : Model.WalletHistorys.PageNumber) of @Model.WalletHistorys.PageCount
-            @Html.PagedListPager(Model.WalletHistorys, page => Url.Action("Index", new { page, userType = ViewBag.CurrentUserType, userName = ViewBag.CurrentUserName }))
+            @Html.PagedListPager(Model.WalletHistorys, page => Url.Action("Index", new { id = ViewBag.phone, page }))
         </div>
     </div>
     <div class="modal fade"

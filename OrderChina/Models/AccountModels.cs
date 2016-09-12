@@ -29,7 +29,7 @@ namespace OrderChina.Models
         public DbSet<SaleManageClient> SaleManageClients { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<DepositOrders> DepositOrders { get; set; }
-        
+
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<WalletHistory> WalletHistorys { get; set; }
         public DbSet<Currency> Currencys { get; set; }
@@ -54,7 +54,7 @@ namespace OrderChina.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; } 
+        public int ID { get; set; }
         public int UserId { get; set; }
         public string EmailUser { get; set; }
         public string IDDepOders { get; set; }
@@ -140,10 +140,15 @@ namespace OrderChina.Models
         [Required(ErrorMessage = "Phí dịch vụ bắt buộc nhập")]
         public double Fee { get; set; }
 
+        [Display(Name = "Phí ship nội địa TQ")]
+
         public double FeeShipChina { get; set; }
+
+        [Display(Name = "Trong lượng")]
 
         public int Weight { get; set; }
 
+        [Display(Name = "Cước vận chuyển")]
         public double FeeShip { get; set; }
 
         [Display(Name = "Ngày tạo")]
@@ -212,6 +217,27 @@ namespace OrderChina.Models
         [Display(Name = "Ngày xuất kho")]
         public DateTime? DeliveryDate { get; set; }
 
+        [Display(Name = "Trạng thái")]
+        public string OrderDetailStatus { get; set; }
+
+        public string getStatusText()
+        {
+            foreach (FieldInfo fieldInfo in typeof(OrderDetailStatus).GetFields())
+            {
+                if (fieldInfo.FieldType.Name != "OrderDetailStatus")
+                    continue;
+                if (fieldInfo.Name.ToLower() == OrderDetailStatus.ToLower())
+                {
+                    var attribute = Attribute.GetCustomAttribute(fieldInfo, typeof(DisplayAttribute)) as DisplayAttribute;
+
+                    if (attribute != null)
+                        return attribute.Name;
+                }
+
+            }
+
+            return OrderDetailStatus;
+        }
     }
 
     [Table("Rate")]
@@ -425,11 +451,10 @@ namespace OrderChina.Models
     #region User
     public class LoginModel
     {
-        [Required]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Email or Phone không được để trống")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Mật khẩu không được để trống")]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu")]
         public string Password { get; set; }
@@ -445,7 +470,7 @@ namespace OrderChina.Models
         public string UserName { get; set; }
 
         [Remote("IsCheckEmail", "Account", "")]
-        [Display(Name = "Email *")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Mật khẩu bắt buộc nhập.")]
@@ -625,6 +650,13 @@ namespace OrderChina.Models
         [Display(Name = "Đã thu đủ tiền")]
         FullCollect = 9
     }
+    public enum OrderDetailStatus
+    {
+        [Display(Name = "Link hoạt động")]
+        Active = 1,
+        [Display(Name = "Link không hoạt động")]
+        Inactive = 2
+    }
 
     public enum UserType
     {
@@ -659,6 +691,6 @@ namespace OrderChina.Models
     {
         public IEnumerable<DepositOrders> ListDepositOrders { get; set; }
     }
-    
+
     #endregion
 }

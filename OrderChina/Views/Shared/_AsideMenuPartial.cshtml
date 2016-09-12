@@ -1,4 +1,5 @@
-﻿@using OrderChina.Models
+﻿@using OrderChina.Common
+@using OrderChina.Models
 <aside class='col-md-3 order-sidebar'>
     <h3 class='text-center'><i class="fa fa-gavel"></i> Đơn hàng</h3>
     <ul class="list-group btn-flat">
@@ -22,7 +23,7 @@
         {
             <li class="list-group-item active">
                 <a href=@Url.Action("MangeDepositOrders", "Account") title="Đơn ký gửi của bạn">
-                    Đơn hàng
+                    Đơn vận chuyển
                 </a>
             </li>
         }
@@ -30,7 +31,7 @@
         {
             <li class="list-group-item">
                 <a href=@Url.Action("MangeDepositOrders", "Account") title="Đơn ký gửi của bạn">
-                    Đơn hàng
+                    Đơn vận chuyển
                 </a>
             </li>
         }
@@ -42,6 +43,21 @@
         Tài Khoản
     </h3>
     <ul class="list-group">
+        @if (Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
+        {
+            if (ViewData["tranhist"] != null)
+            {
+                <li class="list-group-item  active">
+                    <a href="@Url.Action("TransactionHistory", "Account")">Lịch sử giao dịch</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item ">
+                    <a href="@Url.Action("TransactionHistory", "Account")">Lịch sử giao dịch</a>
+                </li>
+            }
+        }
         @if ((string)Session["UserType"] == UserType.Client.ToString())
         {
             if (ViewData["wallet"] != null)
@@ -133,7 +149,7 @@
                     <a href="@Url.Action("Personal", "Account", new { id = id })">Thông tin cá nhân</a>
                 </li>
             }
-        } 
+        }
         @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString() || (string)Session["UserType"] == UserType.Accounting.ToString()))
         {
             var id = Session["ID"];
@@ -150,13 +166,9 @@
                 </li>
             }
         }
-<<<<<<< HEAD:OrderChina/Views/Account/_AsideMenuPartial.cshtml
-        
-=======
         <li class="list-group-item ">
             <a href="@Url.Action("ChangePass", "Account", new { id = Session["ID"] })">Đổi mật khẩu</a>
         </li>
->>>>>>> 686ce85d9987ee805c2d83e3b7296f0a7e0a3253:OrderChina/Views/Shared/_AsideMenuPartial.cshtml
         <li class="list-group-item ">
             <a href="#">Điều khoản sử dụng</a>
         </li>

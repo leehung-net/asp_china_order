@@ -116,7 +116,7 @@
                                 if (((string)Session["UserType"] == UserType.Sale.ToString()))
                                 {
                                     <p class='col-md-3'>
-                                        @Html.ActionLink("Tạo tài khoản khách hàng", "Register", "Account", new { phone = @Model.ListOrderDetails.ElementAt(0).Phone }, new { @class = "btn btn-danger btn-xs" })
+                                        @Html.ActionLink("Tạo tài khoản khách hàng", "Register", "Account", new { phone = @Model.ListOrderDetails.ElementAt(0).Phone, id = Model.OrderId }, new { @class = "btn btn-danger btn-xs" })
                                     </p>
                                 }
                             }
@@ -173,9 +173,9 @@
                                     <a href="#" onclick="confirm_order(@Model.OrderId,'2');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
                                         <i class="fa fa-arrow-left"></i> Gửi sale
                                     </a>
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'3');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Đặt hàng xong">
-                                        <i class="fa fa-ticket"></i> Đặt hàng xong
-                                    </a>
+
+                                    <a href="@Url.Action("UpdateOrder", "Account", new { id = Model.OrderId })" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-orderer-confirm" title="Đặt hàng thành công"><i class="fa fa-trash-o"></i>Đặt hàng thành công</a>
+
                                 }
                             }
                             if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Recieve.ToString()))
@@ -259,6 +259,9 @@
                                     <td class='text-center'>
                                         @Html.DisplayFor(modelItem => item.Note)
                                     </td>
+                                    @*<td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.Note)
+                                        </td>*@
                                     <td class='text-center'>
                                         @if (Session["UserType"] != null)
                                         {
@@ -279,7 +282,7 @@
                                             }
                                             else if ((string)Session["UserType"] == UserType.Sale.ToString())
                                             {
-                                                if (@Model.Status == OrderStatus.ClientConfirm.ToString())
+                                                if (@Model.Status == OrderStatus.New.ToString())
                                                 {
                                                     <a href="@Url.Action("AddEditOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
                                                     <a href="@Url.Action("DeletedOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
@@ -312,21 +315,22 @@
                         {
                             if (Model.Status == OrderStatus.New.ToString())
                             {
-                                <a href="@Url.Action("AddEditOrderDetail", "Account", new { orderId = Model.OrderId })" class="btn-flat btn-warning btn-xs btn pull-right btn-add" style="margin-right: 20px">
+                                <a href="@Url.Action("AddEditOrderDetail", "Account", new {orderId = Model.OrderId})" class="btn-flat btn-warning btn-xs btn pull-right btn-add" style="margin-right: 20px">
                                     <i class="fa fa-plus"></i> Thêm link
                                 </a>
                             }
-                        }
-                        else if ((string)Session["UserType"] == UserType.Sale.ToString())
-                        {
-                            if (Model.Status == OrderStatus.ClientConfirm.ToString())
-                            { <a href="@Url.Action("AddEditOrderDetail", "Account", new { orderId = Model.OrderId })" class="btn-flat btn-warning btn-xs btn pull-right btn-add" style="margin-right: 20px">
-                                <i class="fa fa-plus"></i> Thêm link
-                            </a> }
+                            else if ((string)Session["UserType"] == UserType.Sale.ToString())
+                            {
+                                if (Model.Status == OrderStatus.New.ToString())
+                                {
+                                    <a href="@Url.Action("AddEditOrderDetail", "Account", new {orderId = Model.OrderId})" class="btn-flat btn-warning btn-xs btn pull-right btn-add" style="margin-right: 20px">
+                                        <i class="fa fa-plus"></i> Thêm link
+                                    </a>
+                                }
 
+                            }
                         }
                     }
-
                 </div>
             </div>
         </div>
@@ -479,6 +483,33 @@
                 });
             });
             $('.btn-account-confirm').click(function (e) {
+
+                /*
+                * hủy liên kết
+                *
+                * việc này quan trọng
+                * nếu không hủy liên kết, modal sẽ không được load đúng cách
+                * vì action sẽ trả về 1 trang html trống với partialview
+                *
+                * cách tương tự return false; cách này thực hiện ở cuối method
+                */
+                e.preventDefault();
+
+                var $modal = $('#myModal1');
+                var $modalDialog = $('.modal-mini');
+                var href = $(this).prop('href');
+
+                // không cho phép tắt modal khi click bên ngoài modal
+                var option = { backdrop: 'static' };
+
+                // kiểm tra (logic, điều kiện...)
+
+                // load modal
+                $modalDialog.load(href, function () {
+                    $modal.modal(option, 'show');
+                });
+            });
+            $('.btn-orderer-confirm').click(function (e) {
 
                 /*
                 * hủy liên kết

@@ -9,6 +9,9 @@
 @Scripts.Render("~/bundles/modernizr")
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/jqueryval")
+
 <style>
     .login {
         align-items: center;
@@ -38,7 +41,7 @@
                     <div class="col-sm-8">
                         @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email or Phone" })
                         <br />
-                        @Html.ValidationMessageFor(m => m.Password)
+                        @Html.ValidationMessageFor(m => m.Email)
                     </div>
                 </div>
                 <div>

@@ -1,0 +1,63 @@
+﻿@using System.Diagnostics
+@{
+    ViewBag.Title = "hung-header";
+}
+
+<style>
+    .gdtq-header {
+        background: transparent url("http://nhaphangtaobao.com.vn/upload/images/adv/1451012361header--.jpg") repeat scroll 0% 0% / cover;
+        position: relative;
+    }
+</style>
+
+
+<section class='gdtq-header' id='header'>
+    <a href="#header" class='to-top'><i class="fa fa-angle-up fa-2x"></i></a>
+    <span class='g-fog'></span>
+    <nav class="navbar navbar-default gdtq-header-nav flat" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed flat" data-toggle="collapse" data-target="#menu-top">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="menu-top">
+            <ul class="nav navbar-nav">
+                <li><a href="@Url.Action("Index", "Home")" style="font-size: 20px;"><span class="fa fa-home"></span></a></li>
+                <li>
+                    <a href="" title="Quy định">Quy định</a>
+                </li>
+                <li>
+                    <a href="" title="Hướng dẫn khách hàng">Hướng dẫn khách hàng</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Introduce", "Home")" title="Giới thiệu">Giới thiệu</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Banggia", "Home")" title="Bảng giá">Bảng giá</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("thanhtoan", "Home")" title="Thanh toán">Thanh toán</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index","News")" title="Tin tức">Tin tức</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("tuyendung", "Home")" title="Tuyển dụng">Tuyển dụng</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("lienhe","Home")" title="Liên hệ">Liên hệ</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right navbar-user">
+                @Html.Partial("_LoginPartial")
+            </ul>
+        </div>
+    </nav>
+    @if (Request.Url != null && (Request.Url.AbsolutePath.Contains("Home/Index") || Request.Url.AbsolutePath == "/"))
+    {
+        @Html.Partial("_HeaderPartial")
+    }
+</section>

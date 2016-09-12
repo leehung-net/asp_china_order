@@ -26,6 +26,7 @@ namespace OrderChina.Controllers
     public class AccountController : Controller
     {
         readonly DBContext db = new DBContext();
+        readonly int pageSize = Convert.ToInt32(WebConfigurationManager.AppSettings["page_size"]);
 
         #region User
         //
@@ -167,13 +168,28 @@ namespace OrderChina.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult DeleteUser(string id)
+        {
+            var model = db.UserProfiles.FirstOrDefault(a => a.Phone == id);
+            if (model != null)
+            {
+                db.UserProfiles.Remove(model);
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            return Json(new { success = false });
+        }
+
         //
         // GET: /Account/Register
 
         [AllowAnonymous]
-        public ActionResult Register(string phone)
+        public ActionResult Register(string phone, string id)
         {
-
+            ViewBag.id = id;
             var model = new RegisterModel { Phone = phone, Birthday = DateTime.Now };
             ViewBag.listUserType = GetListUserType();
 
@@ -186,12 +202,11 @@ namespace OrderChina.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterModel model, string listUserType)
+        public ActionResult Register(RegisterModel model, string id)
         {
             if (ModelState.IsValid)
             {
                 // Attempt to register the user
-
                 try
                 {
                     //insert userProfile
@@ -205,7 +220,7 @@ namespace OrderChina.Controllers
                         Name = model.Name,
                         Password = model.Password,
                         Account = model.Account,
-                        UserType = string.IsNullOrEmpty(listUserType) ? UserType.Client.ToString() : listUserType
+                        UserType = string.IsNullOrEmpty(model.UserType) ? UserType.Client.ToString() : model.UserType
                     };
                     db.UserProfiles.Add(userProfile);
                     db.SaveChanges();
@@ -227,7 +242,7 @@ namespace OrderChina.Controllers
                     }
                     else
                     {
-                        if (Session["UserType"] != null && (string)Session["UserType"] != UserType.Sale.ToString())
+                        if (Session["UserType"] != null && (string)Session["UserType"] == UserType.Sale.ToString())
                         {
                             //sale manage
                             var salemanage = new SaleManageClient
@@ -249,7 +264,7 @@ namespace OrderChina.Controllers
                             }
                             db.SaveChanges();
 
-                            return RedirectToAction("Manage", "Account");
+                            return RedirectToAction("ViewOrderDetail", "Account", new { id });
 
                         }
                         else
@@ -318,7 +333,7 @@ namespace OrderChina.Controllers
             }
             else if ((string)Session["UserType"] == UserType.Accounting.ToString())
             {
-                listOrder = db.Orders.Where(a => a.Status == OrderStatus.SaleConfirm.ToString()).ToList();
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.SaleConfirm.ToString() || a.Status == OrderStatus.Receive.ToString()).ToList();
             }
             else if ((string)Session["UserType"] == UserType.Orderer.ToString())
             {
@@ -326,7 +341,7 @@ namespace OrderChina.Controllers
             }
             else if ((string)Session["UserType"] == UserType.Recieve.ToString())
             {
-                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.Receive.ToString()).ToList();
+                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.FullCollect.ToString()).ToList();
             }
             else if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
             {
@@ -364,7 +379,6 @@ namespace OrderChina.Controllers
             ViewBag.CurrentUserName = username;
 
 
-            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             return View(listOrder.ToPagedList(pageNumber, pageSize));
@@ -577,6 +591,7 @@ namespace OrderChina.Controllers
                         {
                             orderDetail.OrderId = orderId;
                             orderDetail.Phone = user.Phone;
+                            orderDetail.OrderDetailStatus = OrderDetailStatus.Active.ToString();
                             db.Entry(orderDetail).State = EntityState.Added;
                             db.OrderDetails.Add(orderDetail);
                             db.SaveChanges();
@@ -603,13 +618,15 @@ namespace OrderChina.Controllers
                         var order = new Order
                         {
                             CreateDate = DateTime.Now,
-                            TotalPrice = model.ListOrderDetail.Sum(a => a.Price ?? 0),
+                            TotalPrice = model.ListOrderDetail.Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0)),
                             Status = OrderStatus.New.ToString(),
                             Rate = rate != null ? rate.Price : 0,
+                            Fee = 5,
                             Phone = model.ListOrderDetail.First().Phone
                         };
 
                         db.Entry(order).State = EntityState.Added;
+                        order.TotalPriceConvert = order.TotalPrice * order.Rate;
                         db.Orders.Add(order);
                         db.SaveChanges();
 
@@ -618,6 +635,9 @@ namespace OrderChina.Controllers
                         foreach (var orderDetail in model.ListOrderDetail)
                         {
                             orderDetail.OrderId = orderId;
+                            orderDetail.Phone = order.Phone;
+                            orderDetail.OrderDetailStatus = OrderDetailStatus.Active.ToString();
+
                             db.Entry(orderDetail).State = EntityState.Added;
                             db.OrderDetails.Add(orderDetail);
                             db.SaveChanges();
@@ -651,7 +671,7 @@ namespace OrderChina.Controllers
         //}
 
 
-        public ActionResult ViewOrderDetail(int id, string message)
+        public ActionResult ViewOrderDetail(int id)
         {
             var model = new ViewDetailOrderModel();
             var order = db.Orders.FirstOrDefault(a => a.OrderId == id);
@@ -701,7 +721,6 @@ namespace OrderChina.Controllers
                 }
             }
             model.ListOrderDetails = orderDetail;
-            ViewData["message"] = message;
             return View(model);
         }
 
@@ -729,17 +748,12 @@ namespace OrderChina.Controllers
 
         }
 
-        public ActionResult AccountingConfirmOrder(int id)
-        {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId == id);
-            return PartialView("_AccountingConfirmOrderPartial", model);
-        }
 
         [HttpPost]
         [AllowAnonymous]
         public ActionResult OrdererRejectOrder(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
             if (model != null)
             {
                 model.Status = OrderStatus.ClientConfirm.ToString();
@@ -754,7 +768,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult OrdererConfirmOrder(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
             if (model != null)
             {
                 model.Status = OrderStatus.Order.ToString();
@@ -769,7 +783,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult ConfirmReceive(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
             if (model != null)
             {
                 model.Status = OrderStatus.Receive.ToString();
@@ -786,7 +800,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult FinishOrder(string orderid)
         {
-            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString(CultureInfo.InvariantCulture) == orderid);
+            var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
             if (model != null)
             {
 
@@ -797,6 +811,41 @@ namespace OrderChina.Controllers
             }
             return Json(new { success = false });
         }
+
+        public ActionResult UpdateOrder(int id)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId == id);
+            return PartialView("_UpdateOrderPartial", model);
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateOrder(Order model)
+        {
+            var order = db.Orders.FirstOrDefault(m => m.OrderId == model.OrderId);
+            if (order != null)
+            {
+
+                order.FeeShip = model.FeeShip;
+                order.Weight = model.Weight;
+                order.FeeShipChina = model.FeeShipChina;
+                order.Status = OrderStatus.Order.ToString();
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("ViewOrderDetail", new { id = model.OrderId });
+
+        }
+
+        public ActionResult AccountingConfirmOrder(int id)
+        {
+            var model = db.Orders.FirstOrDefault(a => a.OrderId == id);
+            return PartialView("_AccountingConfirmOrderPartial", model);
+        }
+
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -849,6 +898,7 @@ namespace OrderChina.Controllers
                         //
                         //var user = db.UserProfiles.FirstOrDefault(a => a.Phone == User.Identity.Name);
                         //if (user != null) model.em = user.Phone;
+                        model.OrderDetailStatus = OrderDetailStatus.Active.ToString();
                         db.OrderDetails.Add(model);
                         db.SaveChanges();
 
@@ -857,7 +907,7 @@ namespace OrderChina.Controllers
                         if (ord != null)
                         {
                             ord.TotalPrice =
-                                db.OrderDetails.Where(a => a.OrderId == model.OrderId).Sum(a => a.Quantity * a.Price ?? 0);
+                                db.OrderDetails.Where(a => a.OrderId == model.OrderId && a.OrderDetailStatus == OrderDetailStatus.Active.ToString()).Sum(a => a.Quantity * a.Price ?? 0);
                             ord.TotalPriceConvert = ord.Rate * ord.TotalPrice;
                             db.SaveChanges();
                         }
@@ -883,13 +933,14 @@ namespace OrderChina.Controllers
                             orderDetail.Description = model.Description;
                             orderDetail.Quantity = model.Quantity;
                             orderDetail.Price = model.Price;
+                            orderDetail.OrderDetailStatus = OrderDetailStatus.Active.ToString();
                             db.SaveChanges();
 
                             var ord = db.Orders.FirstOrDefault(a => a.OrderId == model.OrderId);
                             if (ord != null)
                             {
                                 ord.TotalPrice =
-                                    db.OrderDetails.Where(a => a.OrderId == model.OrderId)
+                                    db.OrderDetails.Where(a => a.OrderId == model.OrderId && a.OrderDetailStatus == OrderDetailStatus.Active.ToString())
                                         .Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0));
                                 ord.TotalPriceConvert = ord.Rate * ord.TotalPrice;
                                 db.SaveChanges();
@@ -957,13 +1008,14 @@ namespace OrderChina.Controllers
             if (orderDetail != null)
             {
                 orderId = orderDetail.OrderId;
+                //orderDetail.OrderDetailStatus = OrderDetailStatus.Inactive.ToString();
                 db.OrderDetails.Remove(orderDetail);
                 db.SaveChanges();
 
                 var ord = db.Orders.FirstOrDefault(a => a.OrderId == orderDetail.OrderId);
                 if (ord != null)
                 {
-                    ord.TotalPrice = db.OrderDetails.Where(a => a.OrderId == orderDetail.OrderId).Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0));
+                    ord.TotalPrice = db.OrderDetails.Where(a => a.OrderId == orderDetail.OrderId && a.OrderDetailStatus == OrderDetailStatus.Active.ToString()).Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0));
                     ord.TotalPriceConvert = ord.Rate * ord.TotalPrice;
                     db.SaveChanges();
                 }
@@ -975,7 +1027,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult Cancel_Order(string orderId)
         {
-            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString(CultureInfo.InvariantCulture) == orderId);
+            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString() == orderId);
             if (order != null)
             {
                 order.Status = OrderStatus.Cancel.ToString();
@@ -988,7 +1040,7 @@ namespace OrderChina.Controllers
         [AllowAnonymous]
         public ActionResult Confirm_Order(string orderId)
         {
-            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString(CultureInfo.InvariantCulture) == orderId);
+            var order = db.Orders.FirstOrDefault(m => m.OrderId.ToString() == orderId);
             if (order != null)
             {
                 order.Status = OrderStatus.ClientConfirm.ToString();
@@ -1026,7 +1078,6 @@ namespace OrderChina.Controllers
             ViewBag.CurrentUserType = userType;
             ViewBag.CurrentUserName = userName;
 
-            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             return View(userProfiles.ToPagedList(pageNumber, pageSize));
@@ -1113,7 +1164,6 @@ namespace OrderChina.Controllers
 
         public ActionResult UpdateRate(string fromDate, string toDate, int? page)
         {
-            const int pageSize = 5;
             int pageNumber = (page ?? 1);
 
             var model = new RateModel();
@@ -1273,6 +1323,7 @@ namespace OrderChina.Controllers
             return View();
         }
         #endregion
+
         #region ManageDepositOrders
         public ActionResult MangeDepositOrders(int? page)
         {

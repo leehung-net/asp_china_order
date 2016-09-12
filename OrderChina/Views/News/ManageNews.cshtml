@@ -1,18 +1,7 @@
-﻿@{
-    
-}
-
-@using OrderChina.Models;
+﻿
 @model PagedList.IPagedList<OrderChina.Models.News>
-@using PagedList;
 @using PagedList.Mvc;
-@if (ViewData["message"] != null)
-{
-<a href="~/Views/Account/_AssignSalePartial.cshtml">~/Views/Account/_AssignSalePartial.cshtml</a>
-    <script>
-        alert(ViewData["message"]);
-    </script>
-}
+
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <script>
     function Deleteconfirm() {
@@ -27,9 +16,8 @@
 
 <section @*class='container'*@ style='padding: 20px;'>
     <div class="news">
-        <h2>ManageNews</h2>
         <div class='row'>
-            @Html.Partial("~/Views/Account/_AsideMenuPartial.cshtml", new ViewDataDictionary { { "Node", true } })
+            @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "Node", true } })
 
             <div class="col-md-9 order-content">
                 <div class='row'>
@@ -81,7 +69,6 @@
                         <h4 class="modal-title" id="myModalLabel">Tạo mới tin tức</h4>
                     </div>
                     <div class="modal-body">
-
                         @Html.Partial("Create")
                     </div>
 

@@ -17,11 +17,18 @@
 </head>
 <body>
     <div class="form-box text-center" style="width: 550px; font-size: 14px">
-        @using (Html.BeginForm())
+        @using (Html.BeginForm(new { id = ViewBag.id }))
         {
             @Html.AntiForgeryToken()
 
             <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Phone, new { @class = "col-sm-3 control-label" })
+                    <div class="col-sm-7">
+                        @(string.IsNullOrEmpty(@Model.Phone) ? Html.TextBoxFor(m => m.Phone) : Html.TextBoxFor(m => m.Phone, new { @readonly = "readonly" }))
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Phone)
+                </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Email, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
@@ -43,13 +50,7 @@
                     </div>
                     @Html.ValidationMessageFor(m => m.ConfirmPassword)
                 </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Phone, new { @class = "col-sm-3 control-label" })
-                    <div class="col-sm-7">
-                        @(string.IsNullOrEmpty(@Model.Phone) ? Html.TextBoxFor(m => m.Phone) : Html.TextBoxFor(m => m.Phone, new { @readonly = "readonly" }))
-                    </div>
-                    @Html.ValidationMessageFor(m => m.Phone)
-                </div>
+
                 <div class="form-group">
                     @Html.LabelFor(m => m.Name, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
@@ -91,7 +92,7 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.UserType, new { @class = "col-sm-3 control-label" })
                         <div class="col-sm-7">
-                            @Html.DropDownList("listUserType", (IEnumerable<SelectListItem>)ViewBag.listUserType, "--Loại tài khoản--", new { @class = "form-control flat", style = "width: 300px;display: inline;" })
+                            @Html.DropDownListFor(m => m.UserType, (IEnumerable<SelectListItem>)ViewBag.listUserType, "--Loại tài khoản--", new { @class = "form-control flat", style = "width: 300px;display: inline;" })
                         </div>
                     </div>
                 }

@@ -1,166 +1,106 @@
-﻿@using System.Diagnostics
-@{
-    ViewBag.Title = "hung-header";
-}
-
-<style>
-    .gdtq-header {
-        background: transparent url("http://nhaphangtaobao.com.vn/upload/images/adv/1451012361header--.jpg") repeat scroll 0% 0% / cover;
-        position: relative;
-    }
-</style>
-
-
-<section class='gdtq-header' id='header'>
-    <a href="#header" class='to-top'><i class="fa fa-angle-up fa-2x"></i></a>
-    <span class='g-fog'></span>
-    <nav class="navbar navbar-default gdtq-header-nav flat" role="navigation">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed flat" data-toggle="collapse" data-target="#menu-top">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse" id="menu-top">
-            <ul class="nav navbar-nav">
-                <li><a href="@Url.Action("Index", "Home")" style="font-size: 20px;"><span class="fa fa-home"></span></a></li>
-                <li>
-                    <a href="" title="Quy định">Quy định</a>
-                </li>
-                <li>
-                    <a href="" title="Hướng dẫn khách hàng">Hướng dẫn khách hàng</a>
-                </li>
-                <li>
-                    <a href="@Url.Action("Introduce", "Home")" title="Giới thiệu">Giới thiệu</a>
-                </li>
-                <li>
-                    <a href="@Url.Action("Banggia", "Home")" title="Bảng giá">Bảng giá</a>
-                </li>
-                <li>
-                    <a href="@Url.Action("thanhtoan", "Home")" title="Thanh toán">Thanh toán</a>
-                </li>
-                <li>
-                    <a href="@Url.Action("Index","News")" title="Tin tức">Tin tức</a>
-                </li>
-                <li>
-                    <a href="@Url.Action("tuyendung", "Home")" title="Tuyển dụng">Tuyển dụng</a>
-                </li>
-                <li>
-                    <a href="@Url.Action("lienhe","Home")" title="Liên hệ">Liên hệ</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right navbar-user">
-                @Html.Partial("_LoginPartial")
-            </ul>
-        </div>
-    </nav>
-
-    <div class="search text-center" style="">
-        <div class="container">
-            <div class="row" style="padding-top:0px;">
-                <h1 class="col-md-3 text-center">
-                    <img alt="" src="~/Images/logo.jpg" style="height: 120px;">
-                </h1>
-                <div class="box-search col-md-6">
-                    <form accept-charset="UTF-8" action="http://nhaphangtaobao.com.vn/tim-kiem-tu-khoa.html" method="POST" target="_blank">
-                        <ul class="target text-left">
-                            <li class="t-active" data-type="1">
-                                <a>Taobao.com</a>
-                            </li>
-                            <li data-type="2">
-                                <a>Alibaba.com</a>
-                            </li>
-                            <li data-type="3">
-                                <a>Tmall.com</a>
-                            </li>
-                            <li data-type="4">
-                                <a>1688.com</a>
-                            </li>
-                        </ul>
-                        <div class="row">
-                            <div class="col-xs-9 input-text">
-                                <input id="page_source" name="page_source" type="hidden" value="1"> <input class="form-control flat" name="query" placeholder="Nhập từ khóa bằng tiếng Việt sản phẩm bạn muốn tìm ở taobao.com, 1688.com ..." type="text">
-                            </div>
-                            <div class="col-xs-3 btn-search">
-                                <button class="flat btn" style="width: 100%;" type="submit">Tìm kiếm</button>
-                            </div>
-                        </div>
-                    </form>
+﻿<div class="search text-center" style="">
+    <div class="container">
+        <div class="row" style="padding-top:0px;">
+            <h1 class="col-md-3 text-center">
+                <img alt="" src="~/Images/logo.jpg" style="height: 120px;">
+            </h1>
+            <div class="box-search col-md-6">
+                <form accept-charset="UTF-8" action="http://nhaphangtaobao.com.vn/tim-kiem-tu-khoa.html" method="POST" target="_blank">
+                    <ul class="target text-left">
+                        <li class="t-active" data-type="1">
+                            <a>Taobao.com</a>
+                        </li>
+                        <li data-type="2">
+                            <a>Alibaba.com</a>
+                        </li>
+                        <li data-type="3">
+                            <a>Tmall.com</a>
+                        </li>
+                        <li data-type="4">
+                            <a>1688.com</a>
+                        </li>
+                    </ul>
                     <div class="row">
                         <div class="col-xs-9 input-text">
-                            Tra cứu hành trình hàng:
-                        </div>
-                        <div class="col-xs-9 input-text">
-                            <input class="form-control flat" id="keyword_mvd" name="keyword_mvd" placeholder="Tra cứu mã vận đơn" type="text">
+                            <input id="page_source" name="page_source" type="hidden" value="1"> <input class="form-control flat" name="query" placeholder="Nhập từ khóa bằng tiếng Việt sản phẩm bạn muốn tìm ở taobao.com, 1688.com ..." type="text">
                         </div>
                         <div class="col-xs-3 btn-search">
-                            <button class="flat btn" onclick="search_mvd();" style="width: 100%;" type="button">Tìm kiếm</button>
+                            <button class="flat btn" style="width: 100%;" type="submit">Tìm kiếm</button>
                         </div>
                     </div>
+                </form>
+                <div class="row">
+                    <div class="col-xs-9 input-text">
+                        Tra cứu hành trình hàng:
+                    </div>
+                    <div class="col-xs-9 input-text">
+                        <input class="form-control flat" id="keyword_mvd" name="keyword_mvd" placeholder="Tra cứu mã vận đơn" type="text">
+                    </div>
+                    <div class="col-xs-3 btn-search">
+                        <button class="flat btn" onclick="search_mvd();" style="width: 100%;" type="button">Tìm kiếm</button>
+                    </div>
                 </div>
-                <div class="col-md-3 text-center">
-                    <p class="rate" style="padding-top:30px;">
-                        Tỷ giá <b>@Session["Price"]</b>
-                    </p>
-                    <p class="hot-line">
-                        Cước v/c <b>
-                            <span data-isfreecall="false" data-ismobile="false" data-isrtl="false" data-numbertocall="+84473091688" data-numbertype="paid" dir="ltr" id="skype_c2c_container" tabindex="-1">
-                                <span dir="ltr">
-                                    <span id="non_free_num_ui">
-                                        <img height="0" src="resource://skype_ff_extension-at-jetpack/skype_ff_extension/data/call_skype_logo.png" width="0" />
-                                        @Session["fee1"]-@Session["fee2"]-@Session["fee3"]
-                                    </span>
+            </div>
+            <div class="col-md-3 text-center">
+                <p class="rate" style="padding-top:30px;">
+                    Tỷ giá <b>@Session["Price"]</b>
+                </p>
+                <p class="hot-line">
+                    Cước v/c <b>
+                        <span data-isfreecall="false" data-ismobile="false" data-isrtl="false" data-numbertocall="+84473091688" data-numbertype="paid" dir="ltr" id="skype_c2c_container" tabindex="-1">
+                            <span dir="ltr">
+                                <span id="non_free_num_ui">
+                                    <img height="0" src="resource://skype_ff_extension-at-jetpack/skype_ff_extension/data/call_skype_logo.png" width="0" />
+                                    @Session["fee1"]-@Session["fee2"]-@Session["fee3"]
                                 </span>
                             </span>
-                        </b>
-                    </p>
-                    <p class="hot-line">
-                        Tổng đài <b>096.119.3333</b>
-                    </p>
+                        </span>
+                    </b>
+                </p>
+                <p class="hot-line">
+                    Tổng đài <b>096.119.3333</b>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    @if (Request.Url != null && (!Request.Url.AbsolutePath.Contains("Home/Index") && Request.Url.AbsolutePath != "/"))
+    {
+        <div class="row banner-create-order" style="padding-top: 0px !important;">
+            <div class="col-md-12">
+                <div class="text-center g-link">
+                    <div class="text-center link-create-order sub-layout-create-order">
+                        <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("CreateOrder","Account")" class="btn btn-order">TẠO ĐƠN HÀNG &nbsp;<span class="fa fa-angle-right"></span></a>
+                        <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("DepositOrders", "Account")" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class="fa fa-angle-right"></span></a>
+                    </div>
                 </div>
             </div>
         </div>
-
-        @if (Request.Url != null && (!Request.Url.AbsolutePath.Contains("Home/Index") && Request.Url.AbsolutePath != "/"))
-        {
-            <div class="row banner-create-order" style="padding-top: 0px !important;">
-                <div class="col-md-12">
-                    <div class="text-center g-link">
-                        <div class="text-center link-create-order sub-layout-create-order">
-                            <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("CreateOrder","Account")" class="btn btn-order">TẠO ĐƠN HÀNG &nbsp;<span class="fa fa-angle-right"></span></a>
-                            <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("DepositOrders", "Account")" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class="fa fa-angle-right"></span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-    @if (Request.Url != null && (Request.Url.AbsolutePath.Contains("Home/Index") || Request.Url.AbsolutePath == "/"))
-    {
-        <section class='g-main-content container'>
-            <div class="row" style="padding-top: 50px;">
-                <div class='col-md-12'>
-                    <div class='text-center g-link'>
-                        <div>
-                            <h1>
-                                ĐEM SỰ TH&Agrave;NH C&Ocirc;NG TỚI BẠN L&Agrave; TR&Aacute;CH NHIỆM CỦA CH&Uacute;NG T&Ocirc;I
-                            </h1>
-                            <p class="extra-slogan">
-                                Chỉ 5 tới 7 ng&agrave;y cho một đơn h&agrave;ng được giao dịch th&agrave;nh c&ocirc;ng v&agrave; trả h&agrave;ng tận tay bạn
-                            </p>
-                            <p class="extra-slogan">
-                                &nbsp;
-                            </p>
-                        </div>
-                        <div class="text-center link-create-order">
-                            @Html.ActionLink("TẠO ĐƠN HÀNG", "CreateOrder", "Account", null, new { @class = "btn btn-order" })
-                            <a href="@Url.Action("DepositOrders", "Account")" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class='fa fa-angle-right'></span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     }
-</section>
+</div>
+@if (Request.Url != null && (Request.Url.AbsolutePath.Contains("Home/Index") || Request.Url.AbsolutePath == "/"))
+{
+    <section class='g-main-content container'>
+        <div class="row" style="padding-top: 50px;">
+            <div class='col-md-12'>
+                <div class='text-center g-link'>
+                    <div>
+                        <h1>
+                            ĐEM SỰ TH&Agrave;NH C&Ocirc;NG TỚI BẠN L&Agrave; TR&Aacute;CH NHIỆM CỦA CH&Uacute;NG T&Ocirc;I
+                        </h1>
+                        <p class="extra-slogan">
+                            Chỉ 5 tới 7 ng&agrave;y cho một đơn h&agrave;ng được giao dịch th&agrave;nh c&ocirc;ng v&agrave; trả h&agrave;ng tận tay bạn
+                        </p>
+                        <p class="extra-slogan">
+                            &nbsp;
+                        </p>
+                    </div>
+                    <div class="text-center link-create-order">
+                        @Html.ActionLink("TẠO ĐƠN HÀNG", "CreateOrder", "Account", null, new { @class = "btn btn-order" })
+                        <a href="@Url.Action("DepositOrders", "Account")" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class='fa fa-angle-right'></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
