@@ -73,6 +73,7 @@
                 </li>
             }
         }
+
         @if (Session["UserType"] != null && (string)Session["UserType"] == UserType.Accounting.ToString())
         {
             if (ViewData["walletmanage"] != null)
@@ -90,16 +91,31 @@
         }
         @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString()))
         {
-            if (ViewData["ListClient"] != null)
+            if (ViewData["ListUser"] != null)
             {
                 <li class="list-group-item active">
-                    <a href="@Url.Action("ListClient", "Account")">Danh sách người sử dụng</a>
+                    <a href="@Url.Action("ListUser", "Account")">Danh sách người sử dụng</a>
                 </li>
             }
             else
             {
                 <li class="list-group-item">
-                    <a href="@Url.Action("ListClient", "Account")">Danh sách người sử dụng</a>
+                    <a href="@Url.Action("ListUser", "Account")">Danh sách người sử dụng</a>
+                </li>
+            }
+        }
+        @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString()))
+        {
+            if (ViewData["ListClient"] != null)
+            {
+                <li class="list-group-item active">
+                    <a href="@Url.Action("ListClient", "Account")">Danh sách khách hàng</a>
+                </li>
+            }
+            else
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("ListClient", "Account")">Danh sách khách hàng</a>
                 </li>
             }
         }

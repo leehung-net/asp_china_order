@@ -648,7 +648,9 @@ namespace OrderChina.Models
         [Display(Name = "Hàng về đã về kho")]
         Receive = 8,
         [Display(Name = "Đã thu đủ tiền")]
-        FullCollect = 9
+        FullCollect = 9,
+        [Display(Name = "Chốt lại đơn hàng")]
+        OrdererReject = 10
     }
     public enum OrderDetailStatus
     {

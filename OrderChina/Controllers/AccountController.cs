@@ -187,12 +187,20 @@ namespace OrderChina.Controllers
         // GET: /Account/Register
 
         [AllowAnonymous]
-        public ActionResult Register(string phone, string id)
+        public ActionResult Register(string phone, string id, string cmd)
         {
             ViewBag.id = id;
             var model = new RegisterModel { Phone = phone, Birthday = DateTime.Now };
-            ViewBag.listUserType = GetListUserType();
-
+            ViewBag.cmd = cmd;
+            if (cmd == "client")
+            {
+                var list = new List<object> { new { name = UserType.Client.ToString(), display = "Khách hàng" } };
+                ViewBag.listUserType = new SelectList(list, "name", "display", UserType.Client.ToString());
+            }
+            else
+            {
+                ViewBag.listUserType = GetListUserType();
+            }
             return View(model);
         }
 
@@ -202,7 +210,7 @@ namespace OrderChina.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterModel model, string id)
+        public ActionResult Register(RegisterModel model, string id, string cmd)
         {
             if (ModelState.IsValid)
             {
@@ -269,6 +277,11 @@ namespace OrderChina.Controllers
                         }
                         else
                         {
+                            if (cmd == "user")
+                            {
+                                return RedirectToAction("ListUser", "Account");
+
+                            }
                             return RedirectToAction("ListClient", "Account");
                         }
                     }
@@ -740,6 +753,9 @@ namespace OrderChina.Controllers
             if (order != null)
             {
                 order.Fee = model.Fee;
+                order.FeeShip = model.FeeShip;
+                order.FeeShipChina = model.FeeShipChina;
+
                 order.Status = OrderStatus.SaleConfirm.ToString();
                 db.SaveChanges();
             }
@@ -756,7 +772,7 @@ namespace OrderChina.Controllers
             var model = db.Orders.FirstOrDefault(a => a.OrderId.ToString() == orderid);
             if (model != null)
             {
-                model.Status = OrderStatus.ClientConfirm.ToString();
+                model.Status = OrderStatus.OrdererReject.ToString();
                 db.SaveChanges();
 
                 return Json(new { success = true });
@@ -1008,8 +1024,8 @@ namespace OrderChina.Controllers
             if (orderDetail != null)
             {
                 orderId = orderDetail.OrderId;
-                //orderDetail.OrderDetailStatus = OrderDetailStatus.Inactive.ToString();
-                db.OrderDetails.Remove(orderDetail);
+                orderDetail.OrderDetailStatus = OrderDetailStatus.Inactive.ToString();
+                //db.OrderDetails.Remove(orderDetail);
                 db.SaveChanges();
 
                 var ord = db.Orders.FirstOrDefault(a => a.OrderId == orderDetail.OrderId);
@@ -1052,29 +1068,44 @@ namespace OrderChina.Controllers
 
         #region Administrator
 
-        public ActionResult ListClient(string userType, string userName, int? page)
+        public ActionResult ListClient(string userName, int? page)
         {
-            ViewBag.ListUserType = GetListUserType(userType);
             var userProfiles = new List<UserProfile>();
 
-            userProfiles = !string.IsNullOrEmpty(userType) ? db.UserProfiles.Where(a => a.UserType == userType).ToList() : db.UserProfiles.ToList();
+            userProfiles = db.UserProfiles.Where(a => a.UserType == UserType.Client.ToString()).ToList();
             if (!string.IsNullOrEmpty(userName))
             {
                 userProfiles = userProfiles.FindAll(a => !String.Equals(a.Phone, User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) && a.Phone.ToLower().Contains(userName.ToLower()));
             }
             foreach (var userProfile in userProfiles)
             {
-                if (userProfile.UserType == UserType.Client.ToString())
+                //get sale
+                var salemanage =
+                    db.SaleManageClients.FirstOrDefault(a => a.User_Client == userProfile.Phone);
+                if (salemanage != null)
                 {
-                    //get sale
-                    var salemanage =
-                        db.SaleManageClients.FirstOrDefault(a => a.User_Client == userProfile.Phone);
-                    if (salemanage != null)
-                    {
-                        userProfile.SaleManage = salemanage.User_Sale;
-                    }
+                    userProfile.SaleManage = salemanage.User_Sale;
                 }
             }
+
+            ViewBag.CurrentUserName = userName;
+
+            int pageNumber = (page ?? 1);
+
+            return View(userProfiles.ToPagedList(pageNumber, pageSize));
+        }
+
+        public ActionResult ListUser(string userType, string userName, int? page)
+        {
+            ViewBag.ListUserType = GetListUserType(userType);
+            var userProfiles = new List<UserProfile>();
+
+            userProfiles = !string.IsNullOrEmpty(userType) ? db.UserProfiles.Where(a => a.UserType != UserType.Client.ToString() && a.UserType == userType).ToList() : db.UserProfiles.Where(a => a.UserType != UserType.Client.ToString()).ToList();
+            if (!string.IsNullOrEmpty(userName))
+            {
+                userProfiles = userProfiles.FindAll(a => !String.Equals(a.Phone, User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) && a.Phone.ToLower().Contains(userName.ToLower()));
+            }
+
             ViewBag.CurrentUserType = userType;
             ViewBag.CurrentUserName = userName;
 

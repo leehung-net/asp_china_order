@@ -10,7 +10,7 @@ namespace OrderChina.Common
 {
     public class Utilities
     {
-        public static bool CheckRole(string userType, string roleCheck)
+        public static bool CheckRole(string userType, string roleCheck = "")
         {
             
             if (userType == UserType.Admin.ToString() || userType == UserType.SuperUser.ToString())

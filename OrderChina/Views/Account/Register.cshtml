@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="form-box text-center" style="width: 550px; font-size: 14px">
-        @using (Html.BeginForm(new { id = ViewBag.id }))
+        @using (Html.BeginForm(new { id = ViewBag.id, cmd = ViewBag.cmd }))
         {
             @Html.AntiForgeryToken()
 

@@ -19,7 +19,14 @@
                 <div class="col-sm-4">
                     @Html.LabelFor(m => m.Fee)
                     @Html.EditorFor(m => m.Fee)
-                    @Html.ValidationMessageFor(m => m.Fee)
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(m => m.FeeShip)
+                    @Html.EditorFor(m => m.FeeShip)
+                </div>
+                <div class="col-sm-4">
+                    @Html.LabelFor(m => m.FeeShipChina)
+                    @Html.EditorFor(m => m.FeeShipChina)
                 </div>
             </div>
             <div class="modal-footer">

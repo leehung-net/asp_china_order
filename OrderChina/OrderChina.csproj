@@ -433,6 +433,8 @@
     <Content Include="Views\Shared\_HeaderPartial.cshtml" />
     <Content Include="Views\Account\_UpdateOrderPartial.cshtml" />
     <Content Include="Views\Account\TransactionHistory.cshtml" />
+    <Content Include="Views\Account\ListUser.cshtml" />
+    <Content Include="Views\Account\_AssignSalePartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

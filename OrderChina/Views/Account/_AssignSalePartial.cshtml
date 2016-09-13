@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "_AssignSalePartial";
+}
+@model OrderChina.Models.SaleManageClient
+<script src="/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="/Scripts/jquery.validate.min.js"></script>
+<script src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+@using (Html.BeginForm("AssignSaleForClient", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">"Gán sale quản lý khách hàng"</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group row" style="width: 100%;font-size: 14px">
+                @Html.HiddenFor(m => m.User_Client)
+                <div class="col-sm-4">
+                    @Html.LabelFor(m => m.User_Sale)
+                    @Html.DropDownListFor(m => m.User_Sale, (IEnumerable<SelectListItem>)ViewBag.listSale, "--Chọn sale--", new { @class = "form-control flat", style = "width: 300px;display: inline;" })
+                    @Html.ValidationMessageFor(m => m.User_Sale)
+                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Link" placeholder='Nhập link sản phẩm' autofocus="autofocus" required="true">
+                        <span class="field-validation-valid" data-valmsg-for="ListOrderDetail[' + index + '].Link" data-valmsg-replace="false">Link không được để trống</span>*@
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" value="Save" id="btnSave" name="cmd" class="btn btn-primary">Gán</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+}

@@ -34,13 +34,13 @@
                         <div class="col-sm-3">
                             <label class="control-label">Link sản phẩm</label>
                         </div>
-                        <div class="col-sm-2">
-                            <label class="control-label">Tên shop</label>
-                        </div>
+                        @*<div class="col-sm-2">
+                                <label class="control-label">Tên shop</label>
+                            </div>*@
                         <div class="col-sm-2">
                             <label class="control-label">Mô tả</label>
                         </div>
-                        <div class="col-sm-1">
+                        <div class="col-sm-2">
                             <label class="control-label">Số lượng</label>
                         </div>
                         <div class="col-sm-2">
@@ -62,21 +62,21 @@
                             <div class="col-sm-3">
                                 <input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Link" placeholder='Nhập link sản phẩm' autofocus="autofocus" required="true">
                             </div>
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Shop" placeholder='Tên shop'>
-                            </div>
+                            @*<div class="col-sm-2">
+                                    <input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Shop" placeholder='Tên shop'>
+                                </div>*@
                             <div class="col-sm-2">
                                 <input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Description" placeholder='Mô tả'>
                             </div>
-                            <div class="col-sm-1">
+                            <div class="col-sm-2">
                                 <input type="number" class="form-control btn-flat" name="ListOrderDetail[0].Quantity" placeholder='Số lượng' required="true">
                             </div>
-                            <div class="col-sm-1">
+                            <div class="col-sm-2">
                                 <input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Price" placeholder='Nhập giá' required="true">
                             </div>
                             @if (!Request.IsAuthenticated)
                             {
-                                <div class="col-sm-1">
+                                <div class="col-sm-2">
                                     <input type="text" class="form-control btn-flat" name="ListOrderDetail[0].Phone" placeholder='Số điện thoại' required="true">
                                 </div>
                             }
@@ -118,9 +118,9 @@
                 '<div class="col-sm-3 col-reset-order">' +
                 '<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Link" placeholder=\'Nhập link sản phẩm\' autofocus="autofocus" required="true">' +
                 '</div>' +
-                '<div class="col-sm-2 col-reset-order">' +
-                '<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Shop" placeholder=\'Tên shop\'>' +
-                '</div>' +
+                //'<div class="col-sm-2 col-reset-order">' +
+                //'<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Shop" placeholder=\'Tên shop\'>' +
+                //'</div>' +
                 '<div class="col-sm-2 col-reset-order">' +
                 '<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Description" placeholder=\'Mô tả\'>' +
                 '</div>' +

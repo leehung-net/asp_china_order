@@ -143,7 +143,7 @@
                         <p><font>(7) Tổng = 1+2+3+5+6</font><font style="float:right">@((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip).ToString("##,###"))<sup>đ</sup></font></p>
                         <p><font>(8) Đặt cọc</font><font style="float:right">@Model.DownPayment.ToString("##,###")<sup>đ</sup></font></p>
                         <p><font>(9) Đã thu thêm</font><font style="float:right">@Model.AccountingCollected.ToString("##,###")<sup>đ</sup></font></p>
-                        <p><font>(10) Còn thiếu</font><font style="float:right">@(((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip) - @Model.DownPayment - @Model.AccountingCollected).ToString("##,###"))<sup>đ</sup></font></p>
+                        <p><font>(10) Còn thiếu</font><font style="float:right">@(((Model.TotalPriceConvert + Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven) + Model.FeeShipChina + Model.FeeShip) - Model.DownPayment - Model.AccountingCollected).ToString("##,###"))<sup>đ</sup></font></p>
                     </div>
                     <span class="clearfix"></span>
                     <p class="col-md-6 pull-right">
@@ -151,16 +151,22 @@
                         {
                             if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Sale.ToString()))
                             {
-                                if (@Model.Status == OrderStatus.New.ToString())
+                                if (Model.Status == OrderStatus.New.ToString() || Model.Status == OrderStatus.OrdererReject.ToString())
                                 {
                                     <a href="@Url.Action("SaleConfirmOrder", "Account", new {id = Model.OrderId})" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-sale-confirm" title="Chốt đơn"><i class="fa fa-trash-o"></i> Chốt đơn hàng</a>
-
                                 }
+                                if (Model.Status == OrderStatus.FullCollect.ToString())
+                                {
+                                    <a href="#" onclick="confirm_order(@Model.OrderId,'5');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Xác nhận đã gửi hàng cho KH">
+                                        <i class="fa fa-ticket"></i> Xác nhận giao hàng
+                                    </a>
+                                }
+
                             }
 
                             if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
                             {
-                                if (@Model.Status == OrderStatus.SaleConfirm.ToString() || @Model.Status == OrderStatus.Receive.ToString())
+                                if (Model.Status == OrderStatus.SaleConfirm.ToString() || Model.Status == OrderStatus.Receive.ToString())
                                 {
                                     <a href="@Url.Action("AccountingConfirmOrder", "Account", new {id = Model.OrderId})" style="margin-right: 5px" rel='tooltip' class="btn btn-facebook btn-xs pull-right btn-account-confirm" title="Cập nhật thanh toán"><i class="fa fa-trash-o"></i> Cập nhật thanh toán</a>
                                 }
@@ -168,7 +174,7 @@
 
                             if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Orderer.ToString()))
                             {
-                                if (@Model.Status == OrderStatus.Paid.ToString())
+                                if (Model.Status == OrderStatus.Paid.ToString())
                                 {
                                     <a href="#" onclick="confirm_order(@Model.OrderId,'2');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Gửi sale">
                                         <i class="fa fa-arrow-left"></i> Gửi sale
@@ -180,20 +186,13 @@
                             }
                             if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Recieve.ToString()))
                             {
-                                if (@Model.Status == OrderStatus.Order.ToString())
+                                if (Model.Status == OrderStatus.Order.ToString())
                                 {
                                     <a href="#" onclick="confirm_order(@Model.OrderId,'4');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Xác nhận hàng về">
                                         <i class="fa fa-arrow-left"></i> Xác nhận hàng về
                                     </a>
 
                                 }
-                                if (@Model.Status == OrderStatus.FullCollect.ToString())
-                                {
-                                    <a href="#" onclick="confirm_order(@Model.OrderId,'5');" style="margin-right: 5px" class="btn btn-facebook btn-xs pull-right" title="Xác nhận đã gửi hàng cho KH">
-                                        <i class="fa fa-ticket"></i> Xác nhận giao hàng
-                                    </a>
-                                }
-
                             }
                         }
                     </p>
@@ -208,15 +207,16 @@
                             <tr>
                                 <th class='text-center'>Mã link</th>
                                 <th class='text-center' style="width: 100px;">Link</th>
-                                <th class='text-center'>Shop</th>
+                                @*<th class='text-center'>Shop</th>*@
                                 <th class='text-center'>Mô tả</th>
-                                <th class='text-center'>Khách đặt</th>
+                                <th class='text-center'>Khối lượng</th>
                                 <th class='text-center'>Đặt được</th>
                                 <th class='text-center'>Về kho</th>
                                 <th class='text-center'>Đơn giá</th>
                                 <th class='text-center'>Thành tiền</th>
                                 <th class='text-center'>Ngày xuất</th>
                                 <th class='text-center'>Ghi chú</th>
+                                <th class='text-center'>Trạng thái</th>
                                 <th class='text-center'>Thao tác</th>
                             </tr>
                         </thead>
@@ -232,9 +232,9 @@
                                             @item.Link
                                         </a>
                                     </td>
-                                    <td class='text-center'>
-                                        @Html.DisplayFor(modelItem => item.Shop)
-                                    </td>
+                                    @*<td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.Shop)
+                                        </td>*@
                                     <td class='text-center'>
                                         @Html.DisplayFor(modelItem => item.Description)
                                     </td>
@@ -251,7 +251,7 @@
                                         @Html.DisplayFor(modelItem => item.Price)
                                     </td>
                                     <td class='text-center'>
-                                        @(item.Price * item.Quantity)
+                                        @(((item.Price * item.Quantity) ?? 0).ToString("##,##0"))
                                     </td>
                                     <td class='text-center'>
                                         @Html.DisplayFor(modelItem => item.DeliveryDate)
@@ -259,18 +259,24 @@
                                     <td class='text-center'>
                                         @Html.DisplayFor(modelItem => item.Note)
                                     </td>
-                                    @*<td class='text-center'>
-                                            @Html.DisplayFor(modelItem => item.Note)
-                                        </td>*@
+                                    <td class='text-center'>
+                                        @item.getStatusText()
+                                    </td>
                                     <td class='text-center'>
                                         @if (Session["UserType"] != null)
                                         {
-                                            if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
+                                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"]))
                                             {
-                                                <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
-                                                <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = true})" rel='tooltip' title="Cập nhật TT đặt hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
-                                                <a href="@Url.Action("UpdateOrderDetail", "Account", new { id = item.OrderDetailId,IsOrderer=false})" rel='tooltip' title="Cập nhật TT nhận hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
-                                                <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                                if (Model.Status == OrderStatus.Paid.ToString() || Model.Status == OrderStatus.New.ToString() || Model.Status == OrderStatus.OrdererReject.ToString())
+                                                {
+                                                    <a href="@Url.Action("AddEditOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+                                                    <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = true})" rel='tooltip' title="Cập nhật TT đặt hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
+                                                    <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                                }
+                                                if (@Model.Status == OrderStatus.Order.ToString())
+                                                {
+                                                    <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = false})" rel='tooltip' title="Cập nhật TT nhận hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
+                                                }
                                             }
                                             else if ((string)Session["UserType"] == UserType.Client.ToString())
                                             {
@@ -282,7 +288,7 @@
                                             }
                                             else if ((string)Session["UserType"] == UserType.Sale.ToString())
                                             {
-                                                if (@Model.Status == OrderStatus.New.ToString())
+                                                if (Model.Status == OrderStatus.New.ToString() || Model.Status == OrderStatus.OrdererReject.ToString())
                                                 {
                                                     <a href="@Url.Action("AddEditOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
                                                     <a href="@Url.Action("DeletedOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
@@ -290,9 +296,12 @@
                                             }
                                             else if ((string)Session["UserType"] == UserType.Orderer.ToString())
                                             {
-                                                <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
-                                                <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = true})" rel='tooltip' title="Cập nhật TT đặt hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
-                                                <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                                if (Model.Status == OrderStatus.Paid.ToString())
+                                                {
+                                                    <a href="@Url.Action("AddEditOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+                                                    <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = true})" rel='tooltip' title="Cập nhật TT đặt hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
+                                                    <a href="@Url.Action("DeletedOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
+                                                }
                                             }
                                             else if ((string)Session["UserType"] == UserType.Recieve.ToString())
                                             {
@@ -319,16 +328,17 @@
                                     <i class="fa fa-plus"></i> Thêm link
                                 </a>
                             }
-                            else if ((string)Session["UserType"] == UserType.Sale.ToString())
-                            {
-                                if (Model.Status == OrderStatus.New.ToString())
-                                {
-                                    <a href="@Url.Action("AddEditOrderDetail", "Account", new {orderId = Model.OrderId})" class="btn-flat btn-warning btn-xs btn pull-right btn-add" style="margin-right: 20px">
-                                        <i class="fa fa-plus"></i> Thêm link
-                                    </a>
-                                }
 
+                        }
+                        else if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Sale.ToString()))
+                        {
+                            if (Model.Status == OrderStatus.New.ToString() || Model.Status == OrderStatus.OrdererReject.ToString())
+                            {
+                                <a href="@Url.Action("AddEditOrderDetail", "Account", new {orderId = Model.OrderId})" class="btn-flat btn-warning btn-xs btn pull-right btn-add" style="margin-right: 20px">
+                                    <i class="fa fa-plus"></i> Thêm link
+                                </a>
                             }
+
                         }
                     }
                 </div>

@@ -24,11 +24,11 @@
                     @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Link" placeholder='Nhập link sản phẩm' autofocus="autofocus" required="true">
                         <span class="field-validation-valid" data-valmsg-for="ListOrderDetail[' + index + '].Link" data-valmsg-replace="false">Link không được để trống</span>*@
                 </div>
-                <div class="col-sm-2">
-                    @Html.LabelFor(m => m.Shop)
-                    @Html.TextBoxFor(m => m.Shop, new { @class = "form-control btn-flat", placeholder = "Tên shop" })
-                    @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Shop" placeholder='Tên shop'>*@
-                </div>
+                @*<div class="col-sm-2">
+                        @Html.LabelFor(m => m.Shop)
+                        @Html.TextBoxFor(m => m.Shop, new { @class = "form-control btn-flat", placeholder = "Tên shop" })
+                        <input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Shop" placeholder='Tên shop'>
+                    </div>*@
                 <div class="col-sm-2">
                     @Html.LabelFor(m => m.Description)
                     @Html.TextBoxFor(m => m.Description, new { @class = "form-control btn-flat", placeholder = "Mô tả" })
