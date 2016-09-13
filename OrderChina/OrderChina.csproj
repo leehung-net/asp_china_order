@@ -261,10 +261,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\OrderChina.mdf" />
-    <Content Include="App_Data\OrderChina_log.ldf">
-      <DependentUpon>OrderChina.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap-datepicker3.css" />
     <Content Include="Content\bootstrap-datepicker3.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -434,7 +430,9 @@
     <Content Include="Views\Account\_UpdateOrderPartial.cshtml" />
     <Content Include="Views\Account\TransactionHistory.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
