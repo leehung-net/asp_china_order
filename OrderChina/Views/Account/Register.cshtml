@@ -26,66 +26,74 @@
                     @Html.LabelFor(m => m.Phone, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @(string.IsNullOrEmpty(@Model.Phone) ? Html.TextBoxFor(m => m.Phone) : Html.TextBoxFor(m => m.Phone, new { @readonly = "readonly" }))
+                        <br />  @Html.ValidationMessageFor(m => m.Phone)
                     </div>
-                    @Html.ValidationMessageFor(m => m.Phone)
+                   
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Email, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @Html.TextBoxFor(m => m.Email)
-                    </div>
-                    @Html.ValidationMessageFor(m => m.Email)
+                        <br /> @Html.ValidationMessageFor(m => m.Email)
+                    </div>               
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Password, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @Html.PasswordFor(m => m.Password)
+                        <br />  @Html.ValidationMessageFor(m => m.Password)
                     </div>
-                    @Html.ValidationMessageFor(m => m.Password)
+                    
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @Html.PasswordFor(m => m.ConfirmPassword)
+                        <br /> @Html.ValidationMessageFor(m => m.ConfirmPassword)
                     </div>
-                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    
                 </div>
 
                 <div class="form-group">
                     @Html.LabelFor(m => m.Name, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @Html.EditorFor(m => m.Name)
+                        <br /> @Html.ValidationMessageFor(m => m.Name)
                     </div>
-                    @Html.ValidationMessageFor(m => m.Name)
+                    
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Gender, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         <label>@Html.RadioButtonFor(m => m.Gender, "Nam", new { style = "width: inherit", @checked = true }) Nam</label>
                         <label>@Html.RadioButtonFor(m => m.Gender, "Nữ", new { style = "width: inherit" }) Nữ</label>
+                        <br />  @Html.ValidationMessageFor(m => m.Gender)
                     </div>
-                    @Html.ValidationMessageFor(m => m.Gender)
+                   
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Birthday, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @Html.EditorFor(m => m.Birthday, new { @Value = @DateTime.Now.ToShortDateString() })
+                        <br />   @Html.ValidationMessageFor(m => m.Birthday)
                     </div>
-                    @Html.ValidationMessageFor(m => m.Birthday)
+                   
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Address, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @Html.EditorFor(m => m.Address)
+                        <br />  @Html.ValidationMessageFor(m => m.Address)
                     </div>
-                    @Html.ValidationMessageFor(m => m.Address)
+                    
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Account, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @Html.EditorFor(m => m.Account)
+                        <br /> @Html.ValidationMessageFor(m => m.Account)
                     </div>
-                    @Html.ValidationMessageFor(m => m.Account)
+                    
                 </div>
                 @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString()))
                 {
