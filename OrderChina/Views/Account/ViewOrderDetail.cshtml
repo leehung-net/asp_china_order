@@ -281,17 +281,10 @@
                                     <td class='text-center'>
                                         @Html.DisplayFor(modelItem => item.Note)
                                     </td>
-                                    <<<<<<< HEAD
                                     <td class='text-center'>
                                         @item.getStatusText()
                                     </td>
-                                    <td class='text-center'>
-                                        =======
-                                        @*<td class='text-center'>
-                                                @Html.DisplayFor(modelItem => item.Note)
-                                            </td>*@
                                     <td class='text-center' id="action">
-                                        >>>>>>> 781707bc8f4e41b25dbcbd0d55f3e64fb8654b85
                                         @if (Session["UserType"] != null)
                                         {
                                             if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"]))
