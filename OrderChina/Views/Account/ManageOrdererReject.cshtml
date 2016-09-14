@@ -1,5 +1,4 @@
-﻿@using OrderChina.Common
-@using OrderChina.Models
+﻿@using OrderChina.Models
 @using PagedList.Mvc
 @model PagedList.IPagedList<Order>
 @{
@@ -9,40 +8,21 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <section @*class='container'*@ style='padding: 20px;'>
     <div class='row'>
-        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "Manage", true } })
+        @Html.Partial("_AsideMenuPartial", new ViewDataDictionary { { "ManageOrdererReject", true } })
 
         <div class="col-md-9 order-content">
             <div class='row'>
-                <a style="background-color:#ffeded" href="@Url.Action("CreateOrderOfSale", "Account")"><button class="btn btn-primary btn-flat">Tạo đơn hàng</button></a>
-                
-                @using (Html.BeginForm("Manage", "Account", FormMethod.Get))
+                @using (Html.BeginForm("ManageOrdererReject", "Account", FormMethod.Get))
                 {
                     <p>
-                        @if (Session["UserType"] != null)
-                        {
-                            if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
-                            {
-                                <div class='col-md-2' id="username" style="padding-left: inherit">
-                                    <input class=" form-control btn-flat" placeholder="Khách hàng" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Khách hàng" name="username" type="text" value="@ViewBag.CurrentUserName">
-                                </div>
 
-                                <div class='col-md-2' id="fromDate">
-                                    <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
-                                </div>
-                            }
-                            else
-                            {
-                                <div class='col-md-2' id="fromDate" style="padding-left: inherit">
-                                    <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <div class='col-md-2' id="fromDate" style="padding-left: inherit">
-                                <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
-                            </div>
-                        }
+                        <div class='col-md-2' id="username" style="padding-left: inherit">
+                            <input class=" form-control btn-flat" placeholder="Khách hàng" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Khách hàng" name="username" type="text" value="@ViewBag.CurrentUserName">
+                        </div>
+
+                        <div class='col-md-2' id="fromDate">
+                            <input class=" form-control btn-flat" placeholder="Từ ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Từ ngày" name="fromDate" type="text" value="@ViewBag.CurrentFromDate">
+                        </div>
 
                         <div class='col-md-2' id="toDate">
                             <input class="form-control btn-flat" placeholder="Đến ngày" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Đến ngày" name="toDate" type="text" value="@ViewBag.CurrentToDate">
@@ -50,10 +30,6 @@
 
                         <div class='col-md-2'>
                             <input class="form-control btn-flat " placeholder="Mã đơn" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Mã đơn" autofocus="autofocus" name="OrderId" value="@ViewBag.CurrentOrderId" type="text">
-                        </div>
-
-                        <div class="col-md-3">
-                            @Html.DropDownList("listStatus", (IEnumerable<SelectListItem>)ViewBag.ListStatus, "--Trạng thái đơn--", new { @class = "form-control flat" })
                         </div>
                         <div class="col-md-1">
                             <button name="submit" type="submit" class="btn btn-primary">
@@ -69,13 +45,8 @@
                 <table class="table table-bordered table-striped" style="font-size: 12px">
                     <thead>
                         <tr>
-                            @if (Session["UserType"] != null)
-                            {
-                                if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
-                                {
-                                    <th class='text-center'>Khách hàng</th>
-                                }
-                            }
+
+                            <th class='text-center'>Khách hàng</th>
                             <th class='text-center'>Mã đơn</th>
                             <th class='text-center'>Mã giao dịch</th>
                             <th class='text-center'>Tỷ giá</th>
@@ -89,15 +60,9 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                @if (Session["UserType"] != null)
-                                {
-                                    if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
-                                    {
-                                        <td class='text-center'>
-                                            @Html.DisplayFor(modelItem => item.Phone)
-                                        </td>
-                                    }
-                                }
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
                                 <td class='text-center'>
                                     @Html.DisplayFor(modelItem => item.OrderId)
                                 </td>
@@ -128,7 +93,7 @@
                 </table>
                 <br />
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-                @Html.PagedListPager(Model, page => Url.Action("Manage", new { page, toDate = ViewBag.CurrentToDate, fromDate = ViewBag.CurrentFromDate, listStatus = ViewBag.CurrentStatus, OrderId = ViewBag.CurrentOrderId }))
+                @Html.PagedListPager(Model, page => Url.Action("ManageOrdererReject", new { page, toDate = ViewBag.CurrentToDate, fromDate = ViewBag.CurrentFromDate, OrderId = ViewBag.CurrentOrderId }))
             </div>
         </div>
     </div>

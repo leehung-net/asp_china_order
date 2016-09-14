@@ -1,7 +1,11 @@
 ﻿@{
     ViewBag.Title = "_AssignSalePartial";
 }
-@model OrderChina.Models.UserProfile
+@model OrderChina.Models.ChangeUserTypeModel
+
+<link rel="stylesheet" href="~/Content/bootstrap-multiselect.css" type="text/css">
+<link rel="stylesheet" href="~/Content/bootstrap.min.css" type="text/css">
+
 
 @using (Html.BeginForm("ChangeUserType", "Account", FormMethod.Post))
 {
@@ -13,12 +17,12 @@
         </div>
         <div class="modal-body">
             <div class="form-group row" style="width: 100%;font-size: 14px">
-                
+
                 @Html.HiddenFor(m => m.Phone)
 
                 <div class="col-sm-4">
                     @Html.LabelFor(m => m.UserType)
-                    @Html.DropDownListFor(m => m.UserType, (IEnumerable<SelectListItem>)ViewBag.listUserType, "--Chọn loại người dùng--", new { @class = "form-control flat", style = "width: 300px;display: inline;" })
+                    @Html.DropDownListFor(m => m.UserType, (IEnumerable<SelectListItem>)ViewBag.listUserType, "--Chọn loại người dùng--", new { @class = "form-control flat", style = "width: 300px;display: inline;", multiple = "multiple" })
                     @*<input type="text" class="form-control btn-flat" name="ListOrderDetail[' + index + '].Link" placeholder='Nhập link sản phẩm' autofocus="autofocus" required="true">
                         <span class="field-validation-valid" data-valmsg-for="ListOrderDetail[' + index + '].Link" data-valmsg-replace="false">Link không được để trống</span>*@
                 </div>
@@ -30,3 +34,9 @@
         </div>
     </div>
 }
+
+<script>
+    $(document).ready(function () {
+        $('#UserType').multiselect();
+    });
+</script>

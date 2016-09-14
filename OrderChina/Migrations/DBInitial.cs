@@ -15,7 +15,7 @@ namespace OrderChina.Migrations
             {
                 Email = "admin@gmail.com",
                 Name = "Lê Văn Hùng",
-                UserType = UserType.Admin.ToString(),
+                UserType = ((int)UserType.Admin).ToString(),
                 Phone = "0977261061",
                 Password = "123456",
                 Address = "Hoài đức",
@@ -27,7 +27,7 @@ namespace OrderChina.Migrations
             {
                 Email = "Accounting@gmail.com",
                 Name = "Accounting",
-                UserType = UserType.Accounting.ToString(),
+                UserType = ((int)UserType.Accounting).ToString(),
                 Phone = "0977261065",
                 Password = "123456",
                 Address = "Hoài đức",
@@ -39,7 +39,7 @@ namespace OrderChina.Migrations
             {
                 Email = "client@gmail.com",
                 Name = "client",
-                UserType = UserType.Client.ToString(),
+                UserType = ((int)UserType.Client).ToString(),
                 Phone = "0977261062",
                 Password = "123456",
                 Address = "Hoài đức",
@@ -51,7 +51,7 @@ namespace OrderChina.Migrations
             {
                 Email = "orderer@gmail.com",
                 Name = "Orderer",
-                UserType = UserType.Orderer.ToString(),
+                UserType = ((int)UserType.Orderer).ToString(),
                 Phone = "0977261063",
                 Password = "123456",
                 Address = "Hoài đức",
@@ -63,7 +63,7 @@ namespace OrderChina.Migrations
             {
                 Email = "sale@gmail.com",
                 Name = "Sale",
-                UserType = UserType.Sale.ToString(),
+                UserType = ((int)UserType.Sale).ToString(),
                 Phone = "0977261064",
                 Password = "123456",
                 Address = "Hoài đức",

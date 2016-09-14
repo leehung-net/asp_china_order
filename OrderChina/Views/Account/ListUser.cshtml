@@ -1,4 +1,5 @@
-﻿@using OrderChina.Models
+﻿@using OrderChina.Common
+@using OrderChina.Models
 @using PagedList.Mvc
 @model PagedList.IPagedList<UserProfile>
 
@@ -62,7 +63,7 @@
                                 </td>
 
                                 <td class='text-center'>
-                                    @item.getUserTypeText()
+                                    @item.getUserType()
                                 </td>
                                 <td class='text-center'>
                                     @item.Birthday.ToString("dd/MM/yyyy")
@@ -80,10 +81,10 @@
                                             <i class="fa fa-money"></i>
                                         </a>
                                     }*@
-                                    @if (item.UserType != UserType.Admin.ToString() && item.UserType != UserType.Client.ToString())
+                                    @if (!Utilities.CheckRole(item.UserType, (int)UserType.Admin, false) && !Utilities.CheckRole(item.UserType, (int)UserType.Client, false))
                                     {
                                         <a rel='tooltip' title="Thay đổi quyền"
-                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Phone }) class="btn btn-xs btn-primary btn-change">
+                                           href=@Url.Action("ChangeUserType", "Account", new { id = item.Phone, userType = item.UserType }) class="btn btn-xs btn-primary btn-change">
                                             <i class="fa fa-cog"></i>
                                         </a>
                                         <a rel='tooltip' title="Xóa người dùng"

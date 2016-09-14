@@ -1,4 +1,5 @@
-﻿@using OrderChina.Models
+﻿@using OrderChina.Common
+@using OrderChina.Models
 @model OrderChina.Models.RegisterModel
 @{
     Layout = null;
@@ -14,6 +15,8 @@
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Content/bootstrap-multiselect.css" type="text/css">
+    <script type="text/javascript" src="~/Scripts/bootstrap-multiselect.js"></script>
 </head>
 <body>
     <div class="form-box text-center" style="width: 550px; font-size: 14px">
@@ -28,14 +31,14 @@
                         @(string.IsNullOrEmpty(@Model.Phone) ? Html.TextBoxFor(m => m.Phone) : Html.TextBoxFor(m => m.Phone, new { @readonly = "readonly" }))
                         <br />  @Html.ValidationMessageFor(m => m.Phone)
                     </div>
-                   
+
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Email, new { @class = "col-sm-3 control-label" })
                     <div class="col-sm-7">
                         @Html.TextBoxFor(m => m.Email)
                         <br /> @Html.ValidationMessageFor(m => m.Email)
-                    </div>               
+                    </div>
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Password, new { @class = "col-sm-3 control-label" })
@@ -43,7 +46,7 @@
                         @Html.PasswordFor(m => m.Password)
                         <br />  @Html.ValidationMessageFor(m => m.Password)
                     </div>
-                    
+
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-sm-3 control-label" })
@@ -51,7 +54,7 @@
                         @Html.PasswordFor(m => m.ConfirmPassword)
                         <br /> @Html.ValidationMessageFor(m => m.ConfirmPassword)
                     </div>
-                    
+
                 </div>
 
                 <div class="form-group">
@@ -60,7 +63,7 @@
                         @Html.EditorFor(m => m.Name)
                         <br /> @Html.ValidationMessageFor(m => m.Name)
                     </div>
-                    
+
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Gender, new { @class = "col-sm-3 control-label" })
@@ -69,7 +72,7 @@
                         <label>@Html.RadioButtonFor(m => m.Gender, "Nữ", new { style = "width: inherit" }) Nữ</label>
                         <br />  @Html.ValidationMessageFor(m => m.Gender)
                     </div>
-                   
+
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Birthday, new { @class = "col-sm-3 control-label" })
@@ -77,7 +80,7 @@
                         @Html.EditorFor(m => m.Birthday, new { @Value = @DateTime.Now.ToShortDateString() })
                         <br />   @Html.ValidationMessageFor(m => m.Birthday)
                     </div>
-                   
+
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Address, new { @class = "col-sm-3 control-label" })
@@ -85,7 +88,7 @@
                         @Html.EditorFor(m => m.Address)
                         <br />  @Html.ValidationMessageFor(m => m.Address)
                     </div>
-                    
+
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Account, new { @class = "col-sm-3 control-label" })
@@ -93,14 +96,14 @@
                         @Html.EditorFor(m => m.Account)
                         <br /> @Html.ValidationMessageFor(m => m.Account)
                     </div>
-                    
+
                 </div>
-                @if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString()))
+                @if (Session["UserType"] != null && Utilities.CheckRole((string)Session["UserType"]))
                 {
                     <div class="form-group">
                         @Html.LabelFor(m => m.UserType, new { @class = "col-sm-3 control-label" })
                         <div class="col-sm-7">
-                            @Html.DropDownListFor(m => m.UserType, (IEnumerable<SelectListItem>)ViewBag.listUserType, "--Loại tài khoản--", new { @class = "form-control flat", style = "width: 300px;display: inline;" })
+                            @Html.DropDownListFor(m => m.UserType, (IEnumerable<SelectListItem>)ViewBag.listUserType, "--Loại tài khoản--", new { @class = "form-control flat", style = "width: 300px;display: inline;", multiple = "multiple" })
                         </div>
                     </div>
                 }
@@ -109,8 +112,15 @@
             </div>
         }
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/jqueryval")
 </body>
 </html>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/jqueryval")
+
+<script>
+    $(document).ready(function () {
+        $('#UserType').multiselect();
+    });
+</script>
