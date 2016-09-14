@@ -431,6 +431,7 @@
     <Content Include="Views\Account\TransactionHistory.cshtml" />
     <Content Include="Views\Account\ListUser.cshtml" />
     <Content Include="Views\Account\_AssignSalePartial.cshtml" />
+    <Content Include="Views\Account\LoginCustomer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
