@@ -436,6 +436,7 @@
     <Content Include="Views\Account\ManageOrdererReject.cshtml" />
     <Content Include="Views\Account\ManageReceiver.cshtml" />
     <Content Include="Views\Account\CreateOrderOfSale.cshtml" />
+    <Content Include="Views\Account\LoginCustomer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

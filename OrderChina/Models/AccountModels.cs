@@ -81,11 +81,17 @@ namespace OrderChina.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
+        [Required(ErrorMessage = "Sđt bắt buộc nhập.")]
+        [Remote("IsCheckExitsPhone", "Account", ErrorMessage = "Sđt {0} đã tồn tại trong hệ thống.")]
+        [Display(Name = "Số điện thoại *")]
         public string Phone { get; set; }
 
         public string PhoneCompany { get; set; }
 
         public string Name { get; set; }
+
+        [Remote("IsCheckEmail", "Account", "")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
         public DateTime Birthday { get; set; }
         public string Address { get; set; }

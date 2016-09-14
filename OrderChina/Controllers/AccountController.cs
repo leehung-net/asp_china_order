@@ -1624,11 +1624,11 @@ namespace OrderChina.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult ChangePass(int id, FormCollection collection)
+        public ActionResult ChangePass(string id, FormCollection collection)
         {
             if (ModelState.IsValid)
             {
-                var user = db.UserProfiles.First(m => m.UserId == id);
+                var user = db.UserProfiles.First(m => m.Phone == id);
                 string oldpass = collection["Password"];
                 string newpass = collection["NewPassword"];
                 if (user.Password != oldpass)
@@ -1700,6 +1700,102 @@ namespace OrderChina.Controllers
             }
 
 
+        }
+        #endregion
+
+        #region LoginCustomer
+        [AllowAnonymous]
+        public ActionResult LoginCustomer(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        //
+        // POST: /Account/Login
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult LoginCustomer(LoginModel model, string returnUrl)
+        {
+            if (IsEmail(model.Email))
+            {
+                if (IsValid(model.Email, model.Password))
+                {
+                    var user = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+                    if (user != null)
+                    {
+                        FormsAuthentication.SetAuthCookie(user.Phone, model.RememberMe);
+                        //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
+                        //var EncryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                        //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
+
+                        //Response.Cookies.Add(authCookie);
+                        if (!string.IsNullOrEmpty(returnUrl))
+                        {
+                            if (db.Rates.Any())
+                            {
+                                var rate = db.Rates.FirstOrDefault();
+                                if (rate != null)
+                                {
+                                    Session["Price"] = rate.Price.ToString("##,###");
+                                    Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                    Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                    Session["fee3"] = rate.FormatPrice(rate.fee3);
+                                }
+                            }
+
+                            Session["Name"] = user.Name;
+                            Session["ID"] = user.UserId;
+                            Session["UserType"] = user.UserType;
+
+                        }
+                    }
+                    return RedirectToLocal(returnUrl);
+                }
+            }
+            else
+            {
+                //phone
+                if (IsValidPhone(model.Email, model.Password))
+                {
+
+                    FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
+                    //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
+                    //var EncryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                    //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
+
+                    //Response.Cookies.Add(authCookie);
+                    if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        if (db.Rates.Any())
+                        {
+                            var rate = db.Rates.FirstOrDefault();
+                            if (rate != null)
+                            {
+                                Session["Price"] = rate.Price.ToString("##,###");
+                                Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                Session["fee3"] = rate.FormatPrice(rate.fee3);
+                            }
+                        }
+                        var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+                        if (userProfile != null)
+                        {
+                            Session["Name"] = userProfile.Name;
+                            Session["ID"] = userProfile.UserId;
+                            Session["UserType"] = userProfile.UserType;
+                        }
+                    }
+                    return RedirectToLocal(returnUrl);
+                }
+            }
+
+
+            // If we got this far, something failed, redisplay form
+            ModelState.AddModelError("", "Tên người dùng hoặc mật khẩu được cung cấp là không chính xác .");
+            return View(model);
         }
         #endregion
 
