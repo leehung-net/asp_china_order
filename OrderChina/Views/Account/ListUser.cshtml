@@ -90,6 +90,10 @@
                                            href=@Url.Action("DeleteUser", "Account", new { id = item.Phone }) class="btn btn-xs btn-primary btn-deleted">
                                             <i class="fa fa-trash-o"></i>
                                         </a>
+                                        <a rel='tooltip' title="Đổi mật khẩu user"
+                                           href=@Url.Action("ChangePass", "Account", new { id = item.Phone }) class="btn btn-xs btn-primary">
+                                            <i class="glyphicon glyphicon-wrench"></i>
+                                        </a>
                                     }
                                 </td>
                             </tr>

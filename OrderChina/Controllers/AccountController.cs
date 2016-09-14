@@ -1302,11 +1302,11 @@ namespace OrderChina.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult ChangePass(int id, FormCollection collection)
+        public ActionResult ChangePass(string id, FormCollection collection)
         {
             if (ModelState.IsValid)
             {
-                var user = db.UserProfiles.First(m => m.UserId == id);
+                var user = db.UserProfiles.First(m => m.Phone == id);
                 string oldpass = collection["Password"];
                 string newpass = collection["NewPassword"];
                 if (user.Password != oldpass)

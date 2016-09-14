@@ -29,6 +29,7 @@ namespace OrderChina.Controllers
                     Session["Name"] = userProfile.Name;
                     Session["ID"] = userProfile.UserId;
                     Session["Email"] = userProfile.Email;
+                    Session["Phone"] = userProfile.Phone;
                     Session["UserType"] = userProfile.UserType;
                 }
             }

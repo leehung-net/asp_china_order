@@ -1,4 +1,6 @@
-﻿@{
+﻿@using OrderChina.Models
+@model OrderChina.Models.UserProfile
+@{
     ViewBag.Title = "Personal";
 }
 @if (ViewData["message"] != null)  
@@ -31,16 +33,24 @@
                     <table style="width:100%;text-align:right">
                         <tr style="height:60px">
                             <td style="width:20%"><label class="lab">Họ tên</label></td>
-                            <td align="left">@Html.TextBox("Name", null, new { @class = "form-control btn-flat" })
-                                <span id="username_error" style="color:#ff0000"></span>
+                            <td align="left">@Html.TextBoxFor(m => m.Name, new { @class = "form-control btn-flat" })
+                             <br />  @Html.ValidationMessageFor(m => m.Name)
                             </td>
                         </tr>
                         <tr>
                             <td><label class="lab">Điện thoại</label></td>
                             <td align="left" style="padding-left:2px">
-                                @Html.TextBox("Phone", null, new { @class = "form-control btn-flat" })
-                            <span id="sdt_error" style="color:#ff0000"></span>
+                                @(string.IsNullOrEmpty(@Model.Phone) ? Html.TextBoxFor(m => m.Phone) : Html.TextBoxFor(m => m.Phone, new { @class = "form-control btn-flat" }))
+                                <br />  @Html.ValidationMessageFor(m => m.Phone)
+                                <span id="sdt_error" style="color:#ff0000"></span>
                         </td>
+                        </tr>
+                        <tr>
+                            <td><label class="lab">Email</label></td>
+                            <td align="left" style="padding-left:2px">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control btn-flat" })
+                                <br /> @Html.ValidationMessageFor(m => m.Email)
+                            </td>
                         </tr>
                         <tr>
                             <td><label class="lab">Giới tính</label></td>
@@ -59,7 +69,7 @@
                             <td></td>
                             <td align="left">
                                 <button type="submit" class="btn btn-danger btn-flat " id="btnsubmit" onclick="return Submid()" >Cập nhật</button>
-                                <a style="font-size:14px;color:blue" href="@Url.Action("ChangePass", "Account", new { id = Session["ID"] })">Đổi mật khẩu</a>
+                                <a style="font-size:14px;color:blue" href="@Url.Action("ChangePass", "Account", new { id = Session["Phone"] })">Đổi mật khẩu</a>
                             </td>
                         </tr>
                     </table>
