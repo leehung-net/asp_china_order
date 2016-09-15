@@ -1,4 +1,5 @@
-﻿@using OrderChina.Models
+﻿@using OrderChina.Common
+@using OrderChina.Models
 @using PagedList.Mvc
 @model PagedList.IPagedList<Order>
 @{
@@ -12,12 +13,14 @@
 
         <div class="col-md-9 order-content">
             <div class='row'>
+                <a style="background-color:#ffeded" href="@Url.Action("CreateOrderOfSale", "Account")"><button class="btn btn-primary btn-flat">Tạo đơn hàng</button></a>
+                
                 @using (Html.BeginForm("Manage", "Account", FormMethod.Get))
                 {
                     <p>
                         @if (Session["UserType"] != null)
                         {
-                            if ((string)Session["UserType"] != UserType.Client.ToString())
+                            if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
                             {
                                 <div class='col-md-2' id="username" style="padding-left: inherit">
                                     <input class=" form-control btn-flat" placeholder="Khách hàng" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Khách hàng" name="username" type="text" value="@ViewBag.CurrentUserName">
@@ -68,12 +71,13 @@
                         <tr>
                             @if (Session["UserType"] != null)
                             {
-                                if ((string)Session["UserType"] != UserType.Client.ToString())
+                                if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
                                 {
                                     <th class='text-center'>Khách hàng</th>
                                 }
                             }
                             <th class='text-center'>Mã đơn</th>
+                            <th class='text-center'>Mã giao dịch</th>
                             <th class='text-center'>Tỷ giá</th>
                             <th class='text-center'>Trạng thái</th>
                             <th class='text-center'>Tổng tiền</th>
@@ -87,7 +91,7 @@
                             <tr>
                                 @if (Session["UserType"] != null)
                                 {
-                                    if ((string)Session["UserType"] != UserType.Client.ToString())
+                                    if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
                                     {
                                         <td class='text-center'>
                                             @Html.DisplayFor(modelItem => item.Phone)
@@ -96,6 +100,9 @@
                                 }
                                 <td class='text-center'>
                                     @Html.DisplayFor(modelItem => item.OrderId)
+                                </td>
+                                <td class='text-center'>
+                                    @Html.DisplayFor(modelItem => item.TransId)
                                 </td>
                                 <td class='text-center'>
                                     @item.Rate.ToString("##,###")

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
+using System.Data.Linq.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 using Microsoft.Web.WebPages.OAuth;
+using OrderChina.Common;
 using PagedList;
 using WebMatrix.WebData;
 using OrderChina.Filters;
@@ -60,8 +62,6 @@ namespace OrderChina.Controllers
                         //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
 
                         //Response.Cookies.Add(authCookie);
-                        if (!string.IsNullOrEmpty(returnUrl))
-                        {
                             if (db.Rates.Any())
                             {
                                 var rate = db.Rates.FirstOrDefault();
@@ -78,9 +78,7 @@ namespace OrderChina.Controllers
                             Session["ID"] = user.UserId;
                             Session["UserType"] = user.UserType;
 
-
                         }
-                    }
                     return RedirectToLocal(returnUrl);
                 }
             }
@@ -96,8 +94,6 @@ namespace OrderChina.Controllers
                     //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
 
                     //Response.Cookies.Add(authCookie);
-                    if (!string.IsNullOrEmpty(returnUrl))
-                    {
                         if (db.Rates.Any())
                         {
                             var rate = db.Rates.FirstOrDefault();
@@ -116,7 +112,6 @@ namespace OrderChina.Controllers
                             Session["ID"] = userProfile.UserId;
                             Session["UserType"] = userProfile.UserType;
                         }
-                    }
                     return RedirectToLocal(returnUrl);
                 }
             }
@@ -195,8 +190,8 @@ namespace OrderChina.Controllers
             ViewBag.cmd = cmd;
             if (cmd == "client")
             {
-                var list = new List<object> { new { name = UserType.Client.ToString(), display = "Khách hàng" } };
-                ViewBag.listUserType = new SelectList(list, "name", "display", UserType.Client.ToString());
+                var list = new List<object> { new { name = (int)UserType.Client, display = "Khách hàng" } };
+                ViewBag.listUserType = new SelectList(list, "name", "display", (int)UserType.Client);
             }
             else
             {
@@ -228,9 +223,18 @@ namespace OrderChina.Controllers
                         Birthday = model.Birthday,
                         Name = model.Name,
                         Password = model.Password,
-                        Account = model.Account,
-                        UserType = string.IsNullOrEmpty(model.UserType) ? UserType.Client.ToString() : model.UserType
+                        Account = model.Account
                     };
+                    if (model.UserType == null || !model.UserType.Any())
+                    {
+                        userProfile.UserType = ((int)UserType.Client).ToString(CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        string userType = model.UserType.Aggregate(string.Empty, (current, s) => current + "," + s);
+                        userType = userType.Substring(1, userType.Length - 1);
+                        userProfile.UserType = userType;
+                    }
                     db.UserProfiles.Add(userProfile);
                     db.SaveChanges();
 
@@ -247,11 +251,27 @@ namespace OrderChina.Controllers
                     if (!Request.IsAuthenticated)
                     {
                         FormsAuthentication.SetAuthCookie(model.Email, false);
+                        if (db.Rates.Any())
+                        {
+                            var rate = db.Rates.FirstOrDefault();
+                            if (rate != null)
+                            {
+                                Session["Price"] = rate.Price.ToString("##,###");
+                                Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                Session["fee3"] = rate.FormatPrice(rate.fee3);
+                            }
+                        }
+
+                        Session["Name"] = userProfile.Name;
+                        Session["ID"] = userProfile.UserId;
+                        Session["UserType"] = userProfile.UserType;
+
                         return RedirectToAction("Index", "Home");
                     }
                     else
                     {
-                        if (Session["UserType"] != null && (string)Session["UserType"] == UserType.Sale.ToString())
+                        if (Session["UserType"] != null && Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, false))
                         {
                             //sale manage
                             var salemanage = new SaleManageClient
@@ -333,62 +353,219 @@ namespace OrderChina.Controllers
         public ActionResult Manage(string username, string listStatus, string fromDate, string toDate, string OrderId, int? page)
         {
 
-            ViewBag.ListStatus = GetListStatus(listStatus);
             List<Order> listOrder = new List<Order>();
-
-            if ((string)Session["UserType"] == UserType.Sale.ToString())
-            {
-                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
-                listOrder = db.Orders.Where(a => listUserManage.Contains(a.Phone) || string.IsNullOrEmpty(a.SaleManager)).ToList();
-            }
-            else if ((string)Session["UserType"] == UserType.Client.ToString())
-            {
-                listOrder = db.Orders.Where(a => a.Phone == User.Identity.Name).ToList();
-            }
-            else if ((string)Session["UserType"] == UserType.Accounting.ToString())
-            {
-                listOrder = db.Orders.Where(a => a.Status == OrderStatus.SaleConfirm.ToString() || a.Status == OrderStatus.Receive.ToString()).ToList();
-            }
-            else if ((string)Session["UserType"] == UserType.Orderer.ToString())
-            {
-                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Paid.ToString()).ToList();
-            }
-            else if ((string)Session["UserType"] == UserType.Recieve.ToString())
-            {
-                listOrder = db.Orders.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.FullCollect.ToString()).ToList();
-            }
-            else if ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString())
-            {
-                listOrder = db.Orders.ToList();
-            }
+            var isFilter = false;
             if (!string.IsNullOrEmpty(username))
             {
-                listOrder = listOrder.FindAll(a => a.Phone.IndexOf(username, System.StringComparison.Ordinal) > 0);
+                isFilter = true;
+                listOrder = db.Orders.Where(a => a.Phone == username).ToList();
             }
 
             if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
             {
                 var fromdate = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var todate = DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                listOrder = (from order in listOrder
-                             where fromdate <= order.CreateDate && order.CreateDate <= todate
-                             select order).ToList();
+                if (isFilter)
+                {
+                    listOrder = (from order in listOrder
+                                 where fromdate <= order.CreateDate && order.CreateDate <= todate
+                                 select order).ToList();
+                }
+                else
+                {
+                    isFilter = true;
+                    listOrder = (from order in db.Orders
+                                 where fromdate <= order.CreateDate && order.CreateDate <= todate
+                                 select order).ToList();
+                }
+
             }
 
             if (!string.IsNullOrEmpty(listStatus))
             {
-                listOrder = listOrder.FindAll(a => a.Status == listStatus);
+                if (isFilter)
+                {
+                    listOrder = listOrder.FindAll(a => a.Status == listStatus);
+                }
+                else
+                {
+                    isFilter = true;
+                    listOrder = db.Orders.Where(a => a.Status == listStatus).ToList();
+
+                }
+            }
+            if (!string.IsNullOrEmpty(OrderId))
+            {
+                if (isFilter)
+                {
+                    listOrder = listOrder.FindAll(a => a.OrderId.ToString() == OrderId);
+                }
+                else
+                {
+                    isFilter = true;
+                    listOrder = db.Orders.Where(a => a.OrderId.ToString() == OrderId).ToList();
+                }
+            }
+
+            ViewBag.ListStatus = GetListStatus(listStatus);
+
+            List<Order> listOrderDisplay = new List<Order>();
+
+            if (isFilter)
+            {
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, false))
+                {
+                    var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
+                    listOrderDisplay.AddRange(listOrder.Where(a => listUserManage.Contains(a.Phone) || string.IsNullOrEmpty(a.SaleManager)).ToList());
+                }
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
+                {
+                    listOrderDisplay.AddRange(listOrder.Where(a => a.Phone == User.Identity.Name).ToList());
+                }
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Accounting, false))
+                {
+                    listOrderDisplay.AddRange(
+                        listOrder.Where(
+                            a =>
+                                a.Status == OrderStatus.SaleConfirm.ToString() || a.Status == OrderStatus.Receive.ToString())
+                            .ToList());
+                }
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Orderer, false))
+                {
+                    listOrderDisplay.AddRange(listOrder.Where(a => a.Status == OrderStatus.Paid.ToString()).ToList());
+                }
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Recieve, false))
+                {
+                    listOrderDisplay.AddRange(listOrder.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.FullCollect.ToString()).ToList());
+                }
+                if (Utilities.CheckRole((string)Session["UserType"]))
+                {
+                    listOrderDisplay = listOrder.ToList();
+                }
+            }
+            else
+            {
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, false))
+            {
+                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
+                    listOrderDisplay.AddRange(db.Orders.Where(a => listUserManage.Contains(a.Phone) || string.IsNullOrEmpty(a.SaleManager)).ToList());
+            }
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
+            {
+                    listOrderDisplay.AddRange(db.Orders.Where(a => a.Phone == User.Identity.Name).ToList());
+            }
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Accounting, false))
+            {
+                    listOrderDisplay.AddRange(
+                        db.Orders.Where(
+                            a =>
+                                a.Status == OrderStatus.SaleConfirm.ToString() || a.Status == OrderStatus.Receive.ToString())
+                            .ToList());
+            }
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Orderer, false))
+            {
+                    listOrderDisplay.AddRange(db.Orders.Where(a => a.Status == OrderStatus.Paid.ToString()).ToList());
+            }
+                if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Recieve, false))
+            {
+                    listOrderDisplay.AddRange(db.Orders.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.FullCollect.ToString()).ToList());
+            }
+                if (Utilities.CheckRole((string)Session["UserType"]))
+            {
+                    listOrderDisplay = db.Orders.ToList();
+                }
+            }
+
+            listOrderDisplay = listOrderDisplay.Distinct().OrderByDescending(a => a.UpdateDate).ToList();
+
+            ViewBag.CurrentToDate = toDate;
+            ViewBag.CurrentFromDate = fromDate;
+            ViewBag.CurrentStatus = listStatus;
+            ViewBag.CurrentOrderId = OrderId;
+            ViewBag.CurrentUserName = username;
+
+
+            int pageNumber = (page ?? 1);
+
+            return View(listOrderDisplay.ToPagedList(pageNumber, pageSize));
+            }
+        public ActionResult ManageReceiver(string username, string fromDate, string toDate, string OrderId, int? page)
+        {
+
+            List<Order> listOrder = new List<Order>();
+
+            listOrder = db.Orders.Where(a => a.Status == OrderStatus.Receive.ToString() || a.Status == OrderStatus.FullCollect.ToString()).ToList();
+            if (!string.IsNullOrEmpty(username))
+            {
+                listOrder = listOrder.Where(a => a.Phone == username).ToList();
+            }
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                var fromdate = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var todate = DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                listOrder = (from order in listOrder
+                             where fromdate <= order.CreateDate && order.CreateDate <= todate
+                             select order).ToList();
+
             }
             if (!string.IsNullOrEmpty(OrderId))
             {
                 listOrder = listOrder.FindAll(a => a.OrderId.ToString() == OrderId);
             }
 
+            if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, false))
+            {
+                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
+                listOrder = listOrder.FindAll(a => listUserManage.Contains(a.Phone) || string.IsNullOrEmpty(a.SaleManager));
+            }
+            listOrder = listOrder.OrderByDescending(a => a.UpdateDate).ToList();
+
+            ViewBag.CurrentToDate = toDate;
+            ViewBag.CurrentFromDate = fromDate;
+            ViewBag.CurrentOrderId = OrderId;
+            ViewBag.CurrentUserName = username;
+
+
+            int pageNumber = (page ?? 1);
+
+            return View(listOrder.ToPagedList(pageNumber, pageSize));
+            }
+
+        public ActionResult ManageOrdererReject(string username, string fromDate, string toDate, string OrderId, int? page)
+        {
+            List<Order> listOrder = new List<Order>();
+
+            listOrder = db.Orders.Where(a => a.Status == OrderStatus.OrdererReject.ToString()).ToList();
+            if (!string.IsNullOrEmpty(username))
+            {
+                listOrder = listOrder.Where(a => a.Phone == username).ToList();
+            }
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                var fromdate = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var todate = DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                listOrder = (from order in listOrder
+                             where fromdate <= order.CreateDate && order.CreateDate <= todate
+                             select order).ToList();
+
+            }
+            if (!string.IsNullOrEmpty(OrderId))
+            {
+                listOrder = listOrder.FindAll(a => a.OrderId.ToString() == OrderId);
+            }
+
+            if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, false))
+            {
+                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
+                listOrder = listOrder.FindAll(a => listUserManage.Contains(a.Phone) || string.IsNullOrEmpty(a.SaleManager));
+            }
+
             listOrder = listOrder.OrderByDescending(a => a.CreateDate).ToList();
 
             ViewBag.CurrentToDate = toDate;
             ViewBag.CurrentFromDate = fromDate;
-            ViewBag.CurrentStatus = listStatus;
             ViewBag.CurrentOrderId = OrderId;
             ViewBag.CurrentUserName = username;
 
@@ -400,7 +577,7 @@ namespace OrderChina.Controllers
 
         private SelectList GetListStatus(string value)
         {
-            List<Object> list = new List<object>();
+            var list = new List<object>();
             foreach (FieldInfo fieldInfo in typeof(OrderStatus).GetFields())
             {
                 if (fieldInfo.FieldType.Name != "OrderStatus")
@@ -408,11 +585,27 @@ namespace OrderChina.Controllers
                 var attribute = Attribute.GetCustomAttribute(fieldInfo,
                    typeof(DisplayAttribute)) as DisplayAttribute;
 
-                if (attribute != null)
-                    list.Add(new { name = fieldInfo.Name, display = attribute.Name });
-                else
-                    list.Add(new { name = fieldInfo.Name, display = fieldInfo.Name });
+                list.Add(attribute != null
+                    ? new { name = fieldInfo.Name, display = attribute.Name }
+                    : new { name = fieldInfo.Name, display = fieldInfo.Name });
+            }
 
+            return new SelectList(list, "name", "display", value);
+        }
+
+        private SelectList GetListUserType(string[] value = null)
+        {
+            var list = new List<object>();
+            foreach (FieldInfo fieldInfo in typeof(UserType).GetFields())
+            {
+                if (fieldInfo.FieldType.Name != "UserType" || fieldInfo.Name == UserType.Admin.ToString())
+                    continue;
+                var attribute = Attribute.GetCustomAttribute(fieldInfo,
+                   typeof(DisplayAttribute)) as DisplayAttribute;
+
+                list.Add(attribute != null
+                    ? new { name = (int)fieldInfo.GetValue(fieldInfo), display = attribute.Name }
+                    : new { name = (int)fieldInfo.GetValue(fieldInfo), display = fieldInfo.Name });
             }
 
             return new SelectList(list, "name", "display", value);
@@ -423,19 +616,36 @@ namespace OrderChina.Controllers
             List<Object> list = new List<object>();
             foreach (FieldInfo fieldInfo in typeof(UserType).GetFields())
             {
-                if (fieldInfo.FieldType.Name != "UserType")
+                if (fieldInfo.FieldType.Name != "UserType" || fieldInfo.Name == UserType.Admin.ToString())
+                    continue;
+                var attribute = Attribute.GetCustomAttribute(fieldInfo,
+                   typeof(DisplayAttribute)) as DisplayAttribute;
+
+                list.Add(attribute != null
+                    ? new { name = (int)fieldInfo.GetValue(fieldInfo), display = attribute.Name }
+                    : new { name = (int)fieldInfo.GetValue(fieldInfo), display = fieldInfo.Name });
+            }
+
+            return new SelectList(list, "name", "display", value);
+        }
+        private SelectList GetListUserType()
+        {
+            List<Object> list = new List<object>();
+            foreach (FieldInfo fieldInfo in typeof(UserType).GetFields())
+            {
+                if (fieldInfo.FieldType.Name != "UserType" || fieldInfo.Name == UserType.Admin.ToString())
                     continue;
                 var attribute = Attribute.GetCustomAttribute(fieldInfo,
                    typeof(DisplayAttribute)) as DisplayAttribute;
 
                 if (attribute != null)
-                    list.Add(new { name = fieldInfo.Name, display = attribute.Name });
+                    list.Add(new { name = (int)fieldInfo.GetValue(fieldInfo), display = attribute.Name });
                 else
-                    list.Add(new { name = fieldInfo.Name, display = fieldInfo.Name });
+                    list.Add(new { name = (int)fieldInfo.GetValue(fieldInfo), display = fieldInfo.Name });
 
             }
 
-            return new SelectList(list, "name", "display", value);
+            return new SelectList(list, "name", "display");
         }
 
         #region Helpers
@@ -585,6 +795,7 @@ namespace OrderChina.Controllers
                         var order = new Order
                         {
                             CreateDate = DateTime.Now,
+                            UpdateDate = DateTime.Now,
                             TotalPrice = model.ListOrderDetail.Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0)),
                             Status = OrderStatus.New.ToString(),
                             Rate = rate != null ? rate.Price : 0,
@@ -636,9 +847,9 @@ namespace OrderChina.Controllers
                             Status = OrderStatus.New.ToString(),
                             Rate = rate != null ? rate.Price : 0,
                             Fee = 5,
-                            Phone = model.ListOrderDetail.First().Phone
+                            Phone = model.ListOrderDetail.First().Phone,
+                            UpdateDate = DateTime.Now
                         };
-
                         db.Entry(order).State = EntityState.Added;
                         order.TotalPriceConvert = order.TotalPrice * order.Rate;
                         db.Orders.Add(order);
@@ -671,6 +882,87 @@ namespace OrderChina.Controllers
 
 
             }
+            return View();
+        }
+
+        //
+        // GET: /Account/CreateOrder
+
+        [AllowAnonymous]
+        public ActionResult CreateOrderOfSale()
+        {
+            if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale))
+            {
+                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
+                List<object> listClient = new List<object>();
+                foreach (var client in listUserManage)
+                {
+                    var user = db.UserProfiles.FirstOrDefault(a => a.Phone == client);
+                    if (user != null)
+                    {
+                        listClient.Add(new { value = user.Phone, display = user.Phone + "-" + user.Name });
+                    }
+                }
+                ViewBag.ListClient = new SelectList(listClient, "value", "display");
+                return View();
+
+            }
+
+            return RedirectToAction("Error");
+                }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult CreateOrderOfSale(NewOrderModel model)
+        {
+            //thực hiện tạo order dựa tên orderdetail
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var rate = db.Rates.FirstOrDefault();
+                    var user = db.UserProfiles.First(a => a.Phone == model.Phone);
+                    var order = new Order
+                    {
+                        CreateDate = DateTime.Now,
+                        TotalPrice = model.ListOrderDetail.Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0)),
+                        Status = OrderStatus.New.ToString(),
+                        Rate = rate != null ? rate.Price : 0,
+                        Fee = 5,
+                        Phone = user.Phone,
+                        UserName = user.Email,
+                        UpdateDate = DateTime.Now
+                    };
+
+                    order.TotalPriceConvert = order.TotalPrice * order.Rate;
+                    order.SaleManager = User.Identity.Name;
+                    db.Entry(order).State = EntityState.Added;
+                    db.Orders.Add(order);
+                    db.SaveChanges();
+
+                    int orderId = order.OrderId;
+
+                    foreach (var orderDetail in model.ListOrderDetail)
+                    {
+                        orderDetail.OrderId = orderId;
+                        orderDetail.Phone = user.Phone;
+                        orderDetail.OrderDetailStatus = OrderDetailStatus.Active.ToString();
+                        db.Entry(orderDetail).State = EntityState.Added;
+                        db.OrderDetails.Add(orderDetail);
+                        db.SaveChanges();
+            }
+
+                    dbContextTransaction.Commit();
+
+                    ViewData["message"] = "Tạo đơn hàng thành công.";
+                    return RedirectToAction("Manage", "Account");
+                }
+                catch (Exception)
+                {
+                    dbContextTransaction.Rollback();
+                }
+            }
+
             return View();
         }
 
@@ -756,7 +1048,7 @@ namespace OrderChina.Controllers
                 order.Fee = model.Fee;
                 order.FeeShip = model.FeeShip;
                 order.FeeShipChina = model.FeeShipChina;
-
+                order.UpdateDate = DateTime.Now;
                 order.Status = OrderStatus.SaleConfirm.ToString();
                 db.SaveChanges();
             }
@@ -848,6 +1140,8 @@ namespace OrderChina.Controllers
                 order.FeeShip = model.FeeShip;
                 order.Weight = model.Weight;
                 order.FeeShipChina = model.FeeShipChina;
+                order.UpdateDate = DateTime.Now;
+
                 order.Status = OrderStatus.Order.ToString();
                 db.SaveChanges();
             }
@@ -874,6 +1168,11 @@ namespace OrderChina.Controllers
                 if (model.Status == OrderStatus.SaleConfirm.ToString())
                 {
                     order.DownPayment = model.DownPayment;
+                    var sale = db.UserProfiles.FirstOrDefault(a => a.Phone == order.SaleManager);
+                    var client = db.UserProfiles.FirstOrDefault(a => a.Phone == order.Phone);
+
+                    order.TransId = Utilities.GenerateOrderId(order.OrderId, (sale == null ? 0 : sale.UserId),
+                        (client == null ? 0 : client.UserId));
                     order.Status = OrderStatus.Paid.ToString();
 
                 }
@@ -882,6 +1181,9 @@ namespace OrderChina.Controllers
                     order.AccountingCollected = model.AccountingCollected;
                     order.Status = OrderStatus.FullCollect.ToString();
                 }
+
+                order.UpdateDate = DateTime.Now;
+
                 db.SaveChanges();
             }
 
@@ -1073,7 +1375,10 @@ namespace OrderChina.Controllers
         {
             var userProfiles = new List<UserProfile>();
 
-            userProfiles = db.UserProfiles.Where(a => a.UserType == UserType.Client.ToString()).ToList();
+            userProfiles = (from user in db.UserProfiles
+                            where user.UserType.Contains(((int)UserType.Client).ToString())
+                            select user).ToList();
+
             if (!string.IsNullOrEmpty(userName))
             {
                 userProfiles = userProfiles.FindAll(a => !String.Equals(a.Phone, User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) && a.Phone.ToLower().Contains(userName.ToLower()));
@@ -1101,7 +1406,10 @@ namespace OrderChina.Controllers
             ViewBag.ListUserType = GetListUserType(userType);
             var userProfiles = new List<UserProfile>();
 
-            userProfiles = !string.IsNullOrEmpty(userType) ? db.UserProfiles.Where(a => a.UserType != UserType.Client.ToString() && a.UserType == userType).ToList() : db.UserProfiles.Where(a => a.UserType != UserType.Client.ToString()).ToList();
+            userProfiles = (from user in db.UserProfiles
+                            where !user.UserType.Contains(((int)UserType.Client).ToString()) && user.UserType.Contains(userType ?? user.UserType)
+                            select user).ToList();
+
             if (!string.IsNullOrEmpty(userName))
             {
                 userProfiles = userProfiles.FindAll(a => !String.Equals(a.Phone, User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) && a.Phone.ToLower().Contains(userName.ToLower()));
@@ -1118,7 +1426,7 @@ namespace OrderChina.Controllers
         public ActionResult AssignSaleForClient(string id, string userSale)
         {
             var model = new SaleManageClient { User_Client = id, User_Sale = userSale };
-            var listSale = db.UserProfiles.Where(a => a.UserType == UserType.Sale.ToString()).Select(a => new { phone = a.Phone, display = a.Name });
+            var listSale = db.UserProfiles.Where(a => a.UserType.Contains(((int)UserType.Sale).ToString())).Select(a => new { phone = a.Phone, display = a.Name });
             ViewBag.listSale = new SelectList(listSale, "phone", "display", userSale);
             return PartialView("_AssignSalePartial", model);
         }
@@ -1170,11 +1478,15 @@ namespace OrderChina.Controllers
 
         public ActionResult ChangeUserType(string id, string userType)
         {
-            var model = db.UserProfiles.FirstOrDefault(a => a.Phone == id);
-            if (model == null)
-                return RedirectToAction("ListClient");
-
-            ViewBag.listUserType = GetListUserType(userType);
+            var user = db.UserProfiles.FirstOrDefault(a => a.Phone == id);
+            if (user == null)
+                return RedirectToAction("ListUser");
+            var model = new ChangeUserTypeModel
+            {
+                Phone = user.Phone
+            };
+            var select = userType.Split(',');
+            ViewBag.listUserType = GetListUserType(select);
 
             return PartialView("_ChangeUserTypePartial", model);
         }
@@ -1182,16 +1494,26 @@ namespace OrderChina.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult ChangeUserType(UserProfile model)
+        public ActionResult ChangeUserType(ChangeUserTypeModel model)
         {
             var userUpdate = db.UserProfiles.FirstOrDefault(a => a.Phone == model.Phone);
             if (userUpdate != null)
             {
-                userUpdate.UserType = model.UserType;
+                if (model.UserType == null || !model.UserType.Any())
+                {
+                    userUpdate.UserType = ((int)UserType.Client).ToString(CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    string userType = model.UserType.Aggregate(string.Empty, (current, s) => current + "," + s);
+                    userType = userType.Substring(1, userType.Length - 1);
+                    userUpdate.UserType = userType;
+                }
+
                 db.SaveChanges();
 
             }
-            return RedirectToAction("ListClient");
+            return RedirectToAction("ListUser");
         }
 
         public ActionResult UpdateRate(string fromDate, string toDate, int? page)

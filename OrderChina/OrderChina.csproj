@@ -263,6 +263,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap-datepicker3.css" />
     <Content Include="Content\bootstrap-datepicker3.min.css" />
+    <Content Include="Content\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -335,6 +336,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\fonts\fontawesome-webfont.woff" />
@@ -431,6 +433,9 @@
     <Content Include="Views\Account\TransactionHistory.cshtml" />
     <Content Include="Views\Account\ListUser.cshtml" />
     <Content Include="Views\Account\_AssignSalePartial.cshtml" />
+    <Content Include="Views\Account\ManageOrdererReject.cshtml" />
+    <Content Include="Views\Account\ManageReceiver.cshtml" />
+    <Content Include="Views\Account\CreateOrderOfSale.cshtml" />
     <Content Include="Views\Account\LoginCustomer.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -30,7 +30,7 @@
                             <span class="name">Số tiền trong ví: </span>
                             <span class="txt">@item.Money.ToString("##,##0")</span>
                         </div>
-                        @if (@OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
+                        @if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Accounting))
                         {
                             <div>
                                 <a href="@Url.Action("AdditionWallet", "Wallet", new { id = item.Id, cmd = "add" })" rel='tooltip' title="Thêm tiền" class='btn btn-info btn-xs btn-addition'><i class="fa fa-plus"></i></a>
@@ -64,7 +64,7 @@
                                 @Html.DisplayFor(modelItem => item.Currency)
                             </td>
                             <td class='text-center'>
-                                @Html.DisplayFor(modelItem => item.Money)
+                                @item.Money.ToString("##,##0")
                             </td>
                             <td class='text-center'>
                                 @item.getUpdateTypeText()

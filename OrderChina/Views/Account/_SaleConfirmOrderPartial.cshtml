@@ -18,15 +18,15 @@
 
                 <div class="col-sm-4">
                     @Html.LabelFor(m => m.Fee)
-                    @Html.EditorFor(m => m.Fee)
+                    @Html.TextBoxFor(m => m.Fee, new { @class = "form-control btn-flat"})
                 </div>
                 <div class="col-sm-4">
                     @Html.LabelFor(m => m.FeeShip)
-                    @Html.EditorFor(m => m.FeeShip)
+                    @Html.TextBoxFor(m => m.FeeShip, new { @class = "form-control btn-flat" })
                 </div>
                 <div class="col-sm-4">
                     @Html.LabelFor(m => m.FeeShipChina)
-                    @Html.EditorFor(m => m.FeeShipChina)
+                    @Html.TextBoxFor(m => m.FeeShipChina, new { @class = "form-control btn-flat" })
                 </div>
             </div>
             <div class="modal-footer">

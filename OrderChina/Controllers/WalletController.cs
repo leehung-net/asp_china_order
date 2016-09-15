@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using OrderChina.Common;
 using OrderChina.Models;
 using PagedList;
 
@@ -15,7 +16,7 @@ namespace OrderChina.Controllers
 
         public ActionResult Index(string id, int? page)
         {
-            if (Session["UserType"] != null && (string)Session["UserType"] == UserType.Client.ToString())
+            if (Session["UserType"] != null && Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
             {
                 const int pageSize = 5;
                 int pageNumber = (page ?? 1);
@@ -27,7 +28,7 @@ namespace OrderChina.Controllers
 
                 return View(model);
             }
-            else if (Session["UserType"] != null && ((string)Session["UserType"] == UserType.Admin.ToString() || (string)Session["UserType"] == UserType.SuperUser.ToString()))
+            else if (Session["UserType"] != null && Utilities.CheckRole((string)Session["UserType"]))
             {
 
                 ViewBag.isadmin = true;
@@ -41,7 +42,7 @@ namespace OrderChina.Controllers
                     .ToPagedList(pageNumber, pageSize);
                 return View(model);
             }
-            else if (Session["UserType"] != null && (string)Session["UserType"] == UserType.Accounting.ToString())
+            else if (Session["UserType"] != null && Utilities.CheckRole((string)Session["UserType"], (int)UserType.Accounting, false))
             {
 
                 ViewBag.isacc = true;
@@ -143,7 +144,7 @@ namespace OrderChina.Controllers
 
         public ActionResult ListClient(string userName, int? page)
         {
-            var userProfiles = db.UserProfiles.Where(a => a.UserType == UserType.Client.ToString()).ToList();
+            var userProfiles = db.UserProfiles.Where(a => a.UserType.Contains(((int)UserType.Client).ToString())).ToList();
             if (!string.IsNullOrEmpty(userName))
             {
                 userProfiles = userProfiles.FindAll(a => !String.Equals(a.Phone, User.Identity.Name, StringComparison.CurrentCultureIgnoreCase) && a.Phone.ToLower().Contains(userName.ToLower()));

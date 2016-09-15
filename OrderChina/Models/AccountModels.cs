@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
+using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 
 namespace OrderChina.Models
 {
@@ -97,18 +99,19 @@ namespace OrderChina.Models
         public string Gender { get; set; }
         public string Password { get; set; }
 
+        [Display(Name = "Loại người dùng")]
         public string UserType { get; set; }
 
         [NotMapped]
         public string SaleManage { get; set; }
 
-        public string getUserTypeText()
+        private string getUserTypeText(string value)
         {
             foreach (FieldInfo fieldInfo in typeof(UserType).GetFields())
             {
                 if (fieldInfo.FieldType.Name != "UserType")
                     continue;
-                if (String.Equals(fieldInfo.Name, UserType, StringComparison.CurrentCultureIgnoreCase))
+                if (String.Equals(((int)fieldInfo.GetValue(fieldInfo)).ToString(), value, StringComparison.CurrentCultureIgnoreCase))
                 {
                     var attribute = Attribute.GetCustomAttribute(fieldInfo, typeof(DisplayAttribute)) as DisplayAttribute;
 
@@ -118,7 +121,19 @@ namespace OrderChina.Models
 
             }
 
-            return UserType;
+            return value;
+        }
+
+        public string getUserType()
+        {
+            var listUserType = UserType.Split(',');
+            var stringreturn = listUserType.Aggregate(string.Empty, (current, s) => current + "," + getUserTypeText(s));
+            if (stringreturn.Length > 1)
+            {
+                return stringreturn.Substring(1, stringreturn.Length - 1);
+
+            }
+            return stringreturn;
         }
     }
 
@@ -131,6 +146,8 @@ namespace OrderChina.Models
         [Display(Name = "Mã đơn hàng")]
         public int OrderId { get; set; }
 
+        [Display(Name = "Mã giao dịch")]
+        public string TransId { get; set; }
         public string UserName { get; set; }
         public string Phone { get; set; }
         [Display(Name = "Tỷ giá")]
@@ -159,6 +176,9 @@ namespace OrderChina.Models
 
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate { get; set; }
+
+        [Display(Name = "Ngày cập nhật")]
+        public DateTime UpdateDate { get; set; }
 
         [Display(Name = "Tiền thu thêm")]
         public double AccountingCollected { get; set; }
@@ -193,20 +213,26 @@ namespace OrderChina.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int OrderDetailId { get; set; }
+
         public int OrderId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Link sản phẩm không được để trống")]
+        [Display(Name = "Link sản phẩm")]
         public string Link { get; set; }
         public string Shop { get; set; }
+
+        [Display(Name = "Mô tả")]
         public string Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Khối lượng không được để trống")]
+        [Display(Name = "Khối lượng")]
         public int? Quantity { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Giá không được để trống")]
+        [Display(Name = "Giá")]
         public double? Price { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "SĐT không được để trống")]
         public string Phone { get; set; }
 
         [Display(Name = "Đặt được")]
@@ -516,7 +542,7 @@ namespace OrderChina.Models
         public string Account { get; set; }
 
         [Display(Name = "Loại tài khoản")]
-        public string UserType { get; set; }
+        public string[] UserType { get; set; }
     }
     public class ExternalLogin
     {
@@ -543,11 +569,22 @@ namespace OrderChina.Models
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
+    public class ChangeUserTypeModel
+    {
+        public string Phone { get; set; }
+
+        [Display(Name = "Loại người sử dụng")]
+        public string[] UserType { get; set; }
+    }
     #endregion
 
     #region Order
     public class NewOrderModel
     {
+        [Required(ErrorMessage = "Phải chọn khách hàng")]
+        [Display(Name = "Khách hàng")]
+        public string Phone { get; set; }
+
         public IEnumerable<OrderDetail> ListOrderDetail { get; set; }
     }
 

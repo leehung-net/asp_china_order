@@ -94,7 +94,7 @@
                     <p class="col-md-6">1 NDT = @Model.Rate.ToString("##,###") <sup>đ</sup></p>
                     @if (Session["UserType"] != null)
                     {
-                        if ((string)Session["UserType"] == UserType.Client.ToString())
+                        if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
                         {
                             <p class="col-md-3">
                                 @if (@Model.Status == OrderStatus.Cancel.ToString())
@@ -134,7 +134,7 @@
                             }
                             else
                             {
-                                if (((string)Session["UserType"] == UserType.Sale.ToString()))
+                                if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, false))
                                 {
                                     <p class='col-md-3'>
                                         @Html.ActionLink("Tạo tài khoản khách hàng", "Register", "Account", new { phone = @Model.ListOrderDetails.ElementAt(0).Phone, id = Model.OrderId }, new { @class = "btn btn-danger btn-xs" })
@@ -154,9 +154,9 @@
                     <div class="col-md-6">
                         <p><font>(1) Tiền hàng</font><font style="float:right">@Model.TotalPriceConvert.ToString("##,###")<sup>đ</sup></font></p>
                         <p><font>(2) Phí dịch vụ (@Model.Fee%)</font><font style="float:right">@Math.Round((Model.TotalPriceConvert * Model.Fee) / 100, MidpointRounding.ToEven).ToString("##,###")<sup>đ</sup></font></p>
-                        <p><font>(3) Ship nội địa TQ</font><font style="float:right">@Model.FeeShipChina<sup>đ</sup></font></p>
+                        <p><font>(3) Ship nội địa TQ</font><font style="float:right">@Model.FeeShipChina.ToString("##,###")<sup>đ</sup></font></p>
                         <p><font>(4) Trọng lượng</font><font style="float:right">@Model.Weight<sup>kg</sup></font></p>
-                        <p><font>(5) Cước vận chuyển</font><font style="float:right">@Model.FeeShip<sup>đ</sup></font></p>
+                        <p><font>(5) Cước vận chuyển</font><font style="float:right">@Model.FeeShip.ToString("##,###")<sup>đ</sup></font></p>
 
                     </div>
                     <div class="col-md-6">
@@ -170,7 +170,7 @@
                     <p class="col-md-6 pull-right">
                         @if (Session["UserType"] != null)
                         {
-                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Sale.ToString()))
+                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale))
                             {
                                 if (Model.Status == OrderStatus.New.ToString() || Model.Status == OrderStatus.OrdererReject.ToString())
                                 {
@@ -186,7 +186,7 @@
 
                             }
 
-                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Accounting.ToString()))
+                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Accounting))
                             {
                                 if (Model.Status == OrderStatus.SaleConfirm.ToString() || Model.Status == OrderStatus.Receive.ToString())
                                 {
@@ -194,7 +194,7 @@
                                 }
                             }
 
-                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Orderer.ToString()))
+                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Orderer))
                             {
                                 if (Model.Status == OrderStatus.Paid.ToString())
                                 {
@@ -206,7 +206,7 @@
 
                                 }
                             }
-                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Recieve.ToString()))
+                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Recieve))
                             {
                                 if (Model.Status == OrderStatus.Order.ToString())
                                 {
@@ -275,9 +275,15 @@
                                     <td class='text-center'>
                                         @(((item.Price * item.Quantity) ?? 0).ToString("##,##0"))
                                     </td>
-                                    <td class='text-center'>
-                                        @Html.DisplayFor(modelItem => item.DeliveryDate)
-                                    </td>
+                                    @if (item.DeliveryDate == null)
+                                    {
+
+                                        <td class='text-center'>Chưa xuất kho</td>
+                                    }
+                                    else
+                                    {
+                                        <td class='text-center'>@((item.DeliveryDate ?? DateTime.Now).ToString("dd/MM/yyyy")) </td>
+                                    }
                                     <td class='text-center'>
                                         @Html.DisplayFor(modelItem => item.Note)
                                     </td>
@@ -287,49 +293,27 @@
                                     <td class='text-center' id="action">
                                         @if (Session["UserType"] != null)
                                         {
-                                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"]))
+                                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client) || OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale) || OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Orderer))
                                             {
                                                 if (Model.Status == OrderStatus.Paid.ToString() || Model.Status == OrderStatus.New.ToString() || Model.Status == OrderStatus.OrdererReject.ToString())
                                                 {
                                                     <a href="@Url.Action("AddEditOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
-                                                    <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = true})" rel='tooltip' title="Cập nhật TT đặt hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
-                                                    <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
-                                                }
-                                                if (@Model.Status == OrderStatus.Order.ToString())
-                                                {
-                                                    <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = false})" rel='tooltip' title="Cập nhật TT nhận hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
-                                                }
-                                            }
-                                            else if ((string)Session["UserType"] == UserType.Client.ToString())
-                                            {
-                                                if (Model.Status == OrderStatus.New.ToString())
-                                                {
-                                                    <a href="@Url.Action("AddEditOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
-                                                    <a href="@Url.Action("DeletedOrderDetail", "Account", new { id = item.OrderDetailId })" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
-                                                }
-                                            }
-                                            else if ((string)Session["UserType"] == UserType.Sale.ToString())
-                                            {
-                                                if (Model.Status == OrderStatus.New.ToString() || Model.Status == OrderStatus.OrdererReject.ToString())
-                                                {
-                                                    <a href="@Url.Action("AddEditOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
                                                     <a href="@Url.Action("DeletedOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
                                                 }
                                             }
-                                            else if ((string)Session["UserType"] == UserType.Orderer.ToString())
+                                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Orderer))
                                             {
                                                 if (Model.Status == OrderStatus.Paid.ToString())
                                                 {
-                                                    <a href="@Url.Action("AddEditOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Sửa link" class='btn btn-info btn-xs btn-edit'><i class="fa fa-edit"></i></a>
+
                                                     <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = true})" rel='tooltip' title="Cập nhật TT đặt hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
-                                                    <a href="@Url.Action("DeletedOrderDetail", "Account", new {id = item.OrderDetailId})" rel='tooltip' title="Xóa link" class='btn btn-danger btn-xs btn-deleted'><i class="fa fa-trash-o"></i></a>
                                                 }
                                             }
-                                            else if ((string)Session["UserType"] == UserType.Recieve.ToString())
+                                            if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Recieve))
                                             {
                                                 if (@Model.Status == OrderStatus.Order.ToString())
                                                 {
-                                                    <a href="@Url.Action("UpdateOrderDetail", "Account", new { id = item.OrderDetailId,IsOrderer=false})" rel='tooltip' title="Cập nhật TT nhận hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
+                                                    <a href="@Url.Action("UpdateOrderDetail", "Account", new {id = item.OrderDetailId, IsOrderer = false})" rel='tooltip' title="Cập nhật TT nhận hàng" class='btn btn-info btn-xs btn-edit-info'><i class="glyphicon glyphicon-cog"></i></a>
                                                 }
                                             }
                                         }
@@ -341,7 +325,7 @@
                     </table>
                     @if (Session["UserType"] != null)
                     {
-                        if ((string)Session["UserType"] == UserType.Client.ToString())
+                        if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client))
                         {
                             if (Model.Status == OrderStatus.New.ToString())
                             {
@@ -351,7 +335,7 @@
                             }
 
                         }
-                        else if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], UserType.Sale.ToString()))
+                        if (OrderChina.Common.Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, true))
                         {
                             if (Model.Status == OrderStatus.New.ToString() || Model.Status == OrderStatus.OrdererReject.ToString())
                             {
@@ -499,8 +483,8 @@
                 */
                 e.preventDefault();
 
-                var $modal = $('#myModal1');
-                var $modalDialog = $('.modal-mini');
+                var $modal = $('#myModal');
+                var $modalDialog = $('.modal-dialog');
                 var href = $(this).prop('href');
 
                 // không cho phép tắt modal khi click bên ngoài modal
