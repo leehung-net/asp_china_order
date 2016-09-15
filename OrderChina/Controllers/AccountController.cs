@@ -1704,9 +1704,9 @@ namespace OrderChina.Controllers
         }
         #endregion
 
-        #region LoginCustomer
+        #region LoginManager
         [AllowAnonymous]
-        public ActionResult LoginCustomer(string returnUrl)
+        public ActionResult LoginManager(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
@@ -1718,14 +1718,18 @@ namespace OrderChina.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult LoginCustomer(LoginModel model, string returnUrl)
+        public ActionResult LoginManager(LoginModel model, string returnUrl)
         {
             if (IsEmail(model.Email))
             {
                 if (IsValid(model.Email, model.Password))
                 {
                     var user = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
-                    if (user != null)
+                    if (user == null || user.UserType == "1" || user.UserType == "5")
+                    {
+                        ModelState.AddModelError("", "Bạn không phải quản lý quản lý bạn không thể đăng nhập ở đây");
+                    }
+                    else if (user != null)
                     {
                         FormsAuthentication.SetAuthCookie(user.Phone, model.RememberMe);
                         //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
@@ -1752,14 +1756,16 @@ namespace OrderChina.Controllers
                             Session["UserType"] = user.UserType;
 
                         }
+                        return RedirectToAction("Manage", "Account");
                     }
-                    return RedirectToLocal(returnUrl);
+
                 }
+                
             }
             else
             {
                 //phone
-                if (IsValidPhone(model.Email, model.Password))
+                if (IsValidPhoneManager(model.Email, model.Password))
                 {
 
                     FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
@@ -1788,8 +1794,9 @@ namespace OrderChina.Controllers
                             Session["ID"] = userProfile.UserId;
                             Session["UserType"] = userProfile.UserType;
                         }
+                        return RedirectToAction("Manage", "Account");
                     }
-                    return RedirectToLocal(returnUrl);
+                    
                 }
             }
 
@@ -1798,6 +1805,24 @@ namespace OrderChina.Controllers
             ModelState.AddModelError("", "Tên người dùng hoặc mật khẩu được cung cấp là không chính xác .");
             return View(model);
         }
+        private bool IsValidPhoneManager(string phone, string password)
+        {
+            bool IsValid = false;
+
+            var user = db.UserProfiles.FirstOrDefault(u => u.Phone == phone);
+            if (user == null||user.UserType == "1" || user.UserType == "5")
+                    {
+                        ModelState.AddModelError("", "Bạn không phải quản lý quản lý bạn không thể đăng nhập ở đây");
+                    }
+            else  if (user != null)
+            {
+                if (user.Password == password)
+                {
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+         }
         #endregion
 
         #region wallet
