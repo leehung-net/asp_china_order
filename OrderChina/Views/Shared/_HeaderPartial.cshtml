@@ -70,7 +70,7 @@
             <div class="col-md-12">
                 <div class="text-center g-link">
                     <div class="text-center link-create-order sub-layout-create-order">
-                        <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("CreateOrder","Account")" class="btn btn-order">TẠO ĐƠN HÀNG &nbsp;<span class="fa fa-angle-right"></span></a>
+                        <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("CreateOrderManage", "Account")" class="btn btn-order">TẠO ĐƠN HÀNG &nbsp;<span class="fa fa-angle-right"></span></a>
                         <a style="padding: 10px !important;font-size: 14px !important;" href="@Url.Action("DepositOrders", "Account")" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class="fa fa-angle-right"></span></a>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                         </p>
                     </div>
                     <div class="text-center link-create-order">
-                        @Html.ActionLink("TẠO ĐƠN HÀNG", "CreateOrder", "Account", null, new { @class = "btn btn-order" })
+                        @Html.ActionLink("TẠO ĐƠN HÀNG", "CreateOrderManage", "Account", null, new { @class = "btn btn-order" })
                         <a href="@Url.Action("DepositOrders", "Account")" class="btn btn-order-c">TẠO ĐƠN KÝ GỬI &nbsp;<span class='fa fa-angle-right'></span></a>
                     </div>
                 </div>

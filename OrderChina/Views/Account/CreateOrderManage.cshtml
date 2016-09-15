@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "CreateOrderManage";
+}
+
+<div class="container" style="padding: 50px 0 80px;">
+    <h3 class="text-center">TẠO ĐƠN HÀNG</h3>
+    <p class="text-center">Chọn một trong các phương thức sau để đặt hàng</p>
+    <div style="margin-top: 50px;">
+        <div class="col-md-4 text-center">
+            <h3 class="text-center">Tạo đơn hàng từ hệ thống</h3>
+            <p class="create-image text-danger" style="font-size: 100px;"><span class="fa fa-shopping-cart"></span></p>
+            <a href="@Url.Action("CreateOrder","Account")" class="btn btn-primary">Bấm vào đây</a>
+        </div>
+        <div class="col-md-4 text-center">
+            <h3 class="text-center">Bằng excel</h3>
+            <p class="create-image text-primary" style="font-size: 100px;"><span class="fa fa-file-excel-o"></span></p>
+            <a href="@Url.Action("CreateOrderFromExcel", "Account")" class="btn btn-primary">Bấm vào đây</a>
+        </div>
+        <div class="col-md-4 text-center">
+            <h3 class="text-center">Sử dụng nút gim <span class="label label-danger btn-flat">Đang xây dựng</span></h3>
+            <p class="create-image" style="font-size: 100px;"><span class="fa fa-bookmark"></span></p>
+            <a class="btn btn-primary disabled" title="" rel="tooltip" data-original-title="Chức năng đang được xây dựng">Gim TB</a>
+        </div>
+        <span class="clearfix"></span>
+    </div>
+
+</div>

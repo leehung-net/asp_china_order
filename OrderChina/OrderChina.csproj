@@ -438,9 +438,13 @@
     <Content Include="Views\Account\CreateOrderOfSale.cshtml" />
     <Content Include="Views\Account\LoginManager.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Account\CreateOrderManage.cshtml" />
+    <Content Include="Views\Account\CreateOrderFromExcel.cshtml" />
+    <Content Include="Upload\Documents\mau.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Upload\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

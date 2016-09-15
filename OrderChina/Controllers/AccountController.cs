@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Linq.SqlClient;
+using System.Data.OleDb;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Reflection;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text.RegularExpressions;
 using System.Transactions;
+using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -62,23 +66,23 @@ namespace OrderChina.Controllers
                         //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
 
                         //Response.Cookies.Add(authCookie);
-                            if (db.Rates.Any())
+                        if (db.Rates.Any())
+                        {
+                            var rate = db.Rates.FirstOrDefault();
+                            if (rate != null)
                             {
-                                var rate = db.Rates.FirstOrDefault();
-                                if (rate != null)
-                                {
-                                    Session["Price"] = rate.Price.ToString("##,###");
-                                    Session["fee1"] = rate.FormatPrice(rate.fee1);
-                                    Session["fee2"] = rate.FormatPrice(rate.fee2);
-                                    Session["fee3"] = rate.FormatPrice(rate.fee3);
-                                }
+                                Session["Price"] = rate.Price.ToString("##,###");
+                                Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                Session["fee3"] = rate.FormatPrice(rate.fee3);
                             }
-
-                            Session["Name"] = user.Name;
-                            Session["ID"] = user.UserId;
-                            Session["UserType"] = user.UserType;
-
                         }
+
+                        Session["Name"] = user.Name;
+                        Session["ID"] = user.UserId;
+                        Session["UserType"] = user.UserType;
+
+                    }
                     return RedirectToLocal(returnUrl);
                 }
             }
@@ -94,24 +98,24 @@ namespace OrderChina.Controllers
                     //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
 
                     //Response.Cookies.Add(authCookie);
-                        if (db.Rates.Any())
+                    if (db.Rates.Any())
+                    {
+                        var rate = db.Rates.FirstOrDefault();
+                        if (rate != null)
                         {
-                            var rate = db.Rates.FirstOrDefault();
-                            if (rate != null)
-                            {
-                                Session["Price"] = rate.Price.ToString("##,###");
-                                Session["fee1"] = rate.FormatPrice(rate.fee1);
-                                Session["fee2"] = rate.FormatPrice(rate.fee2);
-                                Session["fee3"] = rate.FormatPrice(rate.fee3);
-                            }
+                            Session["Price"] = rate.Price.ToString("##,###");
+                            Session["fee1"] = rate.FormatPrice(rate.fee1);
+                            Session["fee2"] = rate.FormatPrice(rate.fee2);
+                            Session["fee3"] = rate.FormatPrice(rate.fee3);
                         }
-                        var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
-                        if (userProfile != null)
-                        {
-                            Session["Name"] = userProfile.Name;
-                            Session["ID"] = userProfile.UserId;
-                            Session["UserType"] = userProfile.UserType;
-                        }
+                    }
+                    var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+                    if (userProfile != null)
+                    {
+                        Session["Name"] = userProfile.Name;
+                        Session["ID"] = userProfile.UserId;
+                        Session["UserType"] = userProfile.UserType;
+                    }
                     return RedirectToLocal(returnUrl);
                 }
             }
@@ -446,32 +450,32 @@ namespace OrderChina.Controllers
             else
             {
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, false))
-            {
-                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
+                {
+                    var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
                     listOrderDisplay.AddRange(db.Orders.Where(a => listUserManage.Contains(a.Phone) || string.IsNullOrEmpty(a.SaleManager)).ToList());
-            }
+                }
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
-            {
+                {
                     listOrderDisplay.AddRange(db.Orders.Where(a => a.Phone == User.Identity.Name).ToList());
-            }
+                }
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Accounting, false))
-            {
+                {
                     listOrderDisplay.AddRange(
                         db.Orders.Where(
                             a =>
                                 a.Status == OrderStatus.SaleConfirm.ToString() || a.Status == OrderStatus.Receive.ToString())
                             .ToList());
-            }
+                }
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Orderer, false))
-            {
+                {
                     listOrderDisplay.AddRange(db.Orders.Where(a => a.Status == OrderStatus.Paid.ToString()).ToList());
-            }
+                }
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Recieve, false))
-            {
+                {
                     listOrderDisplay.AddRange(db.Orders.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.FullCollect.ToString()).ToList());
-            }
+                }
                 if (Utilities.CheckRole((string)Session["UserType"]))
-            {
+                {
                     listOrderDisplay = db.Orders.ToList();
                 }
             }
@@ -488,7 +492,7 @@ namespace OrderChina.Controllers
             int pageNumber = (page ?? 1);
 
             return View(listOrderDisplay.ToPagedList(pageNumber, pageSize));
-            }
+        }
         public ActionResult ManageReceiver(string username, string fromDate, string toDate, string OrderId, int? page)
         {
 
@@ -530,7 +534,7 @@ namespace OrderChina.Controllers
             int pageNumber = (page ?? 1);
 
             return View(listOrder.ToPagedList(pageNumber, pageSize));
-            }
+        }
 
         public ActionResult ManageOrdererReject(string username, string fromDate, string toDate, string OrderId, int? page)
         {
@@ -774,6 +778,192 @@ namespace OrderChina.Controllers
         // GET: /Account/CreateOrder
 
         [AllowAnonymous]
+        public ActionResult CreateOrderManage()
+        {
+            return View();
+        }
+
+        //
+        // GET: /Account/CreateOrderFromExcel
+
+        [AllowAnonymous]
+        public ActionResult CreateOrderFromExcel()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public JsonResult CreateOrderExcel()
+        {
+            DataSet ds = new DataSet();
+            var httpPostedFileBase = Request.Files["file"];
+            if (httpPostedFileBase != null && httpPostedFileBase.ContentLength > 0)
+            {
+                try
+                {
+                    string fileExtension =
+                                                 System.IO.Path.GetExtension(httpPostedFileBase.FileName);
+
+                    if (fileExtension == ".xls" || fileExtension == ".xlsx")
+                    {
+                        string fileLocation = Server.MapPath("~/Upload/Images/") + httpPostedFileBase.FileName;
+                        if (System.IO.File.Exists(fileLocation))
+                        {
+
+                            System.IO.File.Delete(fileLocation);
+                        }
+                        httpPostedFileBase.SaveAs(fileLocation);
+
+                        string excelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
+                        //connection String for xls file format.
+                        if (fileExtension == ".xls")
+                        {
+                            excelConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileLocation + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=2\"";
+                        }
+                        //connection String for xlsx file format.
+                        else if (fileExtension == ".xlsx")
+                        {
+
+                            excelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileLocation + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
+                        }
+
+                        //Create Connection to Excel work book and add oledb namespace
+                        var excelConnection = new OleDbConnection(excelConnectionString);
+                        excelConnection.Open();
+                        var dt = new DataTable();
+
+                        dt = excelConnection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                        if (dt == null)
+                        {
+                            return null;
+                        }
+
+                        var excelSheets = new String[dt.Rows.Count];
+                        int t = 0;
+                        //excel data saves in temp file here.
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            excelSheets[t] = row["TABLE_NAME"].ToString();
+                            t++;
+                        }
+                        var excelConnection1 = new OleDbConnection(excelConnectionString);
+
+                        string query = string.Format("Select * from [{0}]", excelSheets[0]);
+                        using (var dataAdapter = new OleDbDataAdapter(query, excelConnection1))
+                        {
+                            dataAdapter.Fill(ds);
+                        }
+
+                    }
+
+                    var order = new Order();
+                    var orderDetails = new List<OrderDetail>();
+
+                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                    {
+                        //lấy thông tin khách hàng
+                        if (i == 1)
+                        {
+                            order.Phone = ds.Tables[0].Rows[i].ItemArray[2].ToString();
+                        }
+                        else if (i == 2)
+                        {
+                            order.UserName = ds.Tables[0].Rows[i].ItemArray[2].ToString();
+                        }
+                        else if (i >= 4)
+                        {
+                            var orderdetail = new OrderDetail
+                            {
+                                Link = ds.Tables[0].Rows[i].ItemArray[1].ToString(),
+                                Description = ds.Tables[0].Rows[i].ItemArray[2].ToString(),
+                                Quantity = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[3].ToString()),
+                                Price = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[4].ToString())
+                            };
+                            orderDetails.Add(orderdetail);
+                        }
+                    }
+
+                    //tiến hành update
+                    if (string.IsNullOrEmpty(order.Phone) || string.IsNullOrEmpty(order.UserName))
+                    {
+                        return Json(new { success = false, message = "File không đúng mẫu" });
+                    }
+
+                    if (orderDetails.Count(a => string.IsNullOrEmpty(a.Link)) > 0)
+                    {
+                        return Json(new { success = false, message = "File không đúng mẫu" });
+                    }
+                    if (orderDetails.Count(a => a.Quantity == null || a.Quantity == 0) > 0)
+                    {
+                        return Json(new { success = false, message = "File không đúng mẫu" });
+                    }
+                    if (orderDetails.Count(a => a.Quantity == null || a.Quantity == 0) > 0)
+                    {
+                        return Json(new { success = false, message = "File không đúng mẫu" });
+                    }
+
+                    //kiểm tra phone va email ton tai
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var rate = db.Rates.FirstOrDefault();
+                            order.Rate = rate != null ? rate.Price : 0;
+                            order.CreateDate = DateTime.Now;
+                            order.UpdateDate = DateTime.Now;
+                            order.TotalPrice = orderDetails.Sum(a => (a.Quantity ?? 0) * (a.Price ?? 0));
+                            order.Status = OrderStatus.New.ToString();
+                            order.Fee = 5;
+                            order.TotalPriceConvert = order.TotalPrice * order.Rate;
+
+                            var saleManage = db.SaleManageClients.FirstOrDefault(a => a.User_Client == order.Phone);
+                            if (saleManage != null) order.SaleManager = saleManage.User_Sale;
+                            db.Entry(order).State = EntityState.Added;
+                            db.Orders.Add(order);
+                            db.SaveChanges();
+
+                            int orderId = order.OrderId;
+
+                            foreach (var orderDetail in orderDetails)
+                            {
+                                orderDetail.OrderId = orderId;
+                                orderDetail.Phone = order.Phone;
+                                orderDetail.OrderDetailStatus = OrderDetailStatus.Active.ToString();
+                                db.Entry(orderDetail).State = EntityState.Added;
+                                db.OrderDetails.Add(orderDetail);
+                                db.SaveChanges();
+                            }
+
+                            dbContextTransaction.Commit();
+
+                            if (Request.IsAuthenticated)
+                            {
+                                return Json(new { success = true, url = Url.Action("Manage","Account")});
+                                
+                            }
+                            return Json(new { success = true });
+
+                        }
+                        catch (Exception)
+                        {
+                            dbContextTransaction.Rollback();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false });
+                }
+            }
+
+            return Json(new { success = false });
+        }
+        //
+        // GET: /Account/CreateOrder
+
+        [AllowAnonymous]
         public ActionResult CreateOrder()
         {
             return View();
@@ -909,7 +1099,7 @@ namespace OrderChina.Controllers
             }
 
             return RedirectToAction("Error");
-                }
+        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -950,7 +1140,7 @@ namespace OrderChina.Controllers
                         db.Entry(orderDetail).State = EntityState.Added;
                         db.OrderDetails.Add(orderDetail);
                         db.SaveChanges();
-            }
+                    }
 
                     dbContextTransaction.Commit();
 
@@ -1760,7 +1950,7 @@ namespace OrderChina.Controllers
                     }
 
                 }
-                
+
             }
             else
             {
@@ -1796,7 +1986,7 @@ namespace OrderChina.Controllers
                         }
                         return RedirectToAction("Manage", "Account");
                     }
-                    
+
                 }
             }
 
@@ -1810,11 +2000,11 @@ namespace OrderChina.Controllers
             bool IsValid = false;
 
             var user = db.UserProfiles.FirstOrDefault(u => u.Phone == phone);
-            if (user == null||user.UserType == "1" || user.UserType == "5")
-                    {
-                        ModelState.AddModelError("", "Bạn không phải quản lý quản lý bạn không thể đăng nhập ở đây");
-                    }
-            else  if (user != null)
+            if (user == null || user.UserType == "1" || user.UserType == "5")
+            {
+                ModelState.AddModelError("", "Bạn không phải quản lý quản lý bạn không thể đăng nhập ở đây");
+            }
+            else if (user != null)
             {
                 if (user.Password == password)
                 {
@@ -1822,7 +2012,7 @@ namespace OrderChina.Controllers
                 }
             }
             return IsValid;
-         }
+        }
         #endregion
 
         #region wallet

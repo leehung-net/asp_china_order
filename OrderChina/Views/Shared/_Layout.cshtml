@@ -18,10 +18,14 @@
             @RenderBody()
         </section>
     </div>
-    @if (Request.Url != null && (Request.Url.AbsolutePath.Contains("Home/Index") || Request.Url.AbsolutePath == "/"))
-    {
+    @*@if (Request.Url != null && (Request.Url.AbsolutePath.Contains("Home/Index") || Request.Url.AbsolutePath == "/"))
+        {
+            @Html.Partial("_FooterPartial")
+        }*@
+
+    <footer>
         @Html.Partial("_FooterPartial")
-    }
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
