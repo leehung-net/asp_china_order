@@ -78,6 +78,7 @@ namespace OrderChina.Controllers
                             Session["ID"] = user.UserId;
                             Session["UserType"] = user.UserType;
 
+
                         }
                     }
                     return RedirectToLocal(returnUrl);
