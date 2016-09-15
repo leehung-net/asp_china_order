@@ -62,22 +62,23 @@ namespace OrderChina.Controllers
                         //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
 
                         //Response.Cookies.Add(authCookie);
-                        if (db.Rates.Any())
-                        {
-                            var rate = db.Rates.FirstOrDefault();
-                            if (rate != null)
+                            if (db.Rates.Any())
                             {
-                                Session["Price"] = rate.Price.ToString("##,###");
-                                Session["fee1"] = rate.FormatPrice(rate.fee1);
-                                Session["fee2"] = rate.FormatPrice(rate.fee2);
-                                Session["fee3"] = rate.FormatPrice(rate.fee3);
+                                var rate = db.Rates.FirstOrDefault();
+                                if (rate != null)
+                                {
+                                    Session["Price"] = rate.Price.ToString("##,###");
+                                    Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                    Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                    Session["fee3"] = rate.FormatPrice(rate.fee3);
+                                }
                             }
-                        }
 
-                        Session["Name"] = user.Name;
-                        Session["ID"] = user.UserId;
-                        Session["UserType"] = user.UserType;
-                    }
+                            Session["Name"] = user.Name;
+                            Session["ID"] = user.UserId;
+                            Session["UserType"] = user.UserType;
+
+                        }
                     return RedirectToLocal(returnUrl);
                 }
             }
@@ -93,24 +94,24 @@ namespace OrderChina.Controllers
                     //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, EncryptedTicket);
 
                     //Response.Cookies.Add(authCookie);
-                    if (db.Rates.Any())
-                    {
-                        var rate = db.Rates.FirstOrDefault();
-                        if (rate != null)
+                        if (db.Rates.Any())
                         {
-                            Session["Price"] = rate.Price.ToString("##,###");
-                            Session["fee1"] = rate.FormatPrice(rate.fee1);
-                            Session["fee2"] = rate.FormatPrice(rate.fee2);
-                            Session["fee3"] = rate.FormatPrice(rate.fee3);
+                            var rate = db.Rates.FirstOrDefault();
+                            if (rate != null)
+                            {
+                                Session["Price"] = rate.Price.ToString("##,###");
+                                Session["fee1"] = rate.FormatPrice(rate.fee1);
+                                Session["fee2"] = rate.FormatPrice(rate.fee2);
+                                Session["fee3"] = rate.FormatPrice(rate.fee3);
+                            }
                         }
-                    }
-                    var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
-                    if (userProfile != null)
-                    {
-                        Session["Name"] = userProfile.Name;
-                        Session["ID"] = userProfile.UserId;
-                        Session["UserType"] = userProfile.UserType;
-                    }
+                        var userProfile = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
+                        if (userProfile != null)
+                        {
+                            Session["Name"] = userProfile.Name;
+                            Session["ID"] = userProfile.UserId;
+                            Session["UserType"] = userProfile.UserType;
+                        }
                     return RedirectToLocal(returnUrl);
                 }
             }
@@ -445,32 +446,32 @@ namespace OrderChina.Controllers
             else
             {
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Sale, false))
-                {
-                    var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
+            {
+                var listUserManage = db.SaleManageClients.Where(a => a.User_Sale == User.Identity.Name).Select(a => a.User_Client).ToList();
                     listOrderDisplay.AddRange(db.Orders.Where(a => listUserManage.Contains(a.Phone) || string.IsNullOrEmpty(a.SaleManager)).ToList());
-                }
+            }
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
-                {
+            {
                     listOrderDisplay.AddRange(db.Orders.Where(a => a.Phone == User.Identity.Name).ToList());
-                }
+            }
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Accounting, false))
-                {
+            {
                     listOrderDisplay.AddRange(
                         db.Orders.Where(
                             a =>
                                 a.Status == OrderStatus.SaleConfirm.ToString() || a.Status == OrderStatus.Receive.ToString())
                             .ToList());
-                }
+            }
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Orderer, false))
-                {
+            {
                     listOrderDisplay.AddRange(db.Orders.Where(a => a.Status == OrderStatus.Paid.ToString()).ToList());
-                }
+            }
                 if (Utilities.CheckRole((string)Session["UserType"], (int)UserType.Recieve, false))
-                {
+            {
                     listOrderDisplay.AddRange(db.Orders.Where(a => a.Status == OrderStatus.Order.ToString() || a.Status == OrderStatus.FullCollect.ToString()).ToList());
-                }
+            }
                 if (Utilities.CheckRole((string)Session["UserType"]))
-                {
+            {
                     listOrderDisplay = db.Orders.ToList();
                 }
             }
@@ -487,7 +488,7 @@ namespace OrderChina.Controllers
             int pageNumber = (page ?? 1);
 
             return View(listOrderDisplay.ToPagedList(pageNumber, pageSize));
-        }
+            }
         public ActionResult ManageReceiver(string username, string fromDate, string toDate, string OrderId, int? page)
         {
 
@@ -529,7 +530,7 @@ namespace OrderChina.Controllers
             int pageNumber = (page ?? 1);
 
             return View(listOrder.ToPagedList(pageNumber, pageSize));
-        }
+            }
 
         public ActionResult ManageOrdererReject(string username, string fromDate, string toDate, string OrderId, int? page)
         {
@@ -908,7 +909,7 @@ namespace OrderChina.Controllers
             }
 
             return RedirectToAction("Error");
-        }
+                }
 
         [HttpPost]
         [AllowAnonymous]
@@ -949,7 +950,7 @@ namespace OrderChina.Controllers
                         db.Entry(orderDetail).State = EntityState.Added;
                         db.OrderDetails.Add(orderDetail);
                         db.SaveChanges();
-                    }
+            }
 
                     dbContextTransaction.Commit();
 
@@ -1703,9 +1704,9 @@ namespace OrderChina.Controllers
         }
         #endregion
 
-        #region LoginCustomer
+        #region LoginManager
         [AllowAnonymous]
-        public ActionResult LoginCustomer(string returnUrl)
+        public ActionResult LoginManager(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
@@ -1717,14 +1718,18 @@ namespace OrderChina.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult LoginCustomer(LoginModel model, string returnUrl)
+        public ActionResult LoginManager(LoginModel model, string returnUrl)
         {
             if (IsEmail(model.Email))
             {
                 if (IsValid(model.Email, model.Password))
                 {
                     var user = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
-                    if (user != null)
+                    if (user == null || user.UserType == "1" || user.UserType == "5")
+                    {
+                        ModelState.AddModelError("", "Bạn không phải quản lý quản lý bạn không thể đăng nhập ở đây");
+                    }
+                    else if (user != null)
                     {
                         FormsAuthentication.SetAuthCookie(user.Phone, model.RememberMe);
                         //var authTicket = new FormsAuthenticationTicket(model.Email, model.RememberMe, 1);
@@ -1751,14 +1756,16 @@ namespace OrderChina.Controllers
                             Session["UserType"] = user.UserType;
 
                         }
+                        return RedirectToAction("Manage", "Account");
                     }
-                    return RedirectToLocal(returnUrl);
+
                 }
+                
             }
             else
             {
                 //phone
-                if (IsValidPhone(model.Email, model.Password))
+                if (IsValidPhoneManager(model.Email, model.Password))
                 {
 
                     FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
@@ -1787,8 +1794,9 @@ namespace OrderChina.Controllers
                             Session["ID"] = userProfile.UserId;
                             Session["UserType"] = userProfile.UserType;
                         }
+                        return RedirectToAction("Manage", "Account");
                     }
-                    return RedirectToLocal(returnUrl);
+                    
                 }
             }
 
@@ -1797,6 +1805,24 @@ namespace OrderChina.Controllers
             ModelState.AddModelError("", "Tên người dùng hoặc mật khẩu được cung cấp là không chính xác .");
             return View(model);
         }
+        private bool IsValidPhoneManager(string phone, string password)
+        {
+            bool IsValid = false;
+
+            var user = db.UserProfiles.FirstOrDefault(u => u.Phone == phone);
+            if (user == null||user.UserType == "1" || user.UserType == "5")
+                    {
+                        ModelState.AddModelError("", "Bạn không phải quản lý quản lý bạn không thể đăng nhập ở đây");
+                    }
+            else  if (user != null)
+            {
+                if (user.Password == password)
+                {
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+         }
         #endregion
 
         #region wallet
