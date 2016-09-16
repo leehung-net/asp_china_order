@@ -82,47 +82,49 @@
                 <div class="col-sm-12">
                     <hr>
                 </div>
-                <table class="table table-bordered table-striped" style="font-size: 12px">
-                    <thead>
-                        <tr>
-                            <th class='text-center'>Tỷ giá</th>
-                            <th class='text-center'>Cước vc 1</th>
-                            <th class='text-center'>Cước vc 2</th>
-                            <th class='text-center'>Cước vc 3</th>
-                            <th class='text-center'>Người cập nhật</th>
-                            <th class='text-center'>Thời gian cập nhật</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.ListRateHistory != null)
-                        {
-                            foreach (var item in Model.ListRateHistory)
+                <div class="table-responsive" style="width: 100%">
+                    <table class="table table-bordered table-striped" style="font-size: 12px">
+                        <thead>
+                            <tr>
+                                <th class='text-center'>Tỷ giá</th>
+                                <th class='text-center'>Cước vc 1</th>
+                                <th class='text-center'>Cước vc 2</th>
+                                <th class='text-center'>Cước vc 3</th>
+                                <th class='text-center'>Người cập nhật</th>
+                                <th class='text-center'>Thời gian cập nhật</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ListRateHistory != null)
                             {
-                                <tr>
-                                    <td class='text-center'>
-                                        @Html.DisplayFor(modelItem => item.Price)
-                                    </td>
-                                    <td class='text-center'>
-                                        @Html.DisplayFor(modelItem => item.fee1)
-                                    </td>
-                                    <td class='text-center'>
-                                        @Html.DisplayFor(modelItem => item.fee2)
-                                    </td>
-                                    <td class='text-center'>
-                                        @Html.DisplayFor(modelItem => item.fee3)
-                                    </td>
-                                    <td class='text-center'>
-                                        @Html.DisplayFor(modelItem => item.UserUpdate)
-                                    </td>
-                                    <td class='text-center'>
-                                        @Html.DisplayFor(modelItem => item.LastUpdate)
-                                    </td>
+                                foreach (var item in Model.ListRateHistory)
+                                {
+                                    <tr>
+                                        <td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.Price)
+                                        </td>
+                                        <td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.fee1)
+                                        </td>
+                                        <td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.fee2)
+                                        </td>
+                                        <td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.fee3)
+                                        </td>
+                                        <td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.UserUpdate)
+                                        </td>
+                                        <td class='text-center'>
+                                            @Html.DisplayFor(modelItem => item.LastUpdate)
+                                        </td>
 
-                                </tr>
+                                    </tr>
+                                }
                             }
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
                 <br />
 
                 Page @(Model.ListRateHistory.PageCount < Model.ListRateHistory.PageNumber ? 0 : Model.ListRateHistory.PageNumber) of @Model.ListRateHistory.PageCount

@@ -223,12 +223,12 @@
         </div>
         <div class="col-md-12">
             <div class="row">
-                <div class='order-group row' id='no-shop'>
+                <div class='order-group row table-responsive' style="width: 100%" id='no-shop'>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th class='text-center'>Mã link</th>
-                                <th class='text-center' style="width: 100px;">Link</th>
+                                <th class='text-center' >Link</th>
                                 @*<th class='text-center'>Shop</th>*@
                                 <th class='text-center'>Mô tả</th>
                                 <th class='text-center'>Khối lượng</th>
@@ -255,8 +255,8 @@
                                         </a>
                                     </td>
                                     @*<td class='text-center'>
-                                            @Html.DisplayFor(modelItem => item.Shop)
-                                        </td>*@
+                                @Html.DisplayFor(modelItem => item.Shop)
+                            </td>*@
                                     <td class='text-center'>
                                         @Html.DisplayFor(modelItem => item.Description)
                                     </td>

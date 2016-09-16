@@ -14,7 +14,7 @@
         <div class="col-md-9 order-content">
             <div class='row'>
                 <a style="background-color:#ffeded" href="@Url.Action("CreateOrderOfSale", "Account")"><button class="btn btn-primary btn-flat">Tạo đơn hàng</button></a>
-                
+
                 @using (Html.BeginForm("Manage", "Account", FormMethod.Get))
                 {
                     <p>
@@ -66,66 +66,69 @@
                 <div class="col-sm-12">
                     <hr>
                 </div>
-                <table class="table table-bordered table-striped" style="font-size: 12px">
-                    <thead>
-                        <tr>
-                            @if (Session["UserType"] != null)
-                            {
-                                if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
-                                {
-                                    <th class='text-center'>Khách hàng</th>
-                                }
-                            }
-                            <th class='text-center'>Mã đơn</th>
-                            <th class='text-center'>Mã giao dịch</th>
-                            <th class='text-center'>Tỷ giá</th>
-                            <th class='text-center'>Trạng thái</th>
-                            <th class='text-center'>Tổng tiền</th>
-                            <th class="text-center">Ngày tạo</th>
-                            <th class='text-center'>Xem chi tiết đơn</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
+                <div class="table-responsive" style="width: 100%">
+                    <table class="table table-bordered table-striped" style="font-size: 12px">
+                        <thead>
                             <tr>
                                 @if (Session["UserType"] != null)
                                 {
                                     if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
                                     {
-                                        <td class='text-center'>
-                                            @Html.DisplayFor(modelItem => item.Phone)
-                                        </td>
+                                        <th class='text-center'>Khách hàng</th>
                                     }
                                 }
-                                <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.OrderId)
-                                </td>
-                                <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.TransId)
-                                </td>
-                                <td class='text-center'>
-                                    @item.Rate.ToString("##,###")
-                                </td>
-                                <td class='text-center'>
-                                    @item.getStatusText()
-                                </td>
-                                <td class='text-center'>
-                                    @item.TotalPriceConvert.ToString("##,###")
-                                </td>
-                                <td class='text-center'>
-                                    @item.CreateDate.ToString("dd/MM/yyyy")
-                                </td>
-                                <td class='text-center'>
-                                    <a rel='tooltip' title="Xem chi tiết"
-                                       href=@Url.Action("ViewOrderDetail", "Account",new{id = item.OrderId}) class="btn btn-xs btn-primary">
-                                        <i class="fa fa-search-plus"></i>
-                                    </a>
-                                </td>
+                                <th class='text-center'>Mã đơn</th>
+                                <th class='text-center'>Mã giao dịch</th>
+                                <th class='text-center'>Tỷ giá</th>
+                                <th class='text-center'>Trạng thái</th>
+                                <th class='text-center'>Tổng tiền</th>
+                                <th class="text-center">Ngày tạo</th>
+                                <th class='text-center'>Xem chi tiết đơn</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    @if (Session["UserType"] != null)
+                                    {
+                                        if (!Utilities.CheckRole((string)Session["UserType"], (int)UserType.Client, false))
+                                        {
+                                            <td class='text-center'>
+                                                @Html.DisplayFor(modelItem => item.Phone)
+                                            </td>
+                                        }
+                                    }
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.OrderId)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.TransId)
+                                    </td>
+                                    <td class='text-center'>
+                                        @item.Rate.ToString("##,###")
+                                    </td>
+                                    <td class='text-center'>
+                                        @item.getStatusText()
+                                    </td>
+                                    <td class='text-center'>
+                                        @item.TotalPriceConvert.ToString("##,###")
+                                    </td>
+                                    <td class='text-center'>
+                                        @item.CreateDate.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td class='text-center'>
+                                        <a rel='tooltip' title="Xem chi tiết"
+                                           href=@Url.Action("ViewOrderDetail", "Account",new{id = item.OrderId}) class="btn btn-xs btn-primary">
+                                            <i class="fa fa-search-plus"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
                 <br />
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
                 @Html.PagedListPager(Model, page => Url.Action("Manage", new { page, toDate = ViewBag.CurrentToDate, fromDate = ViewBag.CurrentFromDate, listStatus = ViewBag.CurrentStatus, OrderId = ViewBag.CurrentOrderId }))

@@ -34,47 +34,49 @@
                 <div class="col-sm-12">
                     <hr>
                 </div>
+                <div class="table-responsive" style="width: 100%">
 
-                <table class="table table-bordered table-striped" style="font-size: 12px">
-                    <thead>
-                        <tr>
-                            <th class='text-center'>Email</th>
-                            <th class='text-center'>Họ tên</th>
-                            <th class='text-center'>Số điện thoại</th>
-                            <th class="text-center">Ngày sinh</th>
-                            <th class="text-center">Số tài khoản</th>
-                            <th class='text-center'>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
+                    <table class="table table-bordered table-striped" style="font-size: 12px">
+                        <thead>
                             <tr>
-                                <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </td>
-                                <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </td>
-                                <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.Phone)
-                                </td>
-
-                                <td class='text-center'>
-                                    @item.Birthday.ToString("dd/MM/yyyy")
-                                </td>
-                                <td class='text-center'>
-                                    @Html.DisplayFor(modelItem => item.Account)
-                                </td>
-                                <td class='text-center'>
-                                    <a rel='tooltip' title="Ví điện tử" href=@Url.Action("Index", "Wallet", new { id = item.Phone }) class="btn btn-xs btn-primary">
-                                        <i class="fa fa-money"></i>
-                                    </a>
-                                </td>
+                                <th class='text-center'>Email</th>
+                                <th class='text-center'>Họ tên</th>
+                                <th class='text-center'>Số điện thoại</th>
+                                <th class="text-center">Ngày sinh</th>
+                                <th class="text-center">Số tài khoản</th>
+                                <th class='text-center'>Thao tác</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Phone)
+                                    </td>
+
+                                    <td class='text-center'>
+                                        @item.Birthday.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td class='text-center'>
+                                        @Html.DisplayFor(modelItem => item.Account)
+                                    </td>
+                                    <td class='text-center'>
+                                        <a rel='tooltip' title="Ví điện tử" href=@Url.Action("Index", "Wallet", new { id = item.Phone }) class="btn btn-xs btn-primary">
+                                            <i class="fa fa-money"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
                 <br />
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
                 @Html.PagedListPager(Model, page => Url.Action("ListClient", new { page, userType = ViewBag.CurrentUserType, userName = ViewBag.CurrentUserName }))
