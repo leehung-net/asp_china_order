@@ -1915,7 +1915,7 @@ namespace OrderChina.Controllers
                 if (IsValid(model.Email, model.Password))
                 {
                     var user = db.UserProfiles.FirstOrDefault(a => a.Email == model.Email);
-                    if (user == null || user.UserType == "1" || user.UserType == "5")
+                    if (user != null && user.UserType == "5")
                     {
                         ModelState.AddModelError("", "Bạn không phải quản lý quản lý bạn không thể đăng nhập ở đây");
                     }
@@ -2000,7 +2000,7 @@ namespace OrderChina.Controllers
             bool IsValid = false;
 
             var user = db.UserProfiles.FirstOrDefault(u => u.Phone == phone);
-            if (user == null || user.UserType == "1" || user.UserType == "5")
+            if (user != null && user.UserType == "5")
             {
                 ModelState.AddModelError("", "Bạn không phải quản lý quản lý bạn không thể đăng nhập ở đây");
             }
